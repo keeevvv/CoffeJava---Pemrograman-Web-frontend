@@ -40,7 +40,6 @@ const ProductDetail = () => {
 
                 <div className="h-96"></div>
             </div>
-           
         </div>
     );
 };

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../assets/images/logo.png";
 import { Avatar, Dropdown, Navbar, Button } from "flowbite-react";
+import { Inertia } from "@inertiajs/inertia";
+import { Link } from "@inertiajs/react";
 
 export default function NavbarComponent() {
     const navigate = useNavigate();
@@ -54,13 +56,9 @@ export default function NavbarComponent() {
                         <Dropdown.Item>Sign out</Dropdown.Item>
                     </Dropdown>
                 ) : (
-                    <Button
-                        onClick={() => {
-                            navigate("/");
-                        }}
-                    >
-                        Login
-                    </Button>
+                    <Link href="/login">
+                        <Button>Login</Button>
+                    </Link>
                 )}
                 <Navbar.Toggle />
             </div>
