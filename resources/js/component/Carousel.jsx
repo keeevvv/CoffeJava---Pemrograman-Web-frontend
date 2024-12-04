@@ -3,7 +3,7 @@ import { Carousel } from "flowbite-react";
 
 const CarouselComponent = () => {
     return (
-        <div className=" h-full ">
+        <div className=" h-full lg:w-72 xl:w-full w-full ">
             <Carousel>
                 <img
                     src="https://i.pinimg.com/originals/b4/a9/4a/b4a94a5add52ffa335c31ac5a82e999f.gif"

@@ -9,7 +9,7 @@ export function TabsComponent() {
 
     
     return (
-        <div className="w-full bg-emerald-400 h-full rounded-md mt-4 ">
+        <div id="tabbar" className="w-full bg-emerald-400  rounded-md mt-4 lg:">
             <div className="bg-emerald-500 flex justify-between px-8 text-2xl rounded-md p-2">
                 <h1 className={`cursor-pointer ${curenTab === tab1 ? 'underline' : ''}`} onClick = {()=>{setCurentTab(tab1)}}>Informasi</h1>
                 <h1 className={`cursor-pointer ${curenTab === tab2 ? 'underline' : ''}`} onClick = {()=>{setCurentTab(tab2)}}>Tentang</h1>
