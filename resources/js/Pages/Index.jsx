@@ -1,7 +1,6 @@
 import FooterLanding from "../component/FooterSection";
 import NavbarComponent from "../component/Navbar";
 import Jumbotron from "../component/Jumbotron";
-import { Link } from "@inertiajs/react";
 import PopularProduct from "../component/Popular";
 import ReviewComponent from "../component/Review";
 import PaymentComponent from "../component/Payment";
