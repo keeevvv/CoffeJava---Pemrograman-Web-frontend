@@ -10,6 +10,8 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/check-login', [AuthController::class, 'checkLogin']);
 
 Route::inertia('/product/1', 'ProductDetail');
+Route::inertia('/profile', 'Profile');
+Route::inertia('/profile/shipping', 'Shipping');
 
 // Route::get('/login', function () {
 //     return inertia('Login');
