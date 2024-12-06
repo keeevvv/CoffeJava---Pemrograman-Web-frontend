@@ -19,7 +19,7 @@ export default function NavbarComponent() {
     };
 
     return (
-        <Navbar fluid rounded className="bg-emerald-400">
+        <Navbar fluid rounded className="bg-emerald-400 fixed z-10 w-full top-0 ">
             <Navbar.Brand href="https://flowbite-react.com">
                 <img
                     src={Logo}

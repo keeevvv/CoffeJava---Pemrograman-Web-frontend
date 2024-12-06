@@ -1,4 +1,4 @@
-import React, { useState,useEffect  } from "react";
+import React, { useState, useEffect } from "react";
 
 export function TabsComponent() {
     const tab1 =
@@ -8,14 +8,35 @@ export function TabsComponent() {
     const [curenTab, setCurentTab] = useState(tab1);
 
     
+
     return (
-        <div id="tabbar" className="w-full bg-emerald-400  rounded-md mt-4 lg:">
-            <div className="bg-emerald-500 flex justify-between px-8 text-2xl rounded-md p-2">
-                <h1 className={`cursor-pointer ${curenTab === tab1 ? 'underline' : ''}`} onClick = {()=>{setCurentTab(tab1)}}>Informasi</h1>
-                <h1 className={`cursor-pointer ${curenTab === tab2 ? 'underline' : ''}`} onClick = {()=>{setCurentTab(tab2)}}>Tentang</h1>
+        <div id="tabbar" className="w-full bg-emerald-400  rounded-md mt-4 ">
+            <div className="bg-emerald-500 flex justify-between px-8 text-2xl lg:text-base xl:text-xl rounded-md p-2">
+                <h1
+                    className={` cursor-pointer ${
+                        curenTab === tab1 ? "underline" : ""
+                    }`}
+                    onClick={() => {
+                        setCurentTab(tab1);
+                    }}
+                >
+                    Informasi
+                </h1>
+                <h1
+                    className={`cursor-pointer ${
+                        curenTab === tab2 ? "underline" : ""
+                    }`}
+                    onClick={() => {
+                        setCurentTab(tab2);
+                    }}
+                >
+                    Tentang
+                </h1>
             </div>
-            <div className="mt-4">
-                <p className="text-justify text-white">{curenTab}</p>
+            <div className="mt-4 ">
+                <p className="text-justify lg:text-base xl:text-lg text-gray-700 mx-4">
+                    {curenTab}
+                </p>
             </div>
         </div>
     );

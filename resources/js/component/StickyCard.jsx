@@ -1,63 +1,81 @@
 import React, { useEffect, useState } from "react";
 
 const StickyCard = () => {
-    const [cartPosition, setCartPosition] = useState("70px"); 
+    const [quantity, setQuantity] = useState(1);
+    const [totalPrice, setTotalPrice] = useState(3000000);
+    const price = 300000;
+    const [selectedSize, setSelectedSize] = useState(-1);
+
+    const handleSelectSize = (index) => {
+        setSelectedSize(index);
+    };
+
+    const handleIncreaseQuantity = () => {
+        setQuantity(quantity + 1);
+    };
+    const handleDecreaseQuantity = () => {
+        if (quantity > 1) {
+            setQuantity(quantity - 1);
+        }
+    };
 
     useEffect(() => {
-        const handleScroll = () => {
-            const tabbarElement = document.getElementById("tabbar");
-            const cartElement = document.getElementById("sticky-cart");
-
-       
-
-            const tabbarOffset = tabbarElement.offsetTop;
-            const tabbarHeight = tabbarElement.offsetHeight;
-            const stopPoint = tabbarOffset + tabbarHeight;
-            const cartHeight = cartElement.offsetHeight;
-            const scrollY = window.scrollY;
-
-            const offset = 70;
-
-            if (stopPoint <= scrollY + cartHeight + offset) {
-                setCartPosition(`${stopPoint - scrollY - cartHeight}px`);
-            } else {
-                setCartPosition(`${offset}px`);
-            }
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
+        setTotalPrice(quantity * price);
+    }, [quantity]);
     return (
-        <div
-            id="sticky-cart"
-            style={{ top: cartPosition }}
-            className="fixed right-10 hidden lg:block bg-emerald-400 p-4 rounded-lg shadow-lg w-80 transition-all"
-        >
-            <div className="flex justify-between items-center mb-4">
-                <button className="text-lg font-bold">-</button>
-                <span className="text-lg font-bold">1</span>
-                <button className="text-lg font-bold">+</button>
-            </div>
-            <div className="grid grid-cols-4 gap-2 mb-4">
-                {["S", "M", "L", "XL"].map((size) => (
+        <div className="absolute right-4 bottom-0 h-full pt-7">
+            <div className="sticky top-20 hidden lg:block bg-emerald-400 p-5 rounded-lg shadow-lg lg:w-[290px] xl:w-80 transition-all font-sans">
+                <div className="flex justify-between items-center mb-6">
                     <button
-                        key={size}
-                        className="border rounded-md py-1 px-2 text-center hover:bg-black hover:text-white"
+                        onClick={handleDecreaseQuantity}
+                        className="text-xl font-bold text-gray-800 hover:text-gray-900 transition"
                     >
-                        {size}
+                        -
                     </button>
-                ))}
+                    <span className="text-xl font-bold text-gray-900">
+                        {quantity}
+                    </span>
+                    <button
+                        onClick={handleIncreaseQuantity}
+                        className="text-xl font-bold text-gray-800 hover:text-gray-900 transition"
+                    >
+                        +
+                    </button>
+                </div>
+
+                <div className="grid grid-cols-4 gap-3 mb-6">
+                    {["S", "M", "L", "XL"].map((size, index) => (
+                        <button
+                            key={size}
+                            onClick={() => handleSelectSize(index)} // Mengatur ukuran yang dipilih
+                            className={`border rounded-md py-2 text-center font-medium 
+                    transition-all ${
+                        selectedSize === index
+                            ? "bg-gray-900 text-white" // Warna ketika dipilih
+                            : "text-gray-800 hover:bg-gray-900 hover:text-white" // Warna default
+                    }`}
+                        >
+                            {size}
+                        </button>
+                    ))}
+                </div>
+                <div className="text-sm text-gray-700 mb-4 italic">
+                    * Size information available in the product description
+                </div>
+
+                <div className="flex justify-between items-center mb-6">
+                    <span className="text-lg font-semibold text-gray-800">
+                        Subtotal
+                    </span>
+                    <span className="text-lg font-bold text-gray-900">
+                        Rp {totalPrice}
+                    </span>
+                </div>
+
+                <button className="w-full bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all">
+                    ADD TO CART
+                </button>
             </div>
-            <div className="text-sm mb-2">size info</div>
-            <div className="flex justify-between items-center mb-4">
-                <span className="font-bold">Subtotal</span>
-                <span className="font-bold">Rp 300.000,00</span>
-            </div>
-            <button className="w-full bg-white border py-2 rounded-lg hover:bg-black hover:text-white">
-                ADD TO CART
-            </button>
         </div>
     );
 };
