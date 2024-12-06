@@ -1,4 +1,5 @@
 import { Link } from "@inertiajs/react";
+import Logo from "../assets/images/logo.png";
 
 export default function FooterLanding() {
     return (
@@ -7,7 +8,7 @@ export default function FooterLanding() {
                 <div class="flex flex-wrap justify-between items-center">
                     <div class="w-full lg:w-1/3 p-4">
                         <img
-                            src="img/logo-company.png"
+                            src={Logo}
                             alt="Logo"
                             class="w-40 h-auto mx-auto lg:mx-0"
                         />

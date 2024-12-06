@@ -34,9 +34,10 @@ class AuthController extends Controller
          
              return Inertia::location('/');
         } else {
+         
             return Inertia::render('Login', [
                 'errors' => [
-                    'login' => 'Invalid email or password. Please try again.',
+                    'login' => $response->json()['msg'],
                 ],
             ]);
         }

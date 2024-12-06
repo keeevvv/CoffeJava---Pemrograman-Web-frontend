@@ -6,6 +6,7 @@ import { TabsComponent } from "../component/Tabs";
 import HorizontalCardList, { CardList } from "../component/CardList";
 import ProductProfile from "../component/ProductProfile";
 import StickyCard from "../component/StickyCard";
+import FooterLanding from "../component/FooterSection";
 
 const ProductDetail = () => {
     return (
@@ -219,6 +220,7 @@ const ProductDetail = () => {
                     character profile as possessing 'stunning beauty'.
                 </p>
             </div>
+            <FooterLanding/>
         </div>
     );
 };
