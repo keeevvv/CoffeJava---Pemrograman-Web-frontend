@@ -10,18 +10,45 @@ use Firebase\JWT\Key;
 
 class AuthController extends Controller
 {
-    public function showLogin(){
+
+    public function checkLoginStatus(Request $request)
+    {
+        $isLoggedIn = $request->session()->has('access_token');
+        
+        return [
+            'isLoggedIn' => $isLoggedIn,
+        ];
+    }
+
+    public function showLogin(Request $request){
+        if ($request->session()->has('access_token')) {
+            return Inertia::location('/');
+        }
         return Inertia::render('Login');
     }
+
+    public function showHome(Request $request){
+        $isLoggedIn = $this->checkLoginStatus($request);
+
+        return Inertia::render('Index', [
+            'isLoggedIn' => $isLoggedIn,
+        ]);
+    }
+
+    public function showProductDetail(Request $request)
+{
+    
+    $isLoggedIn = $this->checkLoginStatus($request);
+   
+    
+    return Inertia::render('ProductDetail', [
+        'isLoggedIn' => $isLoggedIn,
+    ]);
+}
 
     public function login(Request $request)
     {
      
-       
-
-       
-     
-       
        
         $response = Http::post('http://localhost:3000/api/v1/login', [
             'email' => $request->input('email'),
@@ -31,6 +58,9 @@ class AuthController extends Controller
         if ($response->successful()) {
             
             $tokens = $response->json();
+            
+           
+             $request->session()->put('access_token', $tokens['accessToken']);
          
              return Inertia::location('/');
         } else {
@@ -46,16 +76,5 @@ class AuthController extends Controller
         
     }
 
-    public function checkLogin(Request $request){
-        $token = $request->bearerToken();
-        if ($token) {
-            try {
-                $decoded = JWT::decode($token, new Key(env('ACCESS_TOKEN'), 'HS256'));
-                return response()->json(['loggedIn' => true]);
-            } catch (\Exception $e) {
-                return response()->json(['loggedIn' => false]);
-            }
-        }
-        return response()->json(['loggedIn' => false]);
-    }
+    
 }

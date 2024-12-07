@@ -9,6 +9,7 @@ import StickyCard from "../component/StickyCard";
 import FooterLanding from "../component/FooterSection";
 
 const ProductDetail = () => {
+    
     return (
         <div>
             <NavbarComponent />
