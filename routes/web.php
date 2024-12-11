@@ -1,6 +1,8 @@
 <?php
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -11,7 +13,8 @@ Route::get('/check-login', [AuthController::class, 'checkLogin']);
 
 Route::get('/product/1', [AuthController::class, 'showProductDetail'])->name('product.detail');
 Route::get('/', [AuthController::class, 'showHome'])->name('home.show');
-Route::inertia('/profile', 'Profile');
+
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::inertia('/profile/shipping', 'Shipping');
 
 // Route::get('/login', function () {
