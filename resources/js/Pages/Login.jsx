@@ -54,6 +54,7 @@ export default function Login(props) {
                                     id="email"
                                     type="email"
                                     placeholder="emain@example.com"
+                                    required
                                     onChange={(e) => setEmail(e.target.value)}
                                 ></input>
                             </div>
@@ -68,16 +69,17 @@ export default function Login(props) {
                                     className="w-full px-2 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                                     id="password"
                                     type="password"
+                                    required
                                     placeholder="*********"
                                     onChange={(e) =>
                                         setPassword(e.target.value)
                                     }
                                 ></input>
-                                 {errorMessage && (
-                                        <div className="text-red-500 text-center m-4">
-                                            {errorMessage}
-                                        </div>
-                                    )}
+                                {errorMessage && (
+                                    <div className="text-red-500 text-center m-4">
+                                        {errorMessage}
+                                    </div>
+                                )}
                             </div>
                             <div className="mt-6 sm:mx-20 mx-10">
                                 <button
@@ -96,7 +98,6 @@ export default function Login(props) {
                                         <circle cx="8.5" cy="7" r="4" />
                                         <path d="M20 8v6M23 11h-6" />
                                     </svg>
-                                   
 
                                     <span class="ml-">Sign In</span>
                                 </button>

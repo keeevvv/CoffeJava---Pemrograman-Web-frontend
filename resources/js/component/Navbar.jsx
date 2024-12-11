@@ -5,7 +5,7 @@ import { Link } from "@inertiajs/react";
 import Logo from "../assets/images/logo.png";
 
 export default function NavbarComponent() {
-    const { isLoggedIn } = usePage().props;
+    const { isLoggedIn, user } = usePage().props;
 
     useEffect(() => {
         console.log();
@@ -36,12 +36,14 @@ export default function NavbarComponent() {
                         }
                     >
                         <Dropdown.Header>
-                            <span className="block text-sm">User Name</span>
+                            <span className="block text-sm">{user.name}</span>
                             <span className="block truncate text-sm font-medium">
-                                user@example.com
+                                {user.email}
                             </span>
                         </Dropdown.Header>
-                        <Dropdown.Item>Dashboard</Dropdown.Item>
+                        <Link href="/profile">
+                            <Dropdown.Item>Profile</Dropdown.Item>
+                        </Link>
                         <Dropdown.Item>Settings</Dropdown.Item>
                         <Dropdown.Item>Earnings</Dropdown.Item>
                         <Dropdown.Divider />
