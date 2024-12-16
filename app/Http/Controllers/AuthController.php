@@ -20,42 +20,75 @@ class AuthController extends Controller
         ];
     }
 
-    public function showLogin(Request $request){
+    public function showLogin(Request $request)
+    {
+
         if ($request->session()->has('access_token')) {
             return Inertia::location('/');
         }
         return Inertia::render('Login');
     }
 
-    public function showHome(Request $request){
+    public function showHome(Request $request)
+    {
         $isLoggedIn = $this->checkLoginStatus($request);
 
         $accessToken = $request->session()->get('access_token');
 
+
+
         $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+
+
 
         return Inertia::render('Index', [
             'user' => [
-                    'id' => $decoded->id,
-                    'name' => $decoded->name,
-                    'email' => $decoded->email,
-                    'profileImage' => $decoded->profileImage,
-                    'tanggalLahir' => $decoded->tanggalLahir,
+                'id' => $decoded->id,
+                'name' => $decoded->name,
+                'email' => $decoded->email,
+                'profileImage' => $decoded->profileImage,
+                'tanggalLahir' => $decoded->tanggalLahir,
             ],
             'isLoggedIn' => $isLoggedIn,
         ]);
     }
 
     public function showProductDetail(Request $request)
-{
-
-    $isLoggedIn = $this->checkLoginStatus($request);
+    {
 
 
-    return Inertia::render('ProductDetail', [
-        'isLoggedIn' => $isLoggedIn,
-    ]);
-}
+        $isLoggedIn = $this->checkLoginStatus($request);
+        $accessToken = $request->session()->get('access_token');
+
+
+
+
+
+
+        if ($accessToken != null) {
+
+            try {
+                $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+                return Inertia::render('ProductDetail', [
+                    'user' => [
+                        'id' => $decoded->id,
+                        'name' => $decoded->name,
+                        'email' => $decoded->email,
+                        'profileImage' => $decoded->profileImage,
+                        'tanggalLahir' => $decoded->tanggalLahir,
+                    ],
+                    'isLoggedIn' => $isLoggedIn,
+                ]);
+            } catch (\Throwable $th) {
+                //throw $th;
+            }
+        } else {
+            return Inertia::render('ProductDetail', [
+
+                'isLoggedIn' => $isLoggedIn,
+            ]);
+        }
+    }
 
     public function login(Request $request)
     {
@@ -71,9 +104,13 @@ class AuthController extends Controller
             $tokens = $response->json();
 
 
-             $request->session()->put('access_token', $tokens['accessToken']);
 
-             return Inertia::location('/');
+
+
+            $request->session()->put('access_token', $tokens['accessToken']);
+
+
+            return Inertia::location('/');
         } else {
 
             return Inertia::render('Login', [
@@ -82,10 +119,5 @@ class AuthController extends Controller
                 ],
             ]);
         }
-
-
-
     }
-
-
 }
