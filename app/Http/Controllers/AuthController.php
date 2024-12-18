@@ -53,8 +53,18 @@ class AuthController extends Controller
         ]);
     }
 
-    public function showProductDetail(Request $request)
+    public function showProductDetail(Request $request, $id)
     {
+
+
+
+        $response = Http::get("http://localhost:3000/api/v1/product/{$id}");
+        if (!$response->successful()) {
+            abort(404);
+        }
+
+        $data = $response->json();
+
 
 
         $isLoggedIn = $this->checkLoginStatus($request);
@@ -78,6 +88,7 @@ class AuthController extends Controller
                         'tanggalLahir' => $decoded->tanggalLahir,
                     ],
                     'isLoggedIn' => $isLoggedIn,
+                    'product' => $data
                 ]);
             } catch (\Throwable $th) {
                 //throw $th;
@@ -86,6 +97,7 @@ class AuthController extends Controller
             return Inertia::render('ProductDetail', [
 
                 'isLoggedIn' => $isLoggedIn,
+                'product' => $data
             ]);
         }
     }

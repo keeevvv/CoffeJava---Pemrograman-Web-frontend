@@ -18,6 +18,7 @@ class AuthMiddleware
     {
 
         $accessToken = $request->session()->get('access_token');
+       
 
         if ($accessToken != null) {
             try {
@@ -39,7 +40,7 @@ class AuthMiddleware
         }
 
 
-
+    
         return $next($request);
     }
 

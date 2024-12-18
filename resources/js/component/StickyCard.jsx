@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-const StickyCard = () => {
+const StickyCard = ({ price,stock }) => {
+    console.log(stock)
     const [quantity, setQuantity] = useState(1);
-    const [totalPrice, setTotalPrice] = useState(3000000);
-    const price = 300000;
+    const initialprice = Math.round(price)*1000;
+    const [totalPrice, setTotalPrice] = useState(initialprice);
+    
     const [selectedSize, setSelectedSize] = useState(-1);
 
     const handleSelectSize = (index) => {
@@ -20,7 +22,7 @@ const StickyCard = () => {
     };
 
     useEffect(() => {
-        setTotalPrice(quantity * price);
+        setTotalPrice(quantity * initialprice);
     }, [quantity]);
     return (
         <div className="absolute right-4 bottom-0 h-full pt-7">
@@ -44,18 +46,19 @@ const StickyCard = () => {
                 </div>
 
                 <div className="grid grid-cols-4 gap-3 mb-6">
-                    {["S", "M", "L", "XL"].map((size, index) => (
+                    {stock.map((item, index) => (
                         <button
-                            key={size}
+                            key={index}
                             onClick={() => handleSelectSize(index)} // Mengatur ukuran yang dipilih
                             className={`border rounded-md py-2 text-center font-medium 
                     transition-all ${
+                        item.quantity ==0?"bg-none":
                         selectedSize === index
                             ? "bg-gray-900 text-white" // Warna ketika dipilih
                             : "text-gray-800 hover:bg-gray-900 hover:text-white" // Warna default
                     }`}
                         >
-                            {size}
+                            {item.size}
                         </button>
                     ))}
                 </div>
