@@ -16,6 +16,7 @@ Route::get('/', [AuthController::class, 'showHome'])->name('home.show');
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::inertia('/profile/shipping', 'Shipping');
+Route::inertia('/profile/setting', 'Setting');
 
 // Route::get('/login', function () {
 //     return inertia('Login');
