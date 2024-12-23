@@ -22,12 +22,6 @@ class AuthMiddleware
 
         if ($accessToken != null) {
             try {
-
-
-
-
-
-
                 JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
             } catch (Exception $e) {
 

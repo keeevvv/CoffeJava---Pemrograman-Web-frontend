@@ -19,7 +19,8 @@ Route::post('/addToCart', [AuthController::class, 'addToCart'])->name('addToCart
 
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-Route::inertia('/profile/shipping', 'Shipping');
+Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');
+Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name('profile.setting');
 
 // Route::get('/login', function () {
 //     return inertia('Login');
