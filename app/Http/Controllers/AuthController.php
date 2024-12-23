@@ -71,10 +71,6 @@ class AuthController extends Controller
         $accessToken = $request->session()->get('access_token');
 
 
-
-
-
-
         if ($accessToken != null) {
 
             try {
@@ -114,8 +110,6 @@ class AuthController extends Controller
         if ($response->successful()) {
 
             $tokens = $response->json();
-
-
 
 
 

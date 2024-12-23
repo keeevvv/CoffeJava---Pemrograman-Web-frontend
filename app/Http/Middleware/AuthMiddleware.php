@@ -18,16 +18,10 @@ class AuthMiddleware
     {
 
         $accessToken = $request->session()->get('access_token');
-       
+
 
         if ($accessToken != null) {
             try {
-
-
-
-
-
-
                 JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
             } catch (Exception $e) {
 
@@ -40,7 +34,7 @@ class AuthMiddleware
         }
 
 
-    
+
         return $next($request);
     }
 

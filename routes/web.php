@@ -16,8 +16,8 @@ Route::get('/product/{id}', [AuthController::class, 'showProductDetail'])->name(
 Route::get('/', [AuthController::class, 'showHome'])->name('home.show')->middleware(AuthMiddleware::class);
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-Route::inertia('/profile/shipping', 'Shipping');
-Route::inertia('/profile/setting', 'Setting');
+Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');
+Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name('profile.setting');
 
 // Route::get('/login', function () {
 //     return inertia('Login');

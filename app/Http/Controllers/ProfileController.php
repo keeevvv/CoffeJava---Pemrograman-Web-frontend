@@ -43,4 +43,34 @@ class ProfileController extends Controller
             return redirect('/login')->withErrors(['msg' => 'Invalid token. Please login again.']);
         }
     }
+
+    public function showShipping(Request $request) {
+        $accessToken = $request->session()->get('access_token');
+        $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+        return Inertia::render('Shipping', [
+            'user' => [
+                'id' => $decoded->id,
+                'name' => $decoded->name,
+                'email' => $decoded->email,
+                'profileImage' => $decoded->profileImage,
+                'tanggalLahir' => $decoded->tanggalLahir,
+            ],
+            'isLoggedIn' => $this->checkLoginStatus($request),
+        ]);
+    }
+
+    public function showSetting(Request $request) {
+        $accessToken = $request->session()->get('access_token');
+        $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+        return Inertia::render('Setting', [
+            'user' => [
+                'id' => $decoded->id,
+                'name' => $decoded->name,
+                'email' => $decoded->email,
+                'profileImage' => $decoded->profileImage,
+                'tanggalLahir' => $decoded->tanggalLahir,
+            ],
+            'isLoggedIn' => $this->checkLoginStatus($request),
+        ]);
+    }
 }
