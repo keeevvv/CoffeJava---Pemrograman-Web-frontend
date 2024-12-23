@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { router } from "@inertiajs/react";
 
-const StickyCard = ({ price,stock }) => {
-    console.log(stock)
+const StickyCard = ({ price, stock, product_id }) => {
+    console.log(stock);
     const [quantity, setQuantity] = useState(1);
-    const initialprice = Math.round(price)*1000;
+    const initialprice = Math.round(price) * 1000;
     const [totalPrice, setTotalPrice] = useState(initialprice);
-    
+
+    const [erorSize, setErorSize] = useState(false);
+
     const [selectedSize, setSelectedSize] = useState(-1);
 
     const handleSelectSize = (index) => {
@@ -24,6 +27,21 @@ const StickyCard = ({ price,stock }) => {
     useEffect(() => {
         setTotalPrice(quantity * initialprice);
     }, [quantity]);
+
+    const handleAddToCart = () => {
+        if (selectedSize != -1) {
+            router.visit("/addToCart", {
+                method: "post",
+                data: {
+                    product_id: product_id,
+                    quantity: quantity,
+                    size: stock[selectedSize].size,
+                },
+            });
+        } else {
+            setErorSize(true);
+        }
+    };
     return (
         <div className="absolute right-4 bottom-0 h-full pt-7">
             <div className="sticky top-20 hidden lg:block bg-emerald-400 p-5 rounded-lg shadow-lg lg:w-[290px] xl:w-80 transition-all font-sans">
@@ -44,16 +62,24 @@ const StickyCard = ({ price,stock }) => {
                         +
                     </button>
                 </div>
-
+                <div className={`${erorSize ? "block" : "hidden"}`}>
+                    <p className="text-xs text-red-800">
+                        {" "}
+                        size must be selected first
+                    </p>
+                </div>
                 <div className="grid grid-cols-4 gap-3 mb-6">
                     {stock.map((item, index) => (
                         <button
                             key={index}
-                            onClick={() => handleSelectSize(index)} // Mengatur ukuran yang dipilih
+                            onClick={() => {
+                                handleSelectSize(index);
+                            }} // Mengatur ukuran yang dipilih
                             className={`border rounded-md py-2 text-center font-medium 
                     transition-all ${
-                        item.quantity ==0?"bg-none":
-                        selectedSize === index
+                        item.quantity == 0
+                            ? "bg-none"
+                            : selectedSize === index
                             ? "bg-gray-900 text-white" // Warna ketika dipilih
                             : "text-gray-800 hover:bg-gray-900 hover:text-white" // Warna default
                     }`}
@@ -75,7 +101,10 @@ const StickyCard = ({ price,stock }) => {
                     </span>
                 </div>
 
-                <button className="w-full bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all">
+                <button
+                    onClick={handleAddToCart}
+                    className="w-full bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all"
+                >
                     ADD TO CART
                 </button>
             </div>

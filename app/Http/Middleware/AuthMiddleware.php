@@ -29,6 +29,7 @@ class AuthMiddleware
                 $request->session()->put('access_token', $accessToken);
             }
         } else {
+            $request->session()->put('url.intended', $request->fullUrl());
             $request->session()->flush();
             return Inertia::location('/login');
         }
@@ -44,11 +45,14 @@ class AuthMiddleware
         try {
             // Kirim request ke API untuk mendapatkan token baru
             $response = Http::get('http://localhost:3000/api/v1/token');
+           
 
             if ($response->successful()) {
                 $data = $response->json();
-                return $data['access_token'];
+               
+                return $data['accessToken'];
             } else {
+                $response = Http::delete('http://localhost:3000/api/v1/logout');
                 $request->session()->flush();
                 return Inertia::location('/login');
             }
