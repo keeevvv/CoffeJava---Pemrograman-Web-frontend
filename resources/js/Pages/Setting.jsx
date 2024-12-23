@@ -1,9 +1,37 @@
 import NavbarComponent from "../component/Navbar";
 import { useState } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 
 export default function SettingPage({ user }) {
     const [activeTab, setActiveTab] = useState("profile");
+    const [currentPassword, setCurrentPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+    const [confirmNewPassword, setConfirmNewPassword] = useState("");
+    const { flash } = usePage().props;
+
+    const handleChangePassword = (event) => {
+        event.preventDefault();
+
+        router.post("/profile/setting/password", {
+            id: user.id,
+            currentPassword,
+            newPassword,
+            confirmNewPassword,
+        }, {
+            onSuccess: () => {
+                alert("Password berhasil diperbarui!");
+            },
+            onError: (errors) => {
+                if (errors.currentPassword) {
+                    alert("Password lama salah.");
+                } else if (errors.newPassword) {
+                    alert("Password baru tidak valid.");
+                } else {
+                    alert("Terjadi kesalahan. Silakan coba lagi.");
+                }
+            },
+        });
+    };
 
     return (
         <div>
@@ -28,7 +56,6 @@ export default function SettingPage({ user }) {
                     </div>
 
                     <div className="mt-6">
-                        {/* Navigation Tabs */}
                         <div className="flex justify-center space-x-4 mb-6">
                             <button
                                 onClick={() => setActiveTab("profile")}
@@ -52,7 +79,6 @@ export default function SettingPage({ user }) {
                             </button>
                         </div>
 
-                        {/* Change Profile Form */}
                         {activeTab === "profile" && (
                             <form className="space-y-4">
                                 <div>
@@ -81,9 +107,18 @@ export default function SettingPage({ user }) {
                             </form>
                         )}
 
-                        {/* Change Password Form */}
                         {activeTab === "password" && (
-                            <form className="space-y-4">
+                            <form className="space-y-4" onSubmit={handleChangePassword}>
+                                {flash.success && (
+                                    <div className="mb-4 text-green-600 text-center">
+                                        {flash.success}
+                                    </div>
+                                )}
+                                {flash.error && (
+                                    <div className="mb-4 text-red-600 text-center">
+                                        {flash.error}
+                                    </div>
+                                )}
                                 <div>
                                     <label className="block text-gray-700 font-semibold mb-2">
                                         Current Password
@@ -91,6 +126,8 @@ export default function SettingPage({ user }) {
                                     <input
                                         type="password"
                                         placeholder="Enter current password"
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
@@ -101,6 +138,8 @@ export default function SettingPage({ user }) {
                                     <input
                                         type="password"
                                         placeholder="Enter new password"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
@@ -111,16 +150,20 @@ export default function SettingPage({ user }) {
                                     <input
                                         type="password"
                                         placeholder="Confirm new password"
+                                        value={confirmNewPassword}
+                                        onChange={(e) => setConfirmNewPassword(e.target.value)}
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
-                                <button className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
+                                <button
+                                    type="submit"
+                                    className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+                                >
                                     Update Password
                                 </button>
                             </form>
                         )}
 
-                        {/* Back to Profile List */}
                         <div className="mt-8 flex justify-center">
                             <Link href="/profile">
                                 <button className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600">
