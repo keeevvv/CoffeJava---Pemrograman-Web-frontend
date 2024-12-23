@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Exception;
 use Illuminate\Support\Facades\Http;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
@@ -35,22 +36,27 @@ class AuthController extends Controller
 
         $accessToken = $request->session()->get('access_token');
 
+        if ($accessToken != null) {
+            try {
+                $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
 
-
-        $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
-
-
-
-        return Inertia::render('Index', [
-            'user' => [
-                'id' => $decoded->id,
-                'name' => $decoded->name,
-                'email' => $decoded->email,
-                'profileImage' => $decoded->profileImage,
-                'tanggalLahir' => $decoded->tanggalLahir,
-            ],
-            'isLoggedIn' => $isLoggedIn,
-        ]);
+                return Inertia::render('Index', [
+                    'user' => [
+                        'id' => $decoded->id,
+                        'name' => $decoded->name,
+                        'email' => $decoded->email,
+                        'profileImage' => $decoded->profileImage,
+                        'tanggalLahir' => $decoded->tanggalLahir,
+                    ],
+                    'isLoggedIn' => $isLoggedIn,
+                ]);
+            } catch (Exception $e) {
+            }
+        } else {
+            return Inertia::render(('Index'), [
+                'isLoggedIn' => $isLoggedIn,
+            ]);
+        }
     }
 
     public function showProductDetail(Request $request, $id)
@@ -130,6 +136,46 @@ class AuthController extends Controller
                     'login' => $response->json()['msg'],
                 ],
             ]);
+        }
+    }
+
+
+    public function addToCart(Request $request)
+    {
+
+        $accessToken =  $request->session()->get('access_token');
+        $headers = [
+            'Authorization' => "Bearer {$accessToken}",
+
+            'Content-Type' => 'application/json',
+        ];
+
+        $body = [
+            'quantity' => $request->input('quantity'),
+            'product_id' => $request->input('product_id'),
+            'size' => $request->input('size'),
+        ];
+
+        try {
+            $response = Http::withHeaders($headers)->post("http://localhost:3000/api/v1/checkout", $body);
+
+
+            if ($response->successful()) {
+
+                
+
+                return redirect()->back()->with('success', 'Product added to cart successfully!');
+            } else {
+              
+
+                if ($response->status() == 409) {
+                    return redirect()->back()->with('error', 'this product is already in your cart. please go to bag to edit the quantity');
+                }
+                return redirect()->back()->with('error', 'Failed to add product to cart. Please try again.');
+            }
+        } catch (Exception $e) {
+
+            return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
 }

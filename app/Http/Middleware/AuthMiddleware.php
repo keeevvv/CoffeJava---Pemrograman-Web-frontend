@@ -18,7 +18,7 @@ class AuthMiddleware
     {
 
         $accessToken = $request->session()->get('access_token');
-       
+
 
         if ($accessToken != null) {
             try {
@@ -40,7 +40,7 @@ class AuthMiddleware
         }
 
 
-    
+
         return $next($request);
     }
 
@@ -55,6 +55,7 @@ class AuthMiddleware
                 $data = $response->json();
                 return $data['access_token'];
             } else {
+                $response = Http::delete('http://localhost:3000/api/v1/logout');
                 $request->session()->flush();
                 return Inertia::location('/login');
             }
