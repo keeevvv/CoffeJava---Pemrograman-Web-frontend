@@ -53,9 +53,11 @@ export default function ProfilePage({ user }) {
                                     Shipping
                                 </button>
                             </Link>
-                            <button className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600">
-                                Settings
-                            </button>
+                            <Link href="/profile/setting">
+                                <button className="bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600">
+                                    Settings
+                                </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
