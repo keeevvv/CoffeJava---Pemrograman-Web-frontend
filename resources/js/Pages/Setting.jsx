@@ -9,6 +9,59 @@ export default function SettingPage({ user }) {
     const [confirmNewPassword, setConfirmNewPassword] = useState("");
     const { flash } = usePage().props;
 
+    const [profileImage, setProfileImage] = useState(user.profileImage);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+
+    const [nameField, setName] = useState(user.name);
+    const [email, setEmail] = useState(user.email);
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                setSelectedImage(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+        setProfileImage(e.target.files[0]);
+    };
+
+
+
+    // const handleImageChange = (e) => {
+    //     const file = e.target.files[0];
+    //     if (file) {
+    //         const reader = new FileReader();
+    //         reader.onload = (e) => {
+    //             setSelectedImage(e.target.result);
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
+
+    const handleProfileUpdate = (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+        formData.append("nama", nameField);
+        formData.append("email", email);
+        if (profileImage instanceof File) {
+            formData.append("profileImage", profileImage);
+        }
+
+        router.post("/profile/setting/edit", formData, {
+            forceFormData: true,
+            onSuccess: () => {
+                alert("Profile updated successfully!");
+            },
+            onError: (errors) => {
+                alert("Failed to update profile. Please try again.");
+            },
+        });
+    };
+
     const handleChangePassword = (event) => {
         event.preventDefault();
 
@@ -40,14 +93,19 @@ export default function SettingPage({ user }) {
                 <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
                     <div className="flex flex-col items-center">
                         <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500">
+                            <label htmlFor="profileImageInput" className="cursor-pointer">
                             <img
-                                src={
-                                    user.profileImage == null
-                                        ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
-                                        : user.profileImage
-                                }
+                                src={selectedImage || profileImage || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"}
                                 alt="Foto Profil"
                                 className="w-full h-full object-cover"
+                            />
+                            </label>
+                            <input
+                                id="profileImageInput"
+                                type="file"
+                                accept="image/*"
+                                className="hidden"
+                                onChange={handleImageChange}
                             />
                         </div>
                         <h2 className="mt-4 text-2xl font-semibold text-gray-800">
@@ -80,7 +138,7 @@ export default function SettingPage({ user }) {
                         </div>
 
                         {activeTab === "profile" && (
-                            <form className="space-y-4">
+                            <form className="space-y-4"  onSubmit={handleProfileUpdate}>
                                 <div>
                                     <label className="block text-gray-700 font-semibold mb-2">
                                         Name
@@ -88,6 +146,7 @@ export default function SettingPage({ user }) {
                                     <input
                                         type="text"
                                         defaultValue={user.name}
+                                        onChange={(e) => setName(e.target.value)}
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
@@ -98,6 +157,7 @@ export default function SettingPage({ user }) {
                                     <input
                                         type="email"
                                         defaultValue={user.email}
+                                        onChange={(e) => setEmail(e.target.value)}
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
