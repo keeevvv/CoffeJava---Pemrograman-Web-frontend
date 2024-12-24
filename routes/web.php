@@ -22,6 +22,7 @@ Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')
 Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');
 Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name('profile.setting');
 Route::post('/profile/setting/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
+Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile'])->name('profile.update');
 
 // Route::get('/login', function () {
 //     return inertia('Login');
