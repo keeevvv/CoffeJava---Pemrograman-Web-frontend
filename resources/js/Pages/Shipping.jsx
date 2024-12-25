@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import NavbarComponent from "../component/Navbar";
 
-export default function ShippingPage() {
+export default function ShippingPage(props) {
+    // return (
+    //     <>
+    //         <h1>Tes</h1>
+    //     </>
+    // );
     // State untuk filter
     const [filter, setFilter] = useState("All");
-
     // Data dummy untuk invoice dan status barang
     const shipments = [
         {
@@ -32,13 +36,11 @@ export default function ShippingPage() {
             date: "2024-12-04",
         },
     ];
-
     // Filter berdasarkan status
     const filteredShipments =
         filter === "All"
             ? shipments
             : shipments.filter((shipment) => shipment.status === filter);
-
     return (
         <>
             <NavbarComponent />
@@ -86,7 +88,6 @@ export default function ShippingPage() {
                         Diantar
                     </button>
                 </div>
-
                 {/* Daftar Shipment */}
                 <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filteredShipments.map((shipment) => (
@@ -121,7 +122,6 @@ export default function ShippingPage() {
                         </div>
                     ))}
                 </div>
-
                 {filteredShipments.length === 0 && (
                     <div className="mt-8 text-center text-gray-500">
                         Tidak ada pengiriman dengan status <b>{filter}</b>.

@@ -51,17 +51,23 @@ class ProfileController extends Controller
         if (!$accessToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
-        $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
-        return Inertia::render('Shipping', [
-            'user' => [
-                'id' => $decoded->id,
-                'name' => $decoded->name,
-                'email' => $decoded->email,
-                'profileImage' => $decoded->profileImage,
-                'tanggalLahir' => $decoded->tanggalLahir,
-            ],
-            'isLoggedIn' => $this->checkLoginStatus($request),
-        ]);
+
+        try {
+            $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+
+            return Inertia::render('Shipping', [
+                'user' => [
+                    'id' => $decoded->id,
+                    'name' => $decoded->name,
+                    'email' => $decoded->email,
+                    'profileImage' => $decoded->profileImage,
+                    'tanggalLahir' => $decoded->tanggalLahir,
+                ],
+                'isLoggedIn' => $this->checkLoginStatus($request),
+            ]);
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors(['msg' => 'Invalid token. Please login again.']);
+        }
     }
 
     public function showSetting(Request $request) {
@@ -114,7 +120,7 @@ class ProfileController extends Controller
             } else {
                 return redirect()->back()->with('error', $response->json()['msg'] ?? 'Failed to update password');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
