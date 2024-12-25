@@ -1,6 +1,7 @@
 <?php
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\FavoriteController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthMiddleware;
 
@@ -18,6 +19,13 @@ Route::get('/', [AuthController::class, 'showHome'])->name('home.show')->middlew
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::inertia('/profile/shipping', 'Shipping');
 
+Route::get('/favorites', [FavoriteController::class, 'loadFavorites'])->name('favorites.show')->middleware(AuthMiddleware::class);
+
+
+Route::post('/favorites/{id}', [FavoriteController::class, 'addFavorites'])->name('favorites.add')->middleware(AuthMiddleware::class);
+
+Route::delete('/favorites/{id}', [FavoriteController::class, 'deleteFavorites'])->name('favorites.delete')->middleware(AuthMiddleware::class);
+
 // Route::get('/login', function () {
 //     return inertia('Login');
 // });
@@ -25,4 +33,6 @@ Route::inertia('/profile/shipping', 'Shipping');
 // Route::get('/product/1', function () {
 //     return inertia('ProductDetail');
 // });
+
+
 
