@@ -42,7 +42,7 @@ export default function ShippingPage() {
     return (
         <>
             <NavbarComponent />
-            <div className="bg-gray-100 min-h-screen p-6">
+            <div className="bg-gray-100 min-h-screen p-6 mt-10">
                 {/* Filter Tombol */}
                 <div className="mt-6 flex justify-center space-x-4">
                     <button
