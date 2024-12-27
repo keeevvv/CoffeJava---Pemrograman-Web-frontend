@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthMiddleware;
 
@@ -32,6 +33,9 @@ Route::get('/favorites', [FavoriteController::class, 'loadFavorites'])->name('fa
 Route::post('/favorites/{id}', [FavoriteController::class, 'addFavorites'])->name('favorites.add')->middleware(AuthMiddleware::class);
 
 Route::delete('/favorites/{id}', [FavoriteController::class, 'deleteFavorites'])->name('favorites.delete')->middleware(AuthMiddleware::class);
+
+// //SHOP PAGE
+Route::get('/shop', [ShopController::class, 'openShopPage'])->name('shop.show');
 
 // Route::get('/login', function () {
 //     return inertia('Login');

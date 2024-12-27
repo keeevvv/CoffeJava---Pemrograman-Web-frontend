@@ -60,6 +60,7 @@ export default function NavbarComponent() {
                 <Navbar.Link href="/" active>
                     Home
                 </Navbar.Link>
+                <Navbar.Link href="/shop">Shop</Navbar.Link>
                 <Navbar.Link href="/about">About</Navbar.Link>
                 <Navbar.Link href="/services">Services</Navbar.Link>
                 <Navbar.Link href="/pricing">Pricing</Navbar.Link>
