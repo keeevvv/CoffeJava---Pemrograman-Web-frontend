@@ -34,11 +34,12 @@ class AuthController extends Controller
     {
         $isLoggedIn = $this->checkLoginStatus($request);
 
-        $accessToken = $request->session()->get('access_token');
+        $refreshToken = $request->session()->get('refresh_token');
 
-        if ($accessToken != null) {
+
+        if ($refreshToken != null) {
             try {
-                $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+                $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
 
                 return Inertia::render('Index', [
                     'user' => [
@@ -74,13 +75,14 @@ class AuthController extends Controller
 
 
         $isLoggedIn = $this->checkLoginStatus($request);
-        $accessToken = $request->session()->get('access_token');
+        $refreshToken = $request->session()->get('refresh_token');
 
 
-        if ($accessToken != null) {
+
+        if ($refreshToken != null) {
 
             try {
-                $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+                $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
                 return Inertia::render('ProductDetail', [
                     'user' => [
                         'id' => $decoded->id,
@@ -93,7 +95,6 @@ class AuthController extends Controller
                     'product' => $data
                 ]);
             } catch (\Throwable $th) {
-                //throw $th;
             }
         } else {
             return Inertia::render('ProductDetail', [
@@ -120,6 +121,7 @@ class AuthController extends Controller
 
 
             $request->session()->put('access_token', $tokens['accessToken']);
+            $request->session()->put('refresh_token', $tokens['refreshToken']);
 
 
             return Inertia::location('/');
@@ -156,11 +158,11 @@ class AuthController extends Controller
 
             if ($response->successful()) {
 
-                
+
 
                 return redirect()->back()->with('success', 'Product added to cart successfully!');
             } else {
-              
+
 
                 if ($response->status() == 409) {
                     return redirect()->back()->with('error', 'this product is already in your cart. please go to bag to edit the quantity');
