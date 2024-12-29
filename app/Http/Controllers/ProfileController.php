@@ -22,14 +22,14 @@ class ProfileController extends Controller
 
     public function show(Request $request)
     {
-        $accessToken = $request->session()->get('access_token');
+        $refreshToken = $request->session()->get('refresh_token');
 
-        if (!$accessToken) {
+        if (!$refreshToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
 
         try {
-            $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+            $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
 
             return Inertia::render('Profile', [
                 'user' => [
@@ -47,13 +47,14 @@ class ProfileController extends Controller
     }
 
     public function showShipping(Request $request) {
-        $accessToken = $request->session()->get('access_token');
-        if (!$accessToken) {
+        $refreshToken = $request->session()->get('refresh_token');
+
+        if (!$refreshToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
 
         try {
-            $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+            $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
 
             return Inertia::render('Shipping', [
                 'user' => [
@@ -71,11 +72,11 @@ class ProfileController extends Controller
     }
 
     public function showSetting(Request $request) {
-        $accessToken = $request->session()->get('access_token');
-        if (!$accessToken) {
+        $refreshToken = $request->session()->get('refresh_token');
+        if (!$refreshToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
-        $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+        $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
         return Inertia::render('Setting', [
             'user' => [
                 'id' => $decoded->id,
