@@ -16,6 +16,10 @@ export default {
             fontFamily: {
                 sans: ['Helvetica', 'Arial', 'sans-serif'],
             },
+            colors: {
+                NusantaraGold: '#DDA86B', 
+                NusantaraGoldLight: '#EBC69B',
+              },
         },
     },
     plugins: [flowbite.plugin()],
