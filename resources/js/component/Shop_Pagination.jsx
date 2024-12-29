@@ -1,4 +1,5 @@
 import { Inertia } from "@inertiajs/inertia";
+import { Link } from "@inertiajs/react";
 
 const ShopPagination = ({ pagination }) => {
     const { current_page, last_visible_page } = pagination;
@@ -27,12 +28,12 @@ const ShopPagination = ({ pagination }) => {
             <span>
                 Page {current_page} of {last_visible_page}
             </span>
-            <button
-                onClick={handleNext}
-                disabled={current_page === last_visible_page}
-            >
-                Next
-            </button>
+            
+
+            <Link
+                href={`/shop?page=${current_page + 1}`}
+                
+            >Next</Link>
         </div>
     );
 };

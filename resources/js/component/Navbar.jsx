@@ -7,6 +7,8 @@ import Logo from "../assets/images/logo.png";
 export default function NavbarComponent() {
     const { isLoggedIn, user } = usePage().props;
 
+    console.log(isLoggedIn);
+
     useEffect(() => {
         console.log();
     }, []);
@@ -23,7 +25,7 @@ export default function NavbarComponent() {
                 </span>
             </Navbar.Brand>
             <div className="flex md:order-2">
-                {isLoggedIn.isLoggedIn ? (
+                {isLoggedIn.isLoggedIn == true ? (
                     <Dropdown
                         arrowIcon={false}
                         inline

@@ -11,6 +11,8 @@ import PaymentComponent from "../component/Payment";
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
+import { router } from "@inertiajs/react";
+
 
 const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
     console.log("Products:", products);
@@ -18,6 +20,12 @@ const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
     console.log("Pagination:", pagination);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
+
+
+
+    const nextPage = ()=>{
+        router.visit("/")
+    }
 
     return (
         <div>

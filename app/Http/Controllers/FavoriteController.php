@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Exception;
@@ -34,14 +35,22 @@ class FavoriteController extends Controller
         return $accessToken;
     }
 
+
+
     public function checkLoginStatus(Request $request)
     {
-        return ['isLoggedIn' => $request->session()->has('access_token')];
+        $isLoggedIn = $request->session()->has('access_token');
+
+        return [
+            'isLoggedIn' => $isLoggedIn,
+        ];
     }
 
     public function loadFavorites(Request $request)
     {
+        $isLoggedIn = $this->checkLoginStatus($request);
         try {
+            $refreshToken = $request->session()->get('refresh_token');
             $token = $this->getToken($request);
             if (!$token) return redirect()->route('login');
 
@@ -57,15 +66,30 @@ class FavoriteController extends Controller
                 return redirect()->back()->with('error', 'Failed to load favorites');
             }
 
-            //yang diganti
-            return Inertia::render('Favorite', [
-                // 'user' => $this->getUserDataFromToken($token),
-                'auth'=> [
-                    'favorites' => $response->json(),
-                ]
-                // 'isLoggedIn' => true
-            ]);
+            if ($refreshToken != null) {
+                try {
+                    $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
 
+                    return Inertia::render('Favorite', [
+                        'user' => [
+                            'id' => $decoded->id,
+                            'name' => $decoded->name,
+                            'email' => $decoded->email,
+                            'profileImage' => $decoded->profileImage,
+                            'tanggalLahir' => $decoded->tanggalLahir,
+                        ],
+                        'isLoggedIn' => $isLoggedIn,
+                        'auth' => [
+                            'favorites' => $response->json(),
+                        ]
+                    ]);
+                } catch (Exception $e) {
+                }
+            } else {
+                return Inertia::render(('Index'), [
+                    'isLoggedIn' => false,
+                ]);
+            }
         } catch (Exception $e) {
             Log::error('Error in loadFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to load favorites');
@@ -95,7 +119,6 @@ class FavoriteController extends Controller
 
             return redirect()->route('favorites.index')
                 ->with('success', 'Item successfully added to favorites');
-
         } catch (Exception $e) {
             Log::error('Error in addFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to add favorite');
@@ -125,7 +148,6 @@ class FavoriteController extends Controller
 
             return redirect()->route('favorites.index')
                 ->with('success', 'Item successfully removed from favorites');
-
         } catch (Exception $e) {
             Log::error('Error in deleteFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to delete favorite');
