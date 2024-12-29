@@ -27,6 +27,10 @@ Route::post('/profile/setting/password', [ProfileController::class, 'updatePassw
 Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile'])->name('profile.update');
 Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');
 
+Route::get("/bag", function () {
+    return inertia("Test");
+});
+
 Route::get('/favorites', [FavoriteController::class, 'loadFavorites'])->name('favorites.show')->middleware(AuthMiddleware::class);
 
 
@@ -44,6 +48,3 @@ Route::get('/shop', [ShopController::class, 'openShopPage'])->name('shop.show');
 // Route::get('/product/1', function () {
 //     return inertia('ProductDetail');
 // });
-
-
-
