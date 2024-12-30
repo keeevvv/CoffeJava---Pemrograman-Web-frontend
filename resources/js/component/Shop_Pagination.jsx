@@ -22,18 +22,12 @@ const ShopPagination = ({ pagination }) => {
 
     return (
         <div className="flex justify-evenly">
-            <button onClick={handlePrevious} disabled={current_page === 1}>
-                Previous
-            </button>
+            <Link href={`/shop?page=${current_page - 1}`}>prev</Link>
             <span>
                 Page {current_page} of {last_visible_page}
             </span>
-            
 
-            <Link
-                href={`/shop?page=${current_page + 1}`}
-                
-            >Next</Link>
+            <Link href={`/shop?page=${current_page + 1}`}>Next</Link>
         </div>
     );
 };

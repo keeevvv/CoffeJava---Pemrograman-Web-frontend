@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
+import { CiHeart } from "react-icons/ci";
 
 const StickyCard = ({ price, stock, product_id }) => {
     console.log(stock);
     const [quantity, setQuantity] = useState(1);
-    const initialprice = Math.round(price) * 1000;
+    const initialprice = Math.round(price);
     const [totalPrice, setTotalPrice] = useState(initialprice);
+
+    const formatRupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 2, // Jumlah angka di belakang koma
+        }).format(number);
+    };
 
     const [erorSize, setErorSize] = useState(false);
 
@@ -96,17 +105,22 @@ const StickyCard = ({ price, stock, product_id }) => {
                     <span className="text-lg font-semibold text-gray-800">
                         Subtotal
                     </span>
-                    <span className="text-lg font-bold text-gray-900">
-                        Rp {totalPrice}
+                    <span className="text-base font-bold text-gray-900">
+                        {formatRupiah(totalPrice)}
                     </span>
                 </div>
 
-                <button
-                    onClick={handleAddToCart}
-                    className="w-full bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all"
-                >
-                    ADD TO CART
-                </button>
+                <div className="flex items-center">
+                    <button
+                        onClick={handleAddToCart}
+                        className="w-[90%] bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all"
+                    >
+                        ADD TO CART
+                    </button>
+                    <div>
+                        <CiHeart size={45} />
+                    </div>
+                </div>
             </div>
         </div>
     );

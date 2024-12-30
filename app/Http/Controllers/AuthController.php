@@ -69,8 +69,13 @@ class AuthController extends Controller
         if (!$response->successful()) {
             abort(404);
         }
+        
 
         $data = $response->json();
+       
+        $categoryId = $data["data"]["categories"][0]["category_id"];
+        $Categoryresponse = Http::get("http://localhost:3000/api/v1/products?categoryId={$categoryId}");
+        $categoryData = $Categoryresponse->json()["data"];
 
 
 
@@ -92,7 +97,8 @@ class AuthController extends Controller
                         'tanggalLahir' => $decoded->tanggalLahir,
                     ],
                     'isLoggedIn' => $isLoggedIn,
-                    'product' => $data
+                    'product' => $data,
+                    'similarCategoryProduct' => $categoryData
                 ]);
             } catch (\Throwable $th) {
             }

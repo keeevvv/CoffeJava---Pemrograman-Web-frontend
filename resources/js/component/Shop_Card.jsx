@@ -2,6 +2,13 @@ import { Card } from "flowbite-react";
 import logo from "../assets/images/logo.png";
 
 export default function ShopCardComponent({ product }) {
+    const formatRupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 2, // Jumlah angka di belakang koma
+        }).format(number);
+    };
     const ratingsCount = product.rattings ? product.rattings.length : 0;
 
     return (
@@ -39,8 +46,8 @@ export default function ShopCardComponent({ product }) {
                 </span>
             </div>
             <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                    ${product.price.toFixed(2)}
+                <span className="text-xl font-bold text-gray-900 dark:text-white">
+                    {formatRupiah(product.price.toFixed(2))}
                 </span>
                 <a
                     href={`/product/${product.product_id}`}
