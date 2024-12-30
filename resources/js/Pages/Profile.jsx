@@ -2,14 +2,13 @@ import NavbarComponent from "../component/Navbar";
 import { Link } from "@inertiajs/react";
 
 export default function ProfilePage({ user }) {
-    
     return (
         <div>
             <NavbarComponent />
             <div className="bg-gray-100 min-h-screen flex items-center justify-center">
                 <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
                     <div className="flex flex-col items-center">
-                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500">
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-NusantaraGoldLight">
                             <img
                                 src={
                                     user.profileImage == null
@@ -28,28 +27,28 @@ export default function ProfilePage({ user }) {
                     <div className="mt-6">
                         <ul className="space-y-4 text-gray-700">
                             <li>
-                                <span className="font-semibold">Email:</span>{" "}
+                                <span className="font-semibold">Nama:</span>{" "}
                                 <a
-                                    href={user.email}
-                                    className="text-blue-500 hover:underline"
+                                    href={user.name}
+                                    className="text-NusantaraGold hover:underline"
                                 >
-                                    {user.email || "pengguna@example.com"}
+                                    {user.name || "pengguna@example.com"}
                                 </a>
                             </li>
                             <li>
-                                <span className="font-semibold">Telepon:</span>{" "}
+                                <span className="font-semibold">Email:</span>{" "}
                                 <a
-                                    href={user.phone || "#"}
-                                    className="text-blue-500 hover:underline"
+                                    href={user.email || "#"}
+                                    className="text-NusantaraGold hover:underline"
                                 >
-                                    {user.phone || "Tidak tersedia"}
+                                    {user.email || "Tidak tersedia"}
                                 </a>
                             </li>
                         </ul>
 
                         <div className="mt-8 flex justify-between">
                             <Link href="/profile/orders">
-                                <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
+                                <button className="bg-NusantaraGold text-white px-4 py-2 rounded-lg shadow-md hover:bg-NusantaraGoldDark">
                                     Order
                                 </button>
                             </Link>
