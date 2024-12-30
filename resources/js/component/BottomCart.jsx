@@ -3,7 +3,7 @@ import { AiFillHeart } from "react-icons/ai"; // Importing a heart icon from rea
 import { router } from "@inertiajs/react";
 import toast from "react-hot-toast";
 
-const BottomCart = ({ product_id, isAddedFavorite, flash }) => {
+const BottomCart = ({ product_id, isAddedFavorite, flash, selectedStock }) => {
     const [isFavorite, setIsFavorite] = useState(isAddedFavorite);
     const handleAddFavorite = () => {
         if (!isFavorite) {
@@ -36,11 +36,28 @@ const BottomCart = ({ product_id, isAddedFavorite, flash }) => {
             }
         }
     }, []);
-   
+
+    const handleAddToCart = () => {
+        if (selectedStock === undefined) {
+            alert("undefinasdsaded");
+        } else {
+            router.visit("/addToCart", {
+                method: "post",
+                data: {
+                    product_id: product_id,
+                    quantity: 1,
+                    size: selectedStock,
+                },
+            });
+        }
+    };
 
     return (
         <div className="fixed w-full h-14 inset-x-0 bottom-0 flex items-center ml-2 z-50 lg:hidden">
-            <button className="flex items-center justify-center bg-emerald-400 text-white py-2 rounded w-full">
+            <button
+                onClick={handleAddToCart}
+                className="flex items-center justify-center bg-emerald-400 text-white py-2 rounded w-full"
+            >
                 <span className="text-center">Masukkan ke Tas</span>
             </button>
             <button
