@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\ShopController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthMiddleware;
 
@@ -24,11 +25,18 @@ Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->nam
 Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name('profile.setting');
 Route::post('/profile/setting/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile'])->name('profile.update');
-Route::inertia('/profile/shipping', 'Shipping');
+Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');
+
+Route::get("/bag", function () {
+    return inertia("Test");
+});
 
 Route::get('/favorites', [FavoriteController::class, 'loadFavorites'])->name('favorites.show')->middleware(AuthMiddleware::class);
 Route::post('/addToFavorites', [FavoriteController::class, 'addFavorites'])->name('favorites.add')->middleware(AuthMiddleware::class);
 Route::delete('/favorites/{id}', [FavoriteController::class, 'deleteFavorites'])->name('favorites.delete')->middleware(AuthMiddleware::class);
+
+// //SHOP PAGE
+Route::get('/shop', [ShopController::class, 'openShopPage'])->name('shop.show');
 
 // Route::get('/login', function () {
 //     return inertia('Login');
@@ -37,6 +45,3 @@ Route::delete('/favorites/{id}', [FavoriteController::class, 'deleteFavorites'])
 // Route::get('/product/1', function () {
 //     return inertia('ProductDetail');
 // });
-
-
-

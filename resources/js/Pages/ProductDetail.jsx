@@ -7,13 +7,23 @@ import HorizontalCardList, { CardList } from "../component/CardList";
 import ProductProfile from "../component/ProductProfile";
 import StickyCard from "../component/StickyCard";
 import FooterLanding from "../component/FooterSection";
-import { router, usePage } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import ShopCardComponent from "../component/Shop_Card";
 
 const ProductDetail = () => {
-    const { product, flash } = usePage().props;
+    const { product, flash, similarCategoryProduct,isAddedFavorite } = usePage().props;
+    console.log(similarCategoryProduct);
     const [quantity, setQuantity] = useState(1);
     const [showError, setShowError] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+
+    const formatRupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 2, // Jumlah angka di belakang koma
+        }).format(number);
+    };
 
     useEffect(() => {
         if (flash?.error) {
@@ -34,7 +44,6 @@ const ProductDetail = () => {
         }
     }, []);
 
-    console.log(flash);
 
 
     return (
@@ -42,11 +51,11 @@ const ProductDetail = () => {
             <NavbarComponent />
             {showError && (
                 <div
-                    class="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
+                    className="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center p-4 mb-4 text-sm text-red-800 border border-red-300 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400 dark:border-red-800"
                     role="alert"
                 >
                     <svg
-                        class="flex-shrink-0 inline w-4 h-4 me-3"
+                        className="flex-shrink-0 inline w-4 h-4 me-3"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -61,11 +70,11 @@ const ProductDetail = () => {
 
             {showSuccess && (
                 <div
-                    class="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
+                    className="absolute top-20 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800"
                     role="alert"
                 >
                     <svg
-                        class="flex-shrink-0 inline w-4 h-4 me-3"
+                        className="flex-shrink-0 inline w-4 h-4 me-3"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -79,7 +88,7 @@ const ProductDetail = () => {
             <div className=" flex flex-col sm:text-xl lg:flex-row lg:ml-10 xl:ml-20   relative mt-10 lg:mt-16 ">
                 <div className="  h-96 lg:w-64  2xl:w-96 xl:w-[39rem] sm:w-96 sm:h-[29rem] bg-slate-950 my-5 mx-10 sm:mx-auto lg:mx-0  rounded-full">
                     <CarouselComponent
-                        images={product.data.images}
+                        images={product?.data?.images}
                         className=""
                     />
                 </div>
@@ -92,7 +101,7 @@ const ProductDetail = () => {
                         {product.data.brand}
                     </h3>
                     <h1 className="mt-4 text-lg sm:text-xl text-indigo-600 font-semibold">
-                        {product.data.price}
+                        {formatRupiah(product.data.price)}
                     </h1>
 
                     <h2 className="mt-6 text-xl font-medium">Description</h2>
@@ -100,16 +109,35 @@ const ProductDetail = () => {
                         {product.data.decs}
                     </p>
 
-                    <TabsComponent />
+                    <TabsComponent product={product} />
 
                     <StickyCard
                         price={product.data.price}
                         stock={product.data.stock}
                         product_id={product.data.product_id}
+                        message={flash}
+                        isAddedFavorite={isAddedFavorite}
+                        flash={flash?.success}
                     />
                 </div>
 
                 <BottomCart product_id={product.data.product_id} />
+            </div>
+            <div className="my-10 mx-10 text-lg sm:text-xl text-gray-600">
+                <h1>Maybe you like these similar product</h1>
+                <div className="flex overflow-x-auto space-x-7  ">
+                    {similarCategoryProduct?.map((product, index) => (
+                        <ShopCardComponent key={index} product={product} />
+                    ))}
+                </div>
+            </div>
+            <div className="my-10 mx-10 text-lg sm:text-xl text-gray-600">
+                <h1>Maybe you like these similar product</h1>
+                <div className="flex overflow-x-auto space-x-7  ">
+                    {similarCategoryProduct?.map((product, index) => (
+                        <ShopCardComponent key={index} product={product} />
+                    ))}
+                </div>
             </div>
 
             <FooterLanding />

@@ -7,6 +7,8 @@ import Logo from "../assets/images/logo.png";
 export default function NavbarComponent() {
     const { isLoggedIn, user } = usePage().props;
 
+    
+
     useEffect(() => {
         console.log();
     }, []);
@@ -23,14 +25,14 @@ export default function NavbarComponent() {
                 </span>
             </Navbar.Brand>
             <div className="flex md:order-2">
-                {isLoggedIn.isLoggedIn ? (
+                {isLoggedIn.isLoggedIn == true ? (
                     <Dropdown
                         arrowIcon={false}
                         inline
                         label={
                             <Avatar
                                 alt="User settings"
-                                img="https://i.pinimg.com/736x/89/30/f7/8930f79f497e6b09703985ad3e844708.jpg"
+                                img={user?.profileImage}
                                 rounded
                             />
                         }
@@ -60,6 +62,7 @@ export default function NavbarComponent() {
                 <Navbar.Link href="/" active>
                     Home
                 </Navbar.Link>
+                <Navbar.Link href="/shop">Shop</Navbar.Link>
                 <Navbar.Link href="/about">About</Navbar.Link>
                 <Navbar.Link href="/services">Services</Navbar.Link>
                 <Navbar.Link href="/pricing">Pricing</Navbar.Link>
