@@ -12,7 +12,6 @@ export default function SettingPage({ user }) {
     const [profileImage, setProfileImage] = useState(user.profileImage);
     const [selectedImage, setSelectedImage] = useState(null);
 
-
     const [nameField, setName] = useState(user.name);
     const [email, setEmail] = useState(user.email);
 
@@ -27,8 +26,6 @@ export default function SettingPage({ user }) {
         }
         setProfileImage(e.target.files[0]);
     };
-
-
 
     // const handleImageChange = (e) => {
     //     const file = e.target.files[0];
@@ -65,40 +62,51 @@ export default function SettingPage({ user }) {
     const handleChangePassword = (event) => {
         event.preventDefault();
 
-        router.post("/profile/setting/password", {
-            id: user.id,
-            currentPassword,
-            newPassword,
-            confirmNewPassword,
-        }, {
-            onSuccess: () => {
-                alert("Password berhasil diperbarui!");
+        router.post(
+            "/profile/setting/password",
+            {
+                id: user.id,
+                currentPassword,
+                newPassword,
+                confirmNewPassword,
             },
-            onError: (errors) => {
-                if (errors.currentPassword) {
-                    alert("Password lama salah.");
-                } else if (errors.newPassword) {
-                    alert("Password baru tidak valid.");
-                } else {
-                    alert("Terjadi kesalahan. Silakan coba lagi.");
-                }
-            },
-        });
+            {
+                onSuccess: () => {
+                    alert("Password berhasil diperbarui!");
+                },
+                onError: (errors) => {
+                    if (errors.currentPassword) {
+                        alert("Password lama salah.");
+                    } else if (errors.newPassword) {
+                        alert("Password baru tidak valid.");
+                    } else {
+                        alert("Terjadi kesalahan. Silakan coba lagi.");
+                    }
+                },
+            }
+        );
     };
 
     return (
         <div>
             <NavbarComponent />
-            <div className="bg-gray-100 min-h-screen flex items-center justify-center">
+            <div className="bg-gray-100 min-h-screen flex items-center justify-center mt-10">
                 <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-md">
                     <div className="flex flex-col items-center">
-                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-blue-500">
-                            <label htmlFor="profileImageInput" className="cursor-pointer">
-                            <img
-                                src={selectedImage || profileImage || "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"}
-                                alt="Foto Profil"
-                                className="w-full h-full object-cover"
-                            />
+                        <div className="w-24 h-24 rounded-full overflow-hidden border-4 bg-NusantaraGoldDark">
+                            <label
+                                htmlFor="profileImageInput"
+                                className="cursor-pointer"
+                            >
+                                <img
+                                    src={
+                                        selectedImage ||
+                                        profileImage ||
+                                        "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                                    }
+                                    alt="Foto Profil"
+                                    className="w-full h-full object-cover"
+                                />
                             </label>
                             <input
                                 id="profileImageInput"
@@ -119,7 +127,7 @@ export default function SettingPage({ user }) {
                                 onClick={() => setActiveTab("profile")}
                                 className={`px-4 py-2 rounded-lg shadow-md ${
                                     activeTab === "profile"
-                                        ? "bg-blue-500 text-white"
+                                        ? "bg-NusantaraGoldDark text-white"
                                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                                 }`}
                             >
@@ -129,7 +137,7 @@ export default function SettingPage({ user }) {
                                 onClick={() => setActiveTab("password")}
                                 className={`px-4 py-2 rounded-lg shadow-md ${
                                     activeTab === "password"
-                                        ? "bg-blue-500 text-white"
+                                        ? "bg-NusantaraGoldDark text-white"
                                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                                 }`}
                             >
@@ -138,7 +146,10 @@ export default function SettingPage({ user }) {
                         </div>
 
                         {activeTab === "profile" && (
-                            <form className="space-y-4"  onSubmit={handleProfileUpdate}>
+                            <form
+                                className="space-y-4"
+                                onSubmit={handleProfileUpdate}
+                            >
                                 <div>
                                     <label className="block text-gray-700 font-semibold mb-2">
                                         Name
@@ -146,7 +157,9 @@ export default function SettingPage({ user }) {
                                     <input
                                         type="text"
                                         defaultValue={user.name}
-                                        onChange={(e) => setName(e.target.value)}
+                                        onChange={(e) =>
+                                            setName(e.target.value)
+                                        }
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
@@ -157,18 +170,23 @@ export default function SettingPage({ user }) {
                                     <input
                                         type="email"
                                         defaultValue={user.email}
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
-                                <button className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
+                                <button className="w-full bg-NusantaraGoldDark text-white px-4 py-2 rounded-lg shadow-md hover:bg-NusantaraGoldLight">
                                     Save Changes
                                 </button>
                             </form>
                         )}
 
                         {activeTab === "password" && (
-                            <form className="space-y-4" onSubmit={handleChangePassword}>
+                            <form
+                                className="space-y-4"
+                                onSubmit={handleChangePassword}
+                            >
                                 {flash.success && (
                                     <div className="mb-4 text-green-600 text-center">
                                         {flash.success}
@@ -187,7 +205,9 @@ export default function SettingPage({ user }) {
                                         type="password"
                                         placeholder="Enter current password"
                                         value={currentPassword}
-                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                        onChange={(e) =>
+                                            setCurrentPassword(e.target.value)
+                                        }
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
@@ -199,7 +219,9 @@ export default function SettingPage({ user }) {
                                         type="password"
                                         placeholder="Enter new password"
                                         value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        onChange={(e) =>
+                                            setNewPassword(e.target.value)
+                                        }
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
@@ -211,13 +233,17 @@ export default function SettingPage({ user }) {
                                         type="password"
                                         placeholder="Confirm new password"
                                         value={confirmNewPassword}
-                                        onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                        onChange={(e) =>
+                                            setConfirmNewPassword(
+                                                e.target.value
+                                            )
+                                        }
                                         className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
                                     />
                                 </div>
                                 <button
                                     type="submit"
-                                    className="w-full bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600"
+                                    className="w-full bg-NusantaraGoldDark text-white px-4 py-2 rounded-lg shadow-md hover:bg-NusantaraGoldLight"
                                 >
                                     Update Password
                                 </button>

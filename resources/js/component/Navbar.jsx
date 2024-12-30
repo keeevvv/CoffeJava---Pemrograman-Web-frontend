@@ -55,7 +55,9 @@ export default function NavbarComponent() {
                         <Link href="/profile/setting">
                             <Dropdown.Item>Settings</Dropdown.Item>
                         </Link>
-                        <Dropdown.Item>Earnings</Dropdown.Item>
+                        <Link href="/profile/orders">
+                            <Dropdown.Item>Orders</Dropdown.Item>
+                        </Link>
                         <Dropdown.Divider />
                         <Dropdown.Item>Sign out</Dropdown.Item>
                     </Dropdown>
