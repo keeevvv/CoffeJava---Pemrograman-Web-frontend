@@ -3,74 +3,83 @@ import Logo from "../assets/images/logo.png";
 
 export default function FooterLanding() {
     return (
-        <footer class="bg-gray-800 text-white py-10">
-            <div class="container mx-auto px-6">
-                <div class="flex flex-wrap justify-between items-center">
-                    <div class="w-full lg:w-1/3 p-4">
+        <footer className="bg-NusantaraGoldDark text-white py-10">
+            <div className="container mx-auto px-6">
+                <div className="flex flex-wrap justify-between items-center">
+                    <div className="w-full lg:w-1/3 p-4">
                         <img
                             src={Logo}
                             alt="Logo"
-                            class="w-40 h-auto mx-auto lg:mx-0"
+                            className="w-40 h-auto mx-auto lg:mx-0"
                         />
-                        <p class="text-center lg:text-left mt-4 text-sm">
+                        <p className="text-center lg:text-left mt-4 text-sm">
                             CoffeJava - Java in Your Cup, Code in Your Mind.
                         </p>
                     </div>
 
-                    <div class="w-full lg:w-1/3 p-4">
-                        <h3 class="text-lg font-semibold mb-4 text-center lg:text-left">
+                    <div className="w-full lg:w-1/3 p-4">
+                        <h3 className="text-lg font-semibold mb-4 text-center lg:text-left">
                             Navigasi
                         </h3>
-                        <ul class="space-y-2 text-sm">
+                        <ul className="space-y-2 text-sm">
                             <li>
-                                <Link href="/" class="hover:underline">
+                                <Link href="/" className="hover:underline">
                                     Beranda
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/about" class="hover:underline">
+                                <Link href="/about" className="hover:underline">
                                     Tentang Kami
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/product" class="hover:underline">
+                                <Link
+                                    href="/product"
+                                    className="hover:underline"
+                                >
                                     Produk
                                 </Link>
                             </li>
                             <li>
-                                <Link href="/contact" class="hover:underline">
+                                <Link
+                                    href="/contact"
+                                    className="hover:underline"
+                                >
                                     Hubungi Kami
                                 </Link>
                             </li>
                         </ul>
                     </div>
 
-                    <div class="w-full lg:w-1/3 p-4">
-                        <h3 class="text-lg font-semibold mb-4 text-center lg:text-left">
+                    <div className="w-full lg:w-1/3 p-4">
+                        <h3 className="text-lg font-semibold mb-4 text-center lg:text-left">
                             Kontak Kami
                         </h3>
-                        <p class="text-sm">
-                            <span class="font-bold">Alamat:</span> Jl.
+                        <p className="text-sm">
+                            <span className="font-bold">Alamat:</span> Jl.
                             Bojongsoang, Bandung, Indonesia
                         </p>
-                        <p class="text-sm">
-                            <span class="font-bold">Email:</span>
+                        <p className="text-sm">
+                            <span className="font-bold">Email:</span>
                             <a
                                 href="mailto:info@pesonaindonesia.com"
-                                class="hover:underline"
+                                className="hover:underline"
                             >
                                 info@enusantara.com
                             </a>
                         </p>
-                        <p class="text-sm">
-                            <span class="font-bold">Telepon:</span>
-                            <a href="tel:+62212345678" class="hover:underline">
+                        <p className="text-sm">
+                            <span className="font-bold">Telepon:</span>
+                            <a
+                                href="tel:+62212345678"
+                                className="hover:underline"
+                            >
                                 +62 897-8361-771
                             </a>
                         </p>
                     </div>
                 </div>
-                <div class="text-center mt-10 text-sm border-t border-gray-700 pt-4">
+                <div className="text-center mt-10 text-sm border-t border-gray-700 pt-4">
                     © 2024 CoffeJava. All rights reserved.
                 </div>
             </div>

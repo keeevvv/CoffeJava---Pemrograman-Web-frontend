@@ -2,7 +2,7 @@ import NavbarComponent from "../component/Navbar";
 import { Link } from "@inertiajs/react";
 
 export default function ProfilePage({ user }) {
-    console.log(user);
+    
     return (
         <div>
             <NavbarComponent />
