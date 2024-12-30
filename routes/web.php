@@ -27,10 +27,7 @@ Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile']
 Route::inertia('/profile/shipping', 'Shipping');
 
 Route::get('/favorites', [FavoriteController::class, 'loadFavorites'])->name('favorites.show')->middleware(AuthMiddleware::class);
-
-
-Route::post('/favorites/{id}', [FavoriteController::class, 'addFavorites'])->name('favorites.add')->middleware(AuthMiddleware::class);
-
+Route::post('/addToFavorites', [FavoriteController::class, 'addFavorites'])->name('favorites.add')->middleware(AuthMiddleware::class);
 Route::delete('/favorites/{id}', [FavoriteController::class, 'deleteFavorites'])->name('favorites.delete')->middleware(AuthMiddleware::class);
 
 // Route::get('/login', function () {

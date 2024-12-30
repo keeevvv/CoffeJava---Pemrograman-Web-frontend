@@ -36,7 +36,11 @@ class FavoriteController extends Controller
 
     public function checkLoginStatus(Request $request)
     {
-        return ['isLoggedIn' => $request->session()->has('access_token')];
+        $isLoggedIn = $request->session()->has('access_token');
+
+        return [
+            'isLoggedIn' => $isLoggedIn,
+        ];
     }
 
     public function loadFavorites(Request $request)
@@ -59,11 +63,13 @@ class FavoriteController extends Controller
 
             //yang diganti
             return Inertia::render('Favorite', [
-                // 'user' => $this->getUserDataFromToken($token),
+                'user' => $this->getUserDataFromToken($token),
                 'auth'=> [
                     'favorites' => $response->json(),
+                ],
+                'isLoggedIn' => [
+                    'isLoggedIn' => true
                 ]
-                // 'isLoggedIn' => true
             ]);
 
         } catch (Exception $e) {
@@ -72,18 +78,27 @@ class FavoriteController extends Controller
         }
     }
 
-    public function addFavorites(Request $request, $id)
+    public function addFavorites(Request $request)
     {
+
+        $body = [
+            'productId' => $request->input('productId'),
+        ];
+
         try {
             $token = $this->getToken($request);
             if (!$token) return redirect()->route('login');
 
+            Log::info('Data yang dikirim ke API:', [
+                'token' => $token,
+                'productId' => $request->input('productId')
+            ]);
+
+
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
-            ])->post('http://localhost:3000/api/v1/favorites', [
-                'productId' => $id
-            ]);
+            ])->post('http://localhost:3000/api/v1/favorites', $body);
 
             if (!$response->successful()) {
                 Log::error('Failed to add favorite', [
@@ -93,7 +108,7 @@ class FavoriteController extends Controller
                 return redirect()->back()->with('error', 'Failed to add to favorites');
             }
 
-            return redirect()->route('favorites.index')
+            return redirect()->back()
                 ->with('success', 'Item successfully added to favorites');
 
         } catch (Exception $e) {
@@ -111,9 +126,7 @@ class FavoriteController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
-            ])->delete("http://localhost:3000/api/v1/favorites", [
-                'productId' => $id
-            ]);
+            ])->delete("http://localhost:3000/api/v1/favorites/{$id}");
 
             if (!$response->successful()) {
                 Log::error('Failed to delete favorite', [
@@ -126,6 +139,14 @@ class FavoriteController extends Controller
             return redirect()->route('favorites.index')
                 ->with('success', 'Item successfully removed from favorites');
 
+            // return Inertia::render('Favorite', [
+            //     /// 'user' => $this->getUserDataFromToken($token),
+            //     'auth'=> [
+            //         'favorites' => $response->json(),
+            //     ]
+            //     // 'isLoggedIn' => true
+            // ])->with('success', 'Item successfully removed from favorites');
+
         } catch (Exception $e) {
             Log::error('Error in deleteFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to delete favorite');
@@ -134,10 +155,15 @@ class FavoriteController extends Controller
 }
 
 
-  // return Inertia::render('Favorite', [
-            //     /// 'user' => $this->getUserDataFromToken($token),
-            //     'auth'=> [
-            //         'favorites' => $response->json(),
-            //     ]
-            //     // 'isLoggedIn' => true
-            // ])->with('success', 'Item successfully removed from favorites');
+//   return Inertia::render('Favorite', [
+//                 /// 'user' => $this->getUserDataFromToken($token),
+//                 'auth'=> [
+//                     'favorites' => $response->json(),
+//                 ]
+//                 // 'isLoggedIn' => true
+//             ])->with('success', 'Item successfully removed from favorites');
+
+// 'pName' => $request->input('pName'),
+//             'images' => $request->input('images'),
+//             'price' => $request->input('price'),
+//             'desc' => $request->input('desc'),

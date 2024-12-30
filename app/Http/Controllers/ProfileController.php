@@ -22,14 +22,14 @@ class ProfileController extends Controller
 
     public function show(Request $request)
     {
-        $accessToken = $request->session()->get('access_token');
+        $refreshToken = $request->session()->get('refresh_token');
 
-        if (!$accessToken) {
+        if (!$refreshToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
 
         try {
-            $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+            $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
 
             return Inertia::render('Profile', [
                 'user' => [
@@ -47,29 +47,36 @@ class ProfileController extends Controller
     }
 
     public function showShipping(Request $request) {
-        $accessToken = $request->session()->get('access_token');
-        if (!$accessToken) {
+        $refreshToken = $request->session()->get('refresh_token');
+
+        if (!$refreshToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
-        $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
-        return Inertia::render('Shipping', [
-            'user' => [
-                'id' => $decoded->id,
-                'name' => $decoded->name,
-                'email' => $decoded->email,
-                'profileImage' => $decoded->profileImage,
-                'tanggalLahir' => $decoded->tanggalLahir,
-            ],
-            'isLoggedIn' => $this->checkLoginStatus($request),
-        ]);
+
+        try {
+            $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+
+            return Inertia::render('Shipping', [
+                'user' => [
+                    'id' => $decoded->id,
+                    'name' => $decoded->name,
+                    'email' => $decoded->email,
+                    'profileImage' => $decoded->profileImage,
+                    'tanggalLahir' => $decoded->tanggalLahir,
+                ],
+                'isLoggedIn' => $this->checkLoginStatus($request),
+            ]);
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors(['msg' => 'Invalid token. Please login again.']);
+        }
     }
 
     public function showSetting(Request $request) {
-        $accessToken = $request->session()->get('access_token');
-        if (!$accessToken) {
+        $refreshToken = $request->session()->get('refresh_token');
+        if (!$refreshToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
-        $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+        $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
         return Inertia::render('Setting', [
             'user' => [
                 'id' => $decoded->id,
@@ -114,7 +121,7 @@ class ProfileController extends Controller
             } else {
                 return redirect()->back()->with('error', $response->json()['msg'] ?? 'Failed to update password');
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
         }
     }
@@ -255,7 +262,4 @@ class ProfileController extends Controller
             return redirect('/login')->withErrors(['msg' => 'An unexpected error occurred. Please login again.']);
         }
     }
-
-
-
 }

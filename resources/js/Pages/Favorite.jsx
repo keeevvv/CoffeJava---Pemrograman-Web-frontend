@@ -1,21 +1,23 @@
 import React, { useState } from 'react';
 import { Head, usePage } from '@inertiajs/react';
-import { Inertia } from '@inertiajs/inertia';
+import NavbarComponent from "../component/Navbar";
+import FooterLanding from "../component/FooterSection";
 import { router } from '@inertiajs/react';
 import toast, { Toaster } from 'react-hot-toast';
 
 const Favorite = () => {
-  const { auth } = usePage().props;
-  const [isLoading, setIsLoading] = useState(false);
-  const [favorites, setFavorites] = useState(auth?.favorites || []);
+  const { auth } = usePage().props
+  const [isLoading, setIsLoading] = useState(false)
+  const [favorites, setFavorites] = useState(auth?.favorites || [])
 
   if (!auth?.favorites || auth.favorites.length === 0) {
     return (
       <>
         <Toaster position="top-right" />
-        <Head title="My Favorites" />
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">My Favorites</h1>
+        {/* <Head title="My Favorites" /> */}
+        <NavbarComponent />
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 mt-12">
+          {/* <h1 className="text-3xl font-bold text-gray-900 mb-6">My Favorites</h1> */}
           <div className="text-center py-12">
             <svg
               className="mx-auto h-12 w-12 text-gray-400 mb-4"
@@ -31,64 +33,52 @@ const Favorite = () => {
           </div>
         </div>
       </>
-    );
+    )
   }
 //   `/favorites/${id}`
 
-    const removeFavorite = (id) => {
-    setIsLoading(true);
-    const loadingToast = toast.loading('Removing item...');
+// console.log('product id: ', productId)
 
-    // Optimistic update - update UI dulu sebelum request selesai
+const removeFavorite = (id) => {
+    setIsLoading(true);
+    const loadingToast = toast.loading('Removing item...')
+
+    // Optimistic update
     setFavorites(prevFavorites =>
-        prevFavorites.filter(fav => fav.product?.product_id !== id)
+        prevFavorites.filter(fav => fav.favorite_id !== id)
     );
 
     router.delete(`/favorites/${id}`, {
-        preserveState: true, // Mencegah refresh seluruh state
-        preserveScroll: true, // Menjaga posisi scroll
-        data: {
-            productId: id
-        },
-        onSuccess: (page) => {
-            // Hanya update jika response dari server berbeda
-            if (page.props.favorites) {
-                setFavorites(page.props.favorites);
-            }
-
-            toast.success('Item removed from favorites');
-            setIsLoading(false);
-            toast.dismiss(loadingToast);
-            console.log('Current favorites before deletion:', favorites);
-            console.log('ID to delete:', id);
+        preserveScroll: true,
+        onSuccess: () => {
+            // Redirect akan ditangani oleh controller
+            toast.success('Item removed from favorites')
+            setIsLoading(false)
+            toast.dismiss(loadingToast)
         },
         onError: (errors) => {
-            // Rollback state jika gagal
-            if (auth?.favorites) {
-                setFavorites(auth.favorites);
-            }
-
-            console.error('Delete error:', errors);
-            toast.dismiss(loadingToast);
-            toast.error(errors.error || 'Failed to remove item');
+            setFavorites(auth?.favorites || [])
+            console.error('Delete error:', errors)
+            toast.dismiss(loadingToast)
+            toast.error(errors.error || 'Failed to remove item')
             setIsLoading(false);
         }
     });
-};
-
+}
 
 
 
   return (
     <>
       <Toaster position="top-right" />
-      <Head title="My Favorites" />
+      {/* <Head title="My Favorites" /> */}
+      <NavbarComponent />
 
-      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">My Favorites</h1>
+      <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 mt-12">
+        {/* <h1 className="text-3xl font-bold text-gray-900 mb-6">My Favorites</h1> */}
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {auth.favorites.map((favorite) => (
+          {favorites.map((favorite) => (
             <div
               key={favorite.favorite_id}
               className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden"
@@ -112,14 +102,14 @@ const Favorite = () => {
                   {favorite.product?.pName}
                 </h2>
                 <p className="text-lg text-indigo-600 font-semibold mb-2">
-                  ${favorite.product?.price}
+                  Rp.{(Math.round(favorite.product?.price) * 1000).toLocaleString('id-ID')}
                 </p>
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                   {favorite.product?.desc}
                 </p>
 
                 <button
-                  onClick={() => removeFavorite(favorite.product?.product_id)}
+                  onClick={() => removeFavorite(favorite.favorite_id)}
                   disabled={isLoading}
                   className={`flex items-center text-gray-400 hover:text-red-500 transition-colors ${
                     isLoading ? 'opacity-50 cursor-not-allowed' : ''
@@ -144,7 +134,7 @@ const Favorite = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
 export default Favorite;

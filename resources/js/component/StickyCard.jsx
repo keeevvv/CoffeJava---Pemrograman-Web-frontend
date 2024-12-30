@@ -1,11 +1,31 @@
+
 import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
+import { CiHeart } from "react-icons/ci";
+import { AiFillHeart } from "react-icons/ai";
 
-const StickyCard = ({ price, stock, product_id }) => {
-    console.log(stock);
+const StickyCard = ({
+    price,
+    stock,
+    product_id,
+    message,
+    isAddedFavorite,
+    flash,
+}) => {
+    console.log(flash, "asdsadas");
     const [quantity, setQuantity] = useState(1);
-    const initialprice = Math.round(price) * 1000;
+    const initialprice = Math.round(price);
     const [totalPrice, setTotalPrice] = useState(initialprice);
+
+    const [isFavorite, setIsFavorite] = useState(isAddedFavorite);
+
+    const formatRupiah = (number) => {
+        return new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+            minimumFractionDigits: 2, // Jumlah angka di belakang koma
+        }).format(number);
+    };
 
     const [erorSize, setErorSize] = useState(false);
 
@@ -27,6 +47,42 @@ const StickyCard = ({ price, stock, product_id }) => {
     useEffect(() => {
         setTotalPrice(quantity * initialprice);
     }, [quantity]);
+
+    useEffect(() => {
+        if (flash == "Product added to favorite successfully!") {
+            setIsFavorite(true);
+        } else {
+            if (flash == "Item successfully removed from favorites") {
+                setIsFavorite(false);
+            }
+        }
+    }, []);
+
+    const handleAddFavorite = () => {
+        console.log("Current isFavorite:", isFavorite)
+        console.log("Product ID:", product_id)
+
+        if (!isFavorite) {
+            router.visit("/addToFavorites", {
+                preserveState: true,
+                method: "post",
+                data: {
+                    productId: product_id
+                },
+            });
+            setIsFavorite(true)
+            console.log("Attempting to add to favorites")
+        } else {
+            router.visit(`/favorites/${product_id}`, {
+                method: "delete",
+                data: {
+                    productId: product_id
+                }
+            })
+            setIsFavorite(false)
+            console.log("Attempting to remove from favorites")
+        }
+    }
 
     const handleAddToCart = () => {
         if (selectedSize != -1) {
@@ -75,7 +131,7 @@ const StickyCard = ({ price, stock, product_id }) => {
                             onClick={() => {
                                 handleSelectSize(index);
                             }} // Mengatur ukuran yang dipilih
-                            className={`border rounded-md py-2 text-center font-medium 
+                            className={`border rounded-md py-2 text-center font-medium
                     transition-all ${
                         item.quantity == 0
                             ? "bg-none"
@@ -96,17 +152,29 @@ const StickyCard = ({ price, stock, product_id }) => {
                     <span className="text-lg font-semibold text-gray-800">
                         Subtotal
                     </span>
-                    <span className="text-lg font-bold text-gray-900">
-                        Rp {totalPrice}
+                    <span className="text-base font-bold text-gray-900">
+                        {formatRupiah(totalPrice)}
                     </span>
                 </div>
 
-                <button
-                    onClick={handleAddToCart}
-                    className="w-full bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all"
-                >
-                    ADD TO CART
-                </button>
+                <div className="flex items-center">
+                    <button
+                        onClick={handleAddToCart}
+                        className="w-[90%] bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all"
+                    >
+                        ADD TO CART
+                    </button>
+                    <button
+                        onClick={handleAddFavorite}
+                        className={
+                            isFavorite === true
+                                ? "text-red-400 "
+                                : "bg-transparent"
+                        }
+                    >
+                        <AiFillHeart size={45} className="mr-2 " />
+                    </button>
+                </div>
             </div>
         </div>
     );

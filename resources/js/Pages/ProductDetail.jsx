@@ -7,7 +7,7 @@ import HorizontalCardList, { CardList } from "../component/CardList";
 import ProductProfile from "../component/ProductProfile";
 import StickyCard from "../component/StickyCard";
 import FooterLanding from "../component/FooterSection";
-import { usePage } from "@inertiajs/react";
+import { router, usePage } from "@inertiajs/react";
 
 const ProductDetail = () => {
     const { product, flash } = usePage().props;
@@ -35,6 +35,7 @@ const ProductDetail = () => {
     }, []);
 
     console.log(flash);
+
 
     return (
         <div>
@@ -108,7 +109,7 @@ const ProductDetail = () => {
                     />
                 </div>
 
-                <BottomCart />
+                <BottomCart product_id={product.data.product_id} />
             </div>
 
             <FooterLanding />
