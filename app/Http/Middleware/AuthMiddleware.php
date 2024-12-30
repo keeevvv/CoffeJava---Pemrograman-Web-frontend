@@ -30,9 +30,7 @@ class AuthMiddleware
                 $accessToken = $this->requestNewToken($request);
 
                 if ($accessToken == null) {
-                    $logout = Http::withHeader([
-                        'Authorization' => 'Bearer ' . $refreshToken
-                    ])->delete('http://localhost:3000/api/v1/logout');
+                    
                     return Inertia::location('/login');
                 }
                 $request->session()->put('access_token', $accessToken);

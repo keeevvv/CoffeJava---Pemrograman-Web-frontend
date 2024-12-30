@@ -84,6 +84,11 @@ class FavoriteController extends Controller
                         ]
                     ]);
                 } catch (Exception $e) {
+                    $logout = Http::withHeader([
+                        'Authorization' => 'Bearer ' . $refreshToken
+                    ])->delete('http://localhost:3000/api/v1/logout');
+                    return Inertia::location('/login');
+                  
                 }
             } else {
                 return Inertia::render(('Index'), [

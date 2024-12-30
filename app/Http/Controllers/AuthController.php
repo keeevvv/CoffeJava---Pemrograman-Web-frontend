@@ -52,6 +52,8 @@ class AuthController extends Controller
                     'isLoggedIn' => $isLoggedIn,
                 ]);
             } catch (Exception $e) {
+                $request->session()->flush();
+                return Inertia::location('/');
             }
         } else {
             return Inertia::render(('Index'), [
@@ -167,7 +169,9 @@ class AuthController extends Controller
                     'similarCategoryProduct' => $categoryData,
                     'isAddedFavorite' => $isAddedFavorite
                 ]);
-            } catch (\Throwable $th) {
+            } catch (Exception $e) {
+                $request->session()->flush();
+                return Inertia::location("/product/{$id}");
             }
         } else {
             return Inertia::render('ProductDetail', [
