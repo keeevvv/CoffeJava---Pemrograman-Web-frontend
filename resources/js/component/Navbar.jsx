@@ -17,14 +17,9 @@ export default function NavbarComponent() {
             rounded
             className="bg-NusantaraGold fixed z-10 w-full top-0"
         >
-            <Navbar.Brand  href="/">
-                <div className=" w-10"> 
-                    <img
-                        src={Logo}
-                        sizes
-                        className="w-full"
-                        alt="Logo"
-                    />
+            <Navbar.Brand href="/">
+                <div className=" w-10">
+                    <img src={Logo} sizes className="w-full" alt="Logo" />
                 </div>
 
                 <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
@@ -39,7 +34,11 @@ export default function NavbarComponent() {
                         label={
                             <Avatar
                                 alt="User settings"
-                                img={user?.profileImage}
+                                img={
+                                    user.profileImage == null
+                                        ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                                        : user.profileImage
+                                }
                                 rounded
                             />
                         }
@@ -53,7 +52,9 @@ export default function NavbarComponent() {
                         <Link href="/profile">
                             <Dropdown.Item>Profile</Dropdown.Item>
                         </Link>
-                        <Dropdown.Item>Settings</Dropdown.Item>
+                        <Link href="/profile/setting">
+                            <Dropdown.Item>Settings</Dropdown.Item>
+                        </Link>
                         <Dropdown.Item>Earnings</Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item>Sign out</Dropdown.Item>
