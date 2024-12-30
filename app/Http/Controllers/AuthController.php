@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Support\Facades\Http;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -90,7 +91,44 @@ class AuthController extends Controller
             abort(500, 'Error requesting new access token');
         }
     }
+    public function getToken(Request $request)
+    {
+        $accessToken = $request->session()->get('access_token');
+        if (!$accessToken) {
+            return response()->json(['message' => 'Unauthorized Token'], 403);
+        }
+        return $accessToken;
+    }
 
+    public function deleteFavorites(Request $request, $id)
+    {
+
+        try {
+            $token = $this->getToken($request);
+            if (!$token) return redirect()->route('login');
+
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$token} ",
+                'Content-Type' => 'application/json',
+            ])->delete("http://localhost:3000/api/v1/favorites", [
+                'productId' => (int)$id
+            ]);
+
+            if (!$response->successful()) {
+
+                Log::error('Failed to delete favorite', [
+                    'status' => $response->status(),
+                    'body' => $response->body()
+                ]);
+                return redirect()->back()->with('error', 'Failed to delete from favorites');
+            }
+
+            return redirect()->back()->with('success', 'Item successfully removed from favorites');
+        } catch (Exception $e) {
+            Log::error('Error in deleteFavorites:', ['error' => $e->getMessage()]);
+            return redirect()->back()->with('error', 'Failed to delete favorite');
+        }
+    }
     public function showProductDetail(Request $request, $id)
     {
 

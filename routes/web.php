@@ -18,7 +18,7 @@ Route::get('/check-login', [AuthController::class, 'checkLogin']);
 Route::get('/product/{id}', [AuthController::class, 'showProductDetail'])->name('product.detail');
 Route::get('/', [AuthController::class, 'showHome'])->name('home.show');
 Route::post('/addToCart', [AuthController::class, 'addToCart'])->name('addToCart')->middleware(AuthMiddleware::class);
-
+Route::delete("/delete/favorite/{id}", [AuthController::class, 'deleteFavorites'])->middleware(AuthMiddleware::class);
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
 Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');

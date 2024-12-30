@@ -73,7 +73,7 @@ const StickyCard = ({
             setIsFavorite(true)
             console.log("Attempting to add to favorites")
         } else {
-            router.visit(`/favorites/${product_id}`, {
+            router.visit(`/delete/favorite/${product_id}`, {
                 method: "delete",
                 data: {
                     productId: product_id
