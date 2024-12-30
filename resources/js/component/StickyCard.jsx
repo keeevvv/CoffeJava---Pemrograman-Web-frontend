@@ -3,11 +3,20 @@ import { router } from "@inertiajs/react";
 import { CiHeart } from "react-icons/ci";
 import { AiFillHeart } from "react-icons/ai";
 
-const StickyCard = ({ price, stock, product_id, message, isAddedFavorite }) => {
-    console.log(stock);
+const StickyCard = ({
+    price,
+    stock,
+    product_id,
+    message,
+    isAddedFavorite,
+    flash,
+}) => {
+    console.log(flash, "asdsadas");
     const [quantity, setQuantity] = useState(1);
     const initialprice = Math.round(price);
     const [totalPrice, setTotalPrice] = useState(initialprice);
+
+    const [isFavorite, setIsFavorite] = useState(isAddedFavorite);
 
     const formatRupiah = (number) => {
         return new Intl.NumberFormat("id-ID", {
@@ -37,6 +46,28 @@ const StickyCard = ({ price, stock, product_id, message, isAddedFavorite }) => {
     useEffect(() => {
         setTotalPrice(quantity * initialprice);
     }, [quantity]);
+
+    useEffect(() => {
+        if (flash == "Product added to favorite successfully!") {
+            setIsFavorite(true);
+        } else {
+            if (flash == "Item successfully removed from favorites") {
+                setIsFavorite(false);
+            }
+        }
+    }, []);
+
+    const handleAddFavorite = () => {
+        if (isAddedFavorite === false) {
+            router.visit(`/favorites/${product_id}`, {
+                method: "post",
+            });
+        } else {
+            router.visit(`/favorites/${product_id}`, {
+                method: "delete",
+            });
+        }
+    };
 
     const handleAddToCart = () => {
         if (selectedSize != -1) {
@@ -118,8 +149,15 @@ const StickyCard = ({ price, stock, product_id, message, isAddedFavorite }) => {
                     >
                         ADD TO CART
                     </button>
-                    <button  className={isAddedFavorite === true ? "text-red-400 ":"bg-transparent"  }>
-                        <AiFillHeart size={45}  className="mr-2 " />
+                    <button
+                        onClick={handleAddFavorite}
+                        className={
+                            isFavorite === true
+                                ? "text-red-400 "
+                                : "bg-transparent"
+                        }
+                    >
+                        <AiFillHeart size={45} className="mr-2 " />
                     </button>
                 </div>
             </div>

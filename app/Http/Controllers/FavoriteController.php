@@ -106,7 +106,7 @@ class FavoriteController extends Controller
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
             ])->post('http://localhost:3000/api/v1/favorites', [
-                'productId' => $id
+                'productId' => (int)$id
             ]);
 
             if (!$response->successful()) {
@@ -117,7 +117,7 @@ class FavoriteController extends Controller
                 return redirect()->back()->with('error', 'Failed to add to favorites');
             }
 
-            return redirect()->back()->with('success', 'Product added to cart successfully!');
+            return redirect()->back()->with('success', 'Product added to favorite successfully!');
         } catch (Exception $e) {
             Log::error('Error in addFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to add favorite');
@@ -134,10 +134,11 @@ class FavoriteController extends Controller
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
             ])->delete("http://localhost:3000/api/v1/favorites", [
-                'productId' => $id
+                'productId' => (int)$id
             ]);
 
             if (!$response->successful()) {
+
                 Log::error('Failed to delete favorite', [
                     'status' => $response->status(),
                     'body' => $response->body()
@@ -145,8 +146,7 @@ class FavoriteController extends Controller
                 return redirect()->back()->with('error', 'Failed to delete from favorites');
             }
 
-            return redirect()->route('favorites.index')
-                ->with('success', 'Item successfully removed from favorites');
+            return redirect()->back()->with('success', 'Item successfully removed from favorites');
         } catch (Exception $e) {
             Log::error('Error in deleteFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to delete favorite');

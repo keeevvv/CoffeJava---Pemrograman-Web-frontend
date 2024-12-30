@@ -117,6 +117,7 @@ const ProductDetail = () => {
                         product_id={product.data.product_id}
                         message={flash}
                         isAddedFavorite={isAddedFavorite}
+                        flash={flash?.success}
                     />
                 </div>
 
