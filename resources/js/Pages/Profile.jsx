@@ -48,9 +48,9 @@ export default function ProfilePage({ user }) {
                         </ul>
 
                         <div className="mt-8 flex justify-between">
-                            <Link href="/profile/shipping">
+                            <Link href="/profile/orders">
                                 <button className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
-                                    Shipping
+                                    Order
                                 </button>
                             </Link>
                             <Link href="/profile/setting">

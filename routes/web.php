@@ -8,9 +8,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthMiddleware;
 
 
-
-
-
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login.show');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/check-login', [AuthController::class, 'checkLogin']);
@@ -21,11 +18,11 @@ Route::post('/addToCart', [AuthController::class, 'addToCart'])->name('addToCart
 
 
 Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');
 Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name('profile.setting');
 Route::post('/profile/setting/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
 Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile'])->name('profile.update');
-Route::get('/profile/shipping', [ProfileController::class, 'showShipping'])->name('profile.shipping');
+Route::get('/profile/orders', [ProfileController::class, 'getAllOrders'])->name('profile.order');
+
 
 Route::get("/bag", function () {
     return inertia("Test");

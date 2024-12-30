@@ -32,7 +32,11 @@ export default function NavbarComponent() {
                         label={
                             <Avatar
                                 alt="User settings"
-                                img="https://i.pinimg.com/736x/89/30/f7/8930f79f497e6b09703985ad3e844708.jpg"
+                                img={
+                                    user.profileImage == null
+                                        ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_640.png"
+                                        : user.profileImage
+                                }
                                 rounded
                             />
                         }
@@ -46,7 +50,9 @@ export default function NavbarComponent() {
                         <Link href="/profile">
                             <Dropdown.Item>Profile</Dropdown.Item>
                         </Link>
-                        <Dropdown.Item>Settings</Dropdown.Item>
+                        <Link href="/profile/setting">
+                            <Dropdown.Item>Settings</Dropdown.Item>
+                        </Link>
                         <Dropdown.Item>Earnings</Dropdown.Item>
                         <Dropdown.Divider />
                         <Dropdown.Item>Sign out</Dropdown.Item>
