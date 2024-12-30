@@ -39,8 +39,18 @@ class AuthMiddleware
             }
         } else {
 
+
             $request->session()->flush();
+            if ($request->method() === 'POST') {
+                // Menyimpan URL GET terakhir yang diakses sebelum POST
+                session(['url.intended' => url()->previous()]);
+            } else {
+                session(['url.intended' => url()->current()]);
+            }
+            
+        
             return Inertia::location('/login');
+            //return redirect()->intended('/');
         }
 
 

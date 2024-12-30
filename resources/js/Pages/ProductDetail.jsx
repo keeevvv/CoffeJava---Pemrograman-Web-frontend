@@ -11,7 +11,8 @@ import { usePage } from "@inertiajs/react";
 import ShopCardComponent from "../component/Shop_Card";
 
 const ProductDetail = () => {
-    const { product, flash, similarCategoryProduct } = usePage().props;
+    const { product, flash, similarCategoryProduct,isAddedFavorite } = usePage().props;
+    console.log(similarCategoryProduct);
     const [quantity, setQuantity] = useState(1);
     const [showError, setShowError] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
@@ -43,7 +44,7 @@ const ProductDetail = () => {
         }
     }, []);
 
-    console.log(flash);
+    
 
     return (
         <div>
@@ -114,6 +115,8 @@ const ProductDetail = () => {
                         price={product.data.price}
                         stock={product.data.stock}
                         product_id={product.data.product_id}
+                        message={flash}
+                        isAddedFavorite={isAddedFavorite}
                     />
                 </div>
 
@@ -122,7 +125,7 @@ const ProductDetail = () => {
             <div className="my-10 mx-10 text-lg sm:text-xl text-gray-600">
                 <h1>Maybe you like these similar product</h1>
                 <div className="flex overflow-x-auto space-x-7  ">
-                    {similarCategoryProduct.map((product, index) => (
+                    {similarCategoryProduct?.map((product, index) => (
                         <ShopCardComponent key={index} product={product} />
                     ))}
                 </div>

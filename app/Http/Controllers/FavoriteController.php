@@ -117,8 +117,7 @@ class FavoriteController extends Controller
                 return redirect()->back()->with('error', 'Failed to add to favorites');
             }
 
-            return redirect()->route('favorites.index')
-                ->with('success', 'Item successfully added to favorites');
+            return redirect()->back()->with('success', 'Product added to cart successfully!');
         } catch (Exception $e) {
             Log::error('Error in addFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to add favorite');

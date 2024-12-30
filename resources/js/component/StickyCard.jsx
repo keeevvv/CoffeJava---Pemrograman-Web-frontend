@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
 import { CiHeart } from "react-icons/ci";
+import { AiFillHeart } from "react-icons/ai";
 
-const StickyCard = ({ price, stock, product_id }) => {
+const StickyCard = ({ price, stock, product_id, message, isAddedFavorite }) => {
     console.log(stock);
     const [quantity, setQuantity] = useState(1);
     const initialprice = Math.round(price);
@@ -117,9 +118,9 @@ const StickyCard = ({ price, stock, product_id }) => {
                     >
                         ADD TO CART
                     </button>
-                    <div>
-                        <CiHeart size={45} />
-                    </div>
+                    <button  className={isAddedFavorite === true ? "text-red-400 ":"bg-transparent"  }>
+                        <AiFillHeart size={45}  className="mr-2 " />
+                    </button>
                 </div>
             </div>
         </div>

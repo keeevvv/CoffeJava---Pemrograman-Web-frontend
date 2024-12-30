@@ -60,6 +60,35 @@ class AuthController extends Controller
         }
     }
 
+    private function requestNewToken(Request $request)
+    {
+        $refreshToken = $request->session()->get('refresh_token');
+
+        try {
+
+
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$refreshToken}"
+            ])->get('http://localhost:3000/api/v1/token');
+
+            if ($response->successful()) {
+
+
+                $data = $response->json();
+
+                return $data['accessToken'];
+            } else {
+
+                $request->session()->flush();
+                return null;
+            }
+        } catch (Exception $e) {
+            $request->session()->flush();
+            return Inertia::location('/login');
+            abort(500, 'Error requesting new access token');
+        }
+    }
+
     public function showProductDetail(Request $request, $id)
     {
 
@@ -69,13 +98,15 @@ class AuthController extends Controller
         if (!$response->successful()) {
             abort(404);
         }
-        
+
 
         $data = $response->json();
-       
+
         $categoryId = $data["data"]["categories"][0]["category_id"];
         $Categoryresponse = Http::get("http://localhost:3000/api/v1/products?categoryId={$categoryId}");
         $categoryData = $Categoryresponse->json()["data"];
+
+
 
 
 
@@ -86,8 +117,43 @@ class AuthController extends Controller
 
         if ($refreshToken != null) {
 
+
             try {
                 $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+                $newAccesshToken = $this->requestNewToken($request);
+
+                if ($newAccesshToken == null) {
+                    return Inertia::render('ProductDetail', [
+
+                        'isLoggedIn' => $isLoggedIn,
+                        'product' => $data,
+                        'similarCategoryProduct' => $categoryData
+                    ]);
+                }
+
+
+                $responseFavorite = Http::withHeaders([
+                    'Authorization' => "Bearer {$newAccesshToken} ",
+                ])->get('http://localhost:3000/api/v1/favorites');
+                $isAddedFavorite =  false;
+
+                if ($responseFavorite->successful()) {
+                    $listFavorite = $responseFavorite->json();
+
+
+
+                    foreach ($listFavorite as $favorite) {
+
+                        if ($favorite["product_id"] === (int)$id) {
+                            $isAddedFavorite =  true;
+                            break;
+                        }
+                    }
+                }
+
+
+
+
                 return Inertia::render('ProductDetail', [
                     'user' => [
                         'id' => $decoded->id,
@@ -98,7 +164,8 @@ class AuthController extends Controller
                     ],
                     'isLoggedIn' => $isLoggedIn,
                     'product' => $data,
-                    'similarCategoryProduct' => $categoryData
+                    'similarCategoryProduct' => $categoryData,
+                    'isAddedFavorite' => $isAddedFavorite
                 ]);
             } catch (\Throwable $th) {
             }
@@ -106,7 +173,9 @@ class AuthController extends Controller
             return Inertia::render('ProductDetail', [
 
                 'isLoggedIn' => $isLoggedIn,
-                'product' => $data
+                'product' => $data,
+                'similarCategoryProduct' => $categoryData,
+                'isAddedFavorite' => false
             ]);
         }
     }
@@ -130,7 +199,7 @@ class AuthController extends Controller
             $request->session()->put('refresh_token', $tokens['refreshToken']);
 
 
-            return Inertia::location('/');
+            return redirect()->intended('/');
         } else {
 
             return Inertia::render('Login', [
