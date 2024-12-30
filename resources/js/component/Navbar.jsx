@@ -7,7 +7,7 @@ import Logo from "../assets/images/logo.png";
 export default function NavbarComponent() {
     const { isLoggedIn, user } = usePage().props;
 
-    console.log(isLoggedIn);
+    
 
     useEffect(() => {
         console.log();
@@ -32,7 +32,7 @@ export default function NavbarComponent() {
                         label={
                             <Avatar
                                 alt="User settings"
-                                img="https://i.pinimg.com/736x/89/30/f7/8930f79f497e6b09703985ad3e844708.jpg"
+                                img={user?.profileImage}
                                 rounded
                             />
                         }
