@@ -12,7 +12,7 @@ use Exception;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
+//kevin
 class AuthMiddleware
 {
     public function handle(Request $request, Closure $next)
