@@ -5,14 +5,10 @@ import ShopPagination from "../component/Shop_Pagination";
 import ShopListOfProducts from "../component/Shop_List_Products";
 import FooterLanding from "../component/FooterSection";
 
-import ReviewComponent from "../component/Review";
-import PaymentComponent from "../component/Payment";
-
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 import { router } from "@inertiajs/react";
-
 
 const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
     console.log("Products:", products);
@@ -21,11 +17,9 @@ const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
 
-
-
-    const nextPage = ()=>{
-        router.visit("/")
-    }
+    const nextPage = () => {
+        router.visit("/");
+    };
 
     return (
         <div>
@@ -35,32 +29,32 @@ const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
             <div className="sticky flex items-center top-[59px] bg-NusantaraGold w-full p-2">
                 {/* BAGIAN FILTER */}
                 <div className="hidden sm:flex justify-start gap-4 ">
-                    <button className="hover:bg-NusantaraGoldLight text-white px-4 py-2 rounded">
+                    <button className="hover:bg-NusantaraGoldDark text-white px-4 py-2 rounded">
                         Category
                     </button>
-                    <button className="hover:bg-NusantaraGoldLight text-white px-4 py-2 rounded">
-                        Sub-Category
+                    <button className="hover:bg-NusantaraGoldDark text-white px-4 py-2 rounded">
+                        SubCategory
                     </button>
-                    <button className="hover:bg-NusantaraGoldLight text-white px-4 py-2 rounded">
+                    <button className="hover:bg-NusantaraGoldDark text-white px-4 py-2 rounded">
                         Specific
                     </button>
                 </div>
                 <div className="sm:hidden relative">
                     <button
                         onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                        className="hover:bg-NusantaraGoldLight text-white px-4 py-2 w-full text-left rounded align-center"
+                        className="hover:bg-NusantaraGoldDark text-white px-4 py-2 w-full text-left rounded align-center"
                     >
                         {isDropdownOpen ? "Close Filters" : "Open Filters"}
                     </button>
                     {isDropdownOpen && (
                         <div className="absolute top-full left-0 w-full bg-NusantaraGold hover:bg-NusantaraGold-400 text-white shadow-lg">
-                            <button className="block w-full px-4 py-2 text-left hover:bg-NusantaraGoldLight">
+                            <button className="block w-full px-4 py-2 text-left hover:bg-NusantaraGoldDark">
                                 Category
                             </button>
-                            <button className="block w-full px-4 py-2 text-left hover:bg-NusantaraGoldLight">
-                                Sub-Category
+                            <button className="block w-full px-4 py-2 text-left hover:bg-NusantaraGoldDark">
+                                SubCategory
                             </button>
-                            <button className="block w-full px-4 py-2 text-left hover:bg-NusantaraGoldLight">
+                            <button className="block w-full px-4 py-2 text-left hover:bg-NusantaraGoldDark">
                                 Specific
                             </button>
                         </div>
@@ -81,10 +75,6 @@ const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
             <div>
                 <ShopListOfProducts products={products} />
                 <ShopPagination pagination={pagination} />
-
-                <ReviewComponent />
-
-                <PaymentComponent />
 
                 <FooterLanding />
             </div>

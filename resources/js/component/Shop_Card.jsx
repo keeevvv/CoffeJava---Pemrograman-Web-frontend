@@ -32,9 +32,9 @@ export default function ShopCardComponent({ product }) {
                     {product.pName}
                 </h5>
             </a>
-            <div className="mb-5 mt-2.5 flex items-center">
+            <div className="mb-2 mt-2.5 flex items-center">
                 <svg
-                    className="h-5 w-5 text-yellow-300"
+                    className="h-8 w-8 text-yellow-300"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                     xmlns="http://www.w3.org/2000/svg"
@@ -51,7 +51,7 @@ export default function ShopCardComponent({ product }) {
                 </span>
                 <a
                     href={`/product/${product.product_id}`}
-                    className="rounded-lg bg-NusantaraGold px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-cyan-800 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
+                    className="rounded-lg bg-NusantaraGold px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-NusantaraGoldDark focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
                 >
                     See more
                 </a>
