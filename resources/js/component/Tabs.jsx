@@ -52,8 +52,8 @@ export function TabsComponent({ product }) {
     const [curenTab, setCurentTab] = useState(tab1);
 
     return (
-        <div id="tabbar" className="w-full bg-emerald-400 rounded-md mt-4">
-            <div className="bg-emerald-500 flex justify-between px-8 text-2xl lg:text-base xl:text-xl rounded-md p-2">
+        <div id="tabbar" className="w-full bg-NusantaraGoldLight rounded-md mt-4">
+            <div className="bg-NusantaraGold flex justify-between px-8 text-2xl lg:text-base xl:text-xl rounded-md p-2">
                 <h1
                     className={`cursor-pointer ${
                         curenTab === tab1 ? "underline" : ""

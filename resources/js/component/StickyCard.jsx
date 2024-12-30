@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
 import { CiHeart } from "react-icons/ci";
@@ -49,8 +48,10 @@ const StickyCard = ({
     }, [quantity]);
 
     useEffect(() => {
-        if (flash == "Product added to favorite successfully!") {
+        
+        if (flash == "Item successfully added to favorites") {
             setIsFavorite(true);
+            
         } else {
             if (flash == "Item successfully removed from favorites") {
                 setIsFavorite(false);
@@ -59,30 +60,30 @@ const StickyCard = ({
     }, []);
 
     const handleAddFavorite = () => {
-        console.log("Current isFavorite:", isFavorite)
-        console.log("Product ID:", product_id)
+        console.log("Current isFavorite:", isFavorite);
+        console.log("Product ID:", product_id);
 
         if (!isFavorite) {
             router.visit("/addToFavorites", {
                 preserveState: true,
                 method: "post",
                 data: {
-                    productId: product_id
+                    productId: product_id,
                 },
             });
-            setIsFavorite(true)
-            console.log("Attempting to add to favorites")
+            setIsFavorite(true);
+            console.log("Attempting to add to favorites");
         } else {
             router.visit(`/delete/favorite/${product_id}`, {
                 method: "delete",
                 data: {
-                    productId: product_id
-                }
-            })
-            setIsFavorite(false)
-            console.log("Attempting to remove from favorites")
+                    productId: product_id,
+                },
+            });
+            setIsFavorite(false);
+            console.log("Attempting to remove from favorites");
         }
-    }
+    };
 
     const handleAddToCart = () => {
         if (selectedSize != -1) {
@@ -100,7 +101,7 @@ const StickyCard = ({
     };
     return (
         <div className="absolute right-4 bottom-0 h-full pt-7">
-            <div className="sticky top-20 hidden lg:block bg-emerald-400 p-5 rounded-lg shadow-lg lg:w-[290px] xl:w-80 transition-all font-sans">
+            <div className="sticky top-20 hidden lg:block bg-NusantaraGoldLight p-5 rounded-lg shadow-lg lg:w-[290px] xl:w-80 transition-all font-sans">
                 <div className="flex justify-between items-center mb-6">
                     <button
                         onClick={handleDecreaseQuantity}

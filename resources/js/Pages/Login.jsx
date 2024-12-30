@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
-import Logo from "../assets/images/logo.png";
+import Logo from "../assets/images/logo1.png";
 import { router } from "@inertiajs/react";
 export default function Login(props) {
     const [email, setEmail] = useState("");
@@ -34,7 +34,7 @@ export default function Login(props) {
                         <div>
                             <img
                                 src={Logo}
-                                className="mx-auto mix-blend-multiply mt-20"
+                                className="mx-auto  "
                             />
                         </div>
                         <form
@@ -83,7 +83,7 @@ export default function Login(props) {
                             </div>
                             <div className="mt-6 sm:mx-20 mx-10">
                                 <button
-                                    className="mt-5 tracking-wide font-semibold bg-green-400 text-white-500 w-full py-4 rounded-lg hover:bg-green-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                                    className="mt-5 tracking-wide font-semibold bg-NusantaraGoldLight text-white-500 w-full py-4 rounded-lg hover:bg-NusantaraGoldDark transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
                                     type="submit"
                                 >
                                     <svg
@@ -104,7 +104,7 @@ export default function Login(props) {
                             </div>
                         </form>
                     </div>
-                    <div class="flex-1 bg-green-100 text-center hidden lg:flex"></div>
+                    <div class="flex-1 bg-NusantaraGoldLight text-center hidden lg:flex"></div>
                 </div>
             </div>
         </div>

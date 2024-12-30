@@ -56,7 +56,7 @@ const BottomCart = ({ product_id, isAddedFavorite, flash, selectedStock }) => {
         <div className="fixed w-full h-14 inset-x-0 bottom-0 flex items-center ml-2 z-50 lg:hidden">
             <button
                 onClick={handleAddToCart}
-                className="flex items-center justify-center bg-emerald-400 text-white py-2 rounded w-full"
+                className="flex items-center justify-center bg-NusantaraGold text-white py-2 rounded w-full"
             >
                 <span className="text-center">Masukkan ke Tas</span>
             </button>
