@@ -11,6 +11,8 @@ use App\Http\Middleware\AuthMiddleware;
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login.show');
 Route::post('/login', [AuthController::class, 'login'])->name('login');
+//showRegister
+Route::get('/register', [AuthController::class, 'showRegister'])->name('showRegister.show');
 Route::get('/check-login', [AuthController::class, 'checkLogin']);
 
 Route::get('/product/{id}', [AuthController::class, 'showProductDetail'])->name('product.detail');
