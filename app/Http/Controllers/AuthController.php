@@ -260,6 +260,33 @@ class AuthController extends Controller
         }
     }
 
+    public function register(Request $request)
+    {
+
+
+        $response = Http::post('http://localhost:3000/api/v1/register', [
+            'nama' => $request->input('nama'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'confirmPassword' => $request->input('confirmPassword'),
+            'gender' => $request->input('gender'),
+            'tanggalLahir' => $request->input('tanggalLahir'),
+        ]);
+
+        if ($response->successful()) {
+
+
+
+
+            return redirect('/login')->with('success', 'Registration successful! Please log in.');
+        } else {
+
+            return redirect()->back()->withErrors([
+                'register' => $response->json()['msg'],
+            ]);
+        }
+    }
+
 
     public function addToCart(Request $request)
     {

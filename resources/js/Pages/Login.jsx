@@ -8,6 +8,10 @@ export default function Login(props) {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState(props.errors || {}); // Mengambil errors dari props jika ada
 
+   
+
+    
+
     // Menangkap error dari props, jika ada
     const errorMessage = errors?.login;
 
@@ -25,6 +29,7 @@ export default function Login(props) {
 
     return (
         <div>
+            
             <div className="">
                 <div className="min-h-screen bg-gray-100 lg:bg-transparent  text-gray-900 flex justify-center">
                     <div className="max-w-screen-xl m-0 sm:m-10  shadow  lg:shadow-none sm:rounded-lg flex justify-center flex-1max-w-screen-xl m-0 sm:m-10 bg-white sm:rounded-lg flex justify-center flex-1 flex-col">
@@ -33,10 +38,7 @@ export default function Login(props) {
                             Sign In
                         </h1>
                         <div>
-                            <img
-                                src={Logo}
-                                className="mx-auto  "
-                            />
+                            <img src={Logo} className="mx-auto  " />
                         </div>
                         <form
                             action=""
@@ -59,7 +61,7 @@ export default function Login(props) {
                                     onChange={(e) => setEmail(e.target.value)}
                                 ></input>
                             </div>
-                            
+
                             <div className="mb-4 sm:mx-20 mx-10">
                                 <label
                                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -83,9 +85,9 @@ export default function Login(props) {
                                     </div>
                                 )}
                             </div>
-                            
+
                             <div className="mt-6 sm:mx-20 mx-10">
-                            <p>
+                                <p>
                                     don't have an account?{" "}
                                     <Link
                                         href="/register"

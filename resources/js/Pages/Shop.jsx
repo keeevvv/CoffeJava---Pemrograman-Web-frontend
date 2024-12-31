@@ -9,7 +9,7 @@ import CategoryModal from "../component/Shop_Category_Modal";
 
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
 
 const ShopPage = ({
@@ -57,6 +57,14 @@ const ShopPage = ({
         console.log("Final URL Params:", params.toString());
         // Inertia.get(`/shop?${params.toString()}`);
     };
+
+    useEffect(() => {
+        if (selectedCategoryFilter != null) {
+            router.visit(`/shop?categoryId=${selectedCategoryFilter}`, {
+                method: "get",
+            });
+        }
+    }, []);
 
     return (
         <div>

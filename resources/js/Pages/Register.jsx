@@ -14,7 +14,7 @@ export default function Register(props) {
     const [errors, setErrors] = useState(props.errors || {}); // Mengambil errors dari props jika ada
 
     // Menangkap error dari props, jika ada
-    const errorMessage = errors?.login;
+    const errorMessage = errors?.register;
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -26,13 +26,17 @@ export default function Register(props) {
         console.log(gender);
         console.log(selectedDate);
 
-        // router.visit("/login", {
-        //     method: "post",
-        //     data: {
-        //         email,
-        //         password,
-        //     },
-        // });
+        router.visit("/register", {
+            method: "post",
+            data: {
+                nama: fullName,
+                email,
+                password,
+                confirmPassword,
+                gender,
+                tanggalLahir: selectedDate,
+            },
+        });
     };
 
     return (
@@ -141,7 +145,6 @@ export default function Register(props) {
                                         setPassword(e.target.value)
                                     }
                                 ></input>
-                               
                             </div>
                             <div className="mb-4 sm:mx-20 mx-10">
                                 <label
