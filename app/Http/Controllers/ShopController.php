@@ -40,11 +40,14 @@ class ShopController extends Controller
 
             $specificCategories = $this->fetchSpecificCategories();
           
-            // Ambil categoryId dari request
-        $categoryId = $request->query('categoryId');
+           
+            $categoryId = $request->query('categoryId');
+            $subcategoryId = $request->query('subcategoryId');
+            $specificSubcategoryId = $request->query('specificSubcategoryId');
+            $search = $request->query('search', ''); 
 
-        // Ambil produk berdasarkan categoryId
-        $products = $this->fetchProducts($request, $page, $categoryId); // Pass categoryId to fetchProducts
+            
+            $products = $this->fetchProducts($request, $page, $categoryId, $subcategoryId, $specificSubcategoryId, $search);
     
 
             $user = null;
@@ -83,13 +86,13 @@ class ShopController extends Controller
     }
 
     //fetch produk
-    private function fetchProducts(Request $request, $page, $categoryId = null)
+    private function fetchProducts(Request $request, $page, $categoryId = null, $subcategoryId = null, $specificSubcategoryId = null, $search = '')
 {
     $queryParams = [
-        'categoryId' => $categoryId, // Gunakan categoryId yang diterima
-        'subcategoryId' => $request->query('subcategoryId'),
-        'specificSubcategoryId' => $request->query('specificSubcategoryId'),
-        'search' => $request->query('search'),
+        'categoryId' => $categoryId,
+        'subcategoryId' => $subcategoryId,
+        'specificSubcategoryId' => $specificSubcategoryId,
+        'search' => $search,
         'limit' => $request->query('limit', 20),
         'page' => $page,
     ];

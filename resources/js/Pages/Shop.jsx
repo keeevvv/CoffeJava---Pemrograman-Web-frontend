@@ -31,23 +31,31 @@ const ShopPage = ({
     const [searchValue, setSearchValue] = useState("");
 
     const [showCategoryModal, setShowCategoryModal] = useState(false);
-    const [selectedCategoryFilter, setSelectedCategory] = useState(null);
+    const [selectedCategoryFilter, setSelectedCategory] = useState(null); //untuk filter
 
-    // const nextPage = () => {
-    //     router.visit("/");
-    // };
+    const [showSubCategoryModal, setShowSubCategoryModal] = useState(false);
+    const [selectedSubCategoryFilter, setSelectedSubCategory] = useState(null); //untuk filter
+
+    const [showSpecificCategoryModal, setShowSpecificCategoryModal] =
+        useState(false);
+    const [selectedSpecificCategoryFilter, setSelectedSpecificCategory] =
+        useState(null); //untuk filter
 
     const handleFilterChange = () => {
         const params = new URLSearchParams();
         if (selectedCategoryFilter) {
             params.append("categoryId", selectedCategoryFilter);
         }
-        // if (searchValue) {
-        //     params.append("search", searchValue);
-        // }
-        params.append("page", 1); // Reset ke halaman 1 saat filter diterapkan
+        if (selectedSubCategoryFilter) {
+            params.append("subCategoryId", selectedSubCategoryFilter);
+        }
+        if (selectedSpecificCategoryFilter) {
+            params.append("specificCategoryId", selectedSpecificCategoryFilter);
+        }
+        params.append("page", 1);
 
-        Inertia.get(`/shop?${params.toString()}`);
+        console.log("Final URL Params:", params.toString());
+        // Inertia.get(`/shop?${params.toString()}`);
     };
 
     return (
@@ -55,7 +63,7 @@ const ShopPage = ({
             <NavbarComponent />
             <ShopCarouselComponent />
             {/* BAGIAN SEARCH DAN FILTER */}
-            <div className="sticky flex items-center top-[59px] bg-NusantaraGold w-full p-2">
+            <div className="sticky flex items-center top-[58px] bg-NusantaraGold w-full p-2">
                 {/* BAGIAN FILTER */}
                 <div className="hidden sm:flex justify-start gap-4 ">
                     <button
@@ -117,7 +125,7 @@ const ShopPage = ({
                 isVisible={showCategoryModal}
                 onClose={() => setShowCategoryModal(false)}
                 categoriesData={categories}
-                apply={() => handleFilterChange()}
+                apply={handleFilterChange}
                 setSelectedCategory={setSelectedCategory}
             />
         </div>
