@@ -8,6 +8,7 @@ use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
@@ -263,6 +264,101 @@ class ProfileController extends Controller
         }
     }
 
+
+   public function getAllOrders(Request $request)
+    {
+        $accessToken = $request->session()->get('access_token');
+        $refreshToken = $request->session()->get('refresh_token');
+
+        // dd($accessToken);
+
+        if (!$accessToken) {
+            return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
+        }
+
+        try {
+
+            $decodedUser = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$accessToken}",
+            ])->get("http://localhost:3000/api/v1/order", null);
+
+            // dd($response);
+
+            if ($response->successful()) {
+                $orders = $response->json();
+
+                // dd($orders);
+
+                Log::info('Orders fetched successfully:', $orders);
+
+                return Inertia::render('Shipping', [
+                    'user' => [
+                        'id' => $decodedUser->id,
+                        'name' => $decodedUser->name,
+                        'email' => $decodedUser->email,
+                        'profileImage' => $decodedUser->profileImage,
+                        'tanggalLahir' => $decodedUser->tanggalLahir,
+                    ],
+                    'isLoggedIn' => $this->checkLoginStatus($request),
+                    'orders' => $orders,
+                ]);
+            } else {
+                return redirect()->back()->withErrors(['msg' => $response->json()['error'] ?? 'Failed to fetch orders.']);
+            }
+        } catch (\Firebase\JWT\ExpiredException $e) {
+            return redirect('/login')->withErrors(['msg' => 'Token has expired. Please login again.']);
+        } catch (\Exception $e) {
+            Log::error('Error fetching all orders: ' . $e->getMessage());
+            return redirect('/')->withErrors(['msg' => 'An unexpected error occurred.']);
+        }
+    }
+
+    // public function getOrderById(Request $request, $orderId)
+    // {
+    //     $accessToken = $request->session()->get('access_token');
+    //     $refreshToken = $request->session()->get('refresh_token');
+    //     if (!$accessToken) {
+    //         return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
+    //     }
+
+    //     try {
+    //         $decodedUser = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+    //         $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+    //         $userId = $decoded->id;
+
+    //         $response = Http::withHeaders([
+    //             'Authorization' => "Bearer {$accessToken}",
+    //             'Content-Type' => 'application/json',
+    //         ])->get("http://localhost:3000/api/v1/orders/{$orderId}", [
+    //             'user_id' => $userId,
+    //         ]);
+
+    //         if ($response->successful()) {
+    //             $order = $response->json();
+
+    //             return Inertia::render('OrderDetails', [
+    //                 'user' => [
+    //                     'id' => $decodedUser->id,
+    //                     'name' => $decodedUser->name,
+    //                     'email' => $decodedUser->email,
+    //                     'profileImage' => $decodedUser->profileImage,
+    //                     'tanggalLahir' => $decodedUser->tanggalLahir,
+    //                 ],
+    //                 'isLoggedIn' => $this->checkLoginStatus($request),
+    //                 'order' => $order,
+    //             ]);
+    //         } else {
+    //             return redirect()->back()->withErrors(['msg' => $response->json()['error'] ?? 'Order not found.']);
+    //         }
+    //     } catch (\Firebase\JWT\ExpiredException $e) {
+    //         return redirect('/login')->withErrors(['msg' => 'Token has expired. Please login again.']);
+    //     } catch (\Exception $e) {
+    //         Log::error('Error fetching order details: ' . $e->getMessage());
+    //         return redirect()->back()->withErrors(['msg' => 'An unexpected error occurred.']);
+    //     }
+    // }
 
 
 }

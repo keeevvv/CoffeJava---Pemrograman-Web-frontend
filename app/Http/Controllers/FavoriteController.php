@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Exception;
@@ -35,8 +34,6 @@ class FavoriteController extends Controller
         return $accessToken;
     }
 
-
-
     public function checkLoginStatus(Request $request)
     {
         $isLoggedIn = $request->session()->has('access_token');
@@ -48,9 +45,7 @@ class FavoriteController extends Controller
 
     public function loadFavorites(Request $request)
     {
-        $isLoggedIn = $this->checkLoginStatus($request);
         try {
-            $refreshToken = $request->session()->get('refresh_token');
             $token = $this->getToken($request);
             if (!$token) return redirect()->route('login');
 
@@ -66,48 +61,44 @@ class FavoriteController extends Controller
                 return redirect()->back()->with('error', 'Failed to load favorites');
             }
 
-            if ($refreshToken != null) {
-                try {
-                    $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+            //yang diganti
+            return Inertia::render('Favorite', [
+                'user' => $this->getUserDataFromToken($token),
+                'auth'=> [
+                    'favorites' => $response->json(),
+                ],
+                'isLoggedIn' => [
+                    'isLoggedIn' => true
+                ]
+            ]);
 
-                    return Inertia::render('Favorite', [
-                        'user' => [
-                            'id' => $decoded->id,
-                            'name' => $decoded->name,
-                            'email' => $decoded->email,
-                            'profileImage' => $decoded->profileImage,
-                            'tanggalLahir' => $decoded->tanggalLahir,
-                        ],
-                        'isLoggedIn' => $isLoggedIn,
-                        'auth' => [
-                            'favorites' => $response->json(),
-                        ]
-                    ]);
-                } catch (Exception $e) {
-                }
-            } else {
-                return Inertia::render(('Index'), [
-                    'isLoggedIn' => false,
-                ]);
-            }
         } catch (Exception $e) {
             Log::error('Error in loadFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to load favorites');
         }
     }
 
-    public function addFavorites(Request $request, $id)
+    public function addFavorites(Request $request)
     {
+
+        $body = [
+            'productId' => $request->input('productId'),
+        ];
+
         try {
             $token = $this->getToken($request);
             if (!$token) return redirect()->route('login');
 
+            Log::info('Data yang dikirim ke API:', [
+                'token' => $token,
+                'productId' => $request->input('productId')
+            ]);
+
+
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
-            ])->post('http://localhost:3000/api/v1/favorites', [
-                'productId' => $id
-            ]);
+            ])->post('http://localhost:3000/api/v1/favorites', $body);
 
             if (!$response->successful()) {
                 Log::error('Failed to add favorite', [
@@ -117,8 +108,9 @@ class FavoriteController extends Controller
                 return redirect()->back()->with('error', 'Failed to add to favorites');
             }
 
-            return redirect()->route('favorites.index')
+            return redirect()->back()
                 ->with('success', 'Item successfully added to favorites');
+
         } catch (Exception $e) {
             Log::error('Error in addFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to add favorite');
@@ -134,9 +126,7 @@ class FavoriteController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
-            ])->delete("http://localhost:3000/api/v1/favorites", [
-                'productId' => $id
-            ]);
+            ])->delete("http://localhost:3000/api/v1/favorites/{$id}");
 
             if (!$response->successful()) {
                 Log::error('Failed to delete favorite', [
@@ -148,6 +138,15 @@ class FavoriteController extends Controller
 
             return redirect()->route('favorites.index')
                 ->with('success', 'Item successfully removed from favorites');
+
+            // return Inertia::render('Favorite', [
+            //     /// 'user' => $this->getUserDataFromToken($token),
+            //     'auth'=> [
+            //         'favorites' => $response->json(),
+            //     ]
+            //     // 'isLoggedIn' => true
+            // ])->with('success', 'Item successfully removed from favorites');
+
         } catch (Exception $e) {
             Log::error('Error in deleteFavorites:', ['error' => $e->getMessage()]);
             return redirect()->back()->with('error', 'Failed to delete favorite');
@@ -156,10 +155,15 @@ class FavoriteController extends Controller
 }
 
 
-  // return Inertia::render('Favorite', [
-            //     /// 'user' => $this->getUserDataFromToken($token),
-            //     'auth'=> [
-            //         'favorites' => $response->json(),
-            //     ]
-            //     // 'isLoggedIn' => true
-            // ])->with('success', 'Item successfully removed from favorites');
+//   return Inertia::render('Favorite', [
+//                 /// 'user' => $this->getUserDataFromToken($token),
+//                 'auth'=> [
+//                     'favorites' => $response->json(),
+//                 ]
+//                 // 'isLoggedIn' => true
+//             ])->with('success', 'Item successfully removed from favorites');
+
+// 'pName' => $request->input('pName'),
+//             'images' => $request->input('images'),
+//             'price' => $request->input('price'),
+//             'desc' => $request->input('desc'),

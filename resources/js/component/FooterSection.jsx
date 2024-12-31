@@ -3,7 +3,7 @@ import Logo from "../assets/images/logo.png";
 
 export default function FooterLanding() {
     return (
-        <footer className="bg-gray-800 text-white py-10">
+        <footer className="bg-NusantaraGoldDark text-white py-10">
             <div className="container mx-auto px-6">
                 <div className="flex flex-wrap justify-between items-center">
                     <div className="w-full lg:w-1/3 p-4">

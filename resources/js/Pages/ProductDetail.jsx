@@ -11,11 +11,18 @@ import { usePage } from "@inertiajs/react";
 import ShopCardComponent from "../component/Shop_Card";
 
 const ProductDetail = () => {
-    const { product, flash, similarCategoryProduct } = usePage().props;
+    const { product, flash, similarCategoryProduct, isAddedFavorite } =
+        usePage().props;
+    console.log(similarCategoryProduct);
     const [quantity, setQuantity] = useState(1);
     const [showError, setShowError] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
+    const [selectedSize, setSelectedSize] = useState(-1);
 
+    const listStock = product.data.stock;
+    const handleSelectSize = (index) => {
+        setSelectedSize(index);
+    };
     const formatRupiah = (number) => {
         return new Intl.NumberFormat("id-ID", {
             style: "currency",
@@ -25,6 +32,7 @@ const ProductDetail = () => {
     };
 
     useEffect(() => {
+        
         if (flash?.error) {
             setShowError(true);
 
@@ -35,15 +43,15 @@ const ProductDetail = () => {
 
             return () => clearTimeout(timer); // Cleanup timer
         } else if (flash?.success) {
+          
+
             setShowSuccess(true);
             const timer = setTimeout(() => {
                 setShowSuccess(false);
             }, 2000);
             return () => clearTimeout(timer);
         }
-    }, []);
-
-    console.log(flash);
+    }, [flash?.error || flash?.success]);
 
     return (
         <div>
@@ -103,6 +111,27 @@ const ProductDetail = () => {
                         {formatRupiah(product.data.price)}
                     </h1>
 
+                    <div className="grid grid-cols-4 gap-3 mb-6 lg:hidden">
+                        {listStock?.map((item, index) => (
+                            <button
+                                key={index}
+                                onClick={() => {
+                                    handleSelectSize(index);
+                                }} // Mengatur ukuran yang dipilih
+                                className={`border rounded-md py-2 text-center font-medium
+                    transition-all ${
+                        item.quantity == 0
+                            ? "bg-none"
+                            : selectedSize === index
+                            ? "bg-gray-900 text-white" // Warna ketika dipilih
+                            : "text-gray-800 hover:bg-gray-900 hover:text-white" // Warna default
+                    }`}
+                            >
+                                {item.size}
+                            </button>
+                        ))}
+                    </div>
+
                     <h2 className="mt-6 text-xl font-medium">Description</h2>
                     <p className="lg:text-base xl:text-xl mt-2 text-justify text-gray-700 leading-relaxed ">
                         {product.data.decs}
@@ -114,15 +143,21 @@ const ProductDetail = () => {
                         price={product.data.price}
                         stock={product.data.stock}
                         product_id={product.data.product_id}
+                        message={flash}
+                        isAddedFavorite={isAddedFavorite}
+                        flash={flash?.success}
                     />
                 </div>
 
-                <BottomCart />
+                <BottomCart
+                    product_id={product.data.product_id}
+                    selectedStock={listStock[selectedSize]?.size}
+                />
             </div>
             <div className="my-10 mx-10 text-lg sm:text-xl text-gray-600">
                 <h1>Maybe you like these similar product</h1>
                 <div className="flex overflow-x-auto space-x-7  ">
-                    {similarCategoryProduct.map((product, index) => (
+                    {similarCategoryProduct?.map((product, index) => (
                         <ShopCardComponent key={index} product={product} />
                     ))}
                 </div>

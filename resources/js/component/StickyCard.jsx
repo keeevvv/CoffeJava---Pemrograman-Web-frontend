@@ -1,12 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
 import { CiHeart } from "react-icons/ci";
+import { AiFillHeart } from "react-icons/ai";
 
-const StickyCard = ({ price, stock, product_id }) => {
-    console.log(stock);
+const StickyCard = ({
+    price,
+    stock,
+    product_id,
+    message,
+    isAddedFavorite,
+    flash,
+}) => {
+    console.log(flash, "asdsadas");
     const [quantity, setQuantity] = useState(1);
     const initialprice = Math.round(price);
     const [totalPrice, setTotalPrice] = useState(initialprice);
+
+    const [isFavorite, setIsFavorite] = useState(isAddedFavorite);
 
     const formatRupiah = (number) => {
         return new Intl.NumberFormat("id-ID", {
@@ -37,6 +47,44 @@ const StickyCard = ({ price, stock, product_id }) => {
         setTotalPrice(quantity * initialprice);
     }, [quantity]);
 
+    useEffect(() => {
+        
+        if (flash == "Item successfully added to favorites") {
+            setIsFavorite(true);
+            
+        } else {
+            if (flash == "Item successfully removed from favorites") {
+                setIsFavorite(false);
+            }
+        }
+    }, []);
+
+    const handleAddFavorite = () => {
+        console.log("Current isFavorite:", isFavorite);
+        console.log("Product ID:", product_id);
+
+        if (!isFavorite) {
+            router.visit("/addToFavorites", {
+                preserveState: true,
+                method: "post",
+                data: {
+                    productId: product_id,
+                },
+            });
+            setIsFavorite(true);
+            console.log("Attempting to add to favorites");
+        } else {
+            router.visit(`/delete/favorite/${product_id}`, {
+                method: "delete",
+                data: {
+                    productId: product_id,
+                },
+            });
+            setIsFavorite(false);
+            console.log("Attempting to remove from favorites");
+        }
+    };
+
     const handleAddToCart = () => {
         if (selectedSize != -1) {
             router.visit("/addToCart", {
@@ -53,7 +101,7 @@ const StickyCard = ({ price, stock, product_id }) => {
     };
     return (
         <div className="absolute right-4 bottom-0 h-full pt-7">
-            <div className="sticky top-20 hidden lg:block bg-emerald-400 p-5 rounded-lg shadow-lg lg:w-[290px] xl:w-80 transition-all font-sans">
+            <div className="sticky top-20 hidden lg:block bg-NusantaraGoldLight p-5 rounded-lg shadow-lg lg:w-[290px] xl:w-80 transition-all font-sans">
                 <div className="flex justify-between items-center mb-6">
                     <button
                         onClick={handleDecreaseQuantity}
@@ -84,7 +132,7 @@ const StickyCard = ({ price, stock, product_id }) => {
                             onClick={() => {
                                 handleSelectSize(index);
                             }} // Mengatur ukuran yang dipilih
-                            className={`border rounded-md py-2 text-center font-medium 
+                            className={`border rounded-md py-2 text-center font-medium
                     transition-all ${
                         item.quantity == 0
                             ? "bg-none"
@@ -117,9 +165,16 @@ const StickyCard = ({ price, stock, product_id }) => {
                     >
                         ADD TO CART
                     </button>
-                    <div>
-                        <CiHeart size={45} />
-                    </div>
+                    <button
+                        onClick={handleAddFavorite}
+                        className={
+                            isFavorite === true
+                                ? "text-red-400 "
+                                : "bg-transparent"
+                        }
+                    >
+                        <AiFillHeart size={45} className="mr-2 " />
+                    </button>
                 </div>
             </div>
         </div>

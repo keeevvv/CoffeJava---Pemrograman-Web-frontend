@@ -12,7 +12,7 @@ use Exception;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-
+//kevin
 class AuthMiddleware
 {
     public function handle(Request $request, Closure $next)
@@ -30,17 +30,25 @@ class AuthMiddleware
                 $accessToken = $this->requestNewToken($request);
 
                 if ($accessToken == null) {
-                    $logout = Http::withHeader([
-                        'Authorization' => 'Bearer ' . $refreshToken
-                    ])->delete('http://localhost:3000/api/v1/logout');
+
                     return Inertia::location('/login');
                 }
                 $request->session()->put('access_token', $accessToken);
             }
         } else {
 
+
             $request->session()->flush();
+            if ($request->method() === 'POST') {
+                // Menyimpan URL GET terakhir yang diakses sebelum POST
+                session(['url.intended' => url()->previous()]);
+            } else {
+                session(['url.intended' => url()->current()]);
+            }
+
+
             return Inertia::location('/login');
+            //return redirect()->intended('/');
         }
 
 
@@ -62,7 +70,7 @@ class AuthMiddleware
 
             if ($response->successful()) {
 
-               
+
                 $data = $response->json();
 
                 return $data['accessToken'];
