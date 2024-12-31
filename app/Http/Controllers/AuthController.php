@@ -22,6 +22,14 @@ class AuthController extends Controller
         ];
     }
 
+    public function showRegister(Request $request)
+    {
+        if ($request->session()->has('access_token')) {
+            return Inertia::location('/');
+        }
+        return Inertia::render('Register');
+    }
+
     public function showLogin(Request $request)
     {
 
