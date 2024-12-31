@@ -5,20 +5,49 @@ import ShopPagination from "../component/Shop_Pagination";
 import ShopListOfProducts from "../component/Shop_List_Products";
 import FooterLanding from "../component/FooterSection";
 
+import CategoryModal from "../component/Shop_Category_Modal";
+
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 import { router } from "@inertiajs/react";
 
-const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
-    console.log("Products:", products);
+const ShopPage = ({
+    user,
+    isLoggedIn,
+    products,
+    pagination,
+    categories,
+    subCategories,
+    specificCategories,
+}) => {
+    // console.log("Products:", products);
+    // console.log("Pagination:", pagination);
+    // console.log("categories:", categories);
+    // console.log("subCategories:", subCategories);
+    // console.log("specificCategories:", specificCategories);
 
-    console.log("Pagination:", pagination);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
 
-    const nextPage = () => {
-        router.visit("/");
+    const [showCategoryModal, setShowCategoryModal] = useState(false);
+    const [selectedCategoryFilter, setSelectedCategory] = useState(null);
+
+    // const nextPage = () => {
+    //     router.visit("/");
+    // };
+
+    const handleFilterChange = () => {
+        const params = new URLSearchParams();
+        if (selectedCategoryFilter) {
+            params.append("categoryId", selectedCategoryFilter);
+        }
+        // if (searchValue) {
+        //     params.append("search", searchValue);
+        // }
+        params.append("page", 1); // Reset ke halaman 1 saat filter diterapkan
+
+        Inertia.get(`/shop?${params.toString()}`);
     };
 
     return (
@@ -29,7 +58,10 @@ const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
             <div className="sticky flex items-center top-[59px] bg-NusantaraGold w-full p-2">
                 {/* BAGIAN FILTER */}
                 <div className="hidden sm:flex justify-start gap-4 ">
-                    <button className="hover:bg-NusantaraGoldDark text-white px-4 py-2 rounded">
+                    <button
+                        className="hover:bg-NusantaraGoldDark text-white px-4 py-2 rounded"
+                        onClick={() => setShowCategoryModal(true)}
+                    >
                         Category
                     </button>
                     <button className="hover:bg-NusantaraGoldDark text-white px-4 py-2 rounded">
@@ -74,10 +106,20 @@ const ShopPage = ({ user, products, pagination, isLoggedIn }) => {
 
             <div>
                 <ShopListOfProducts products={products} />
-                <ShopPagination pagination={pagination} />
+                <ShopPagination
+                    pagination={pagination}
+                    selectedCategoryFilter={selectedCategoryFilter}
+                />
 
                 <FooterLanding />
             </div>
+            <CategoryModal
+                isVisible={showCategoryModal}
+                onClose={() => setShowCategoryModal(false)}
+                categoriesData={categories}
+                apply={() => handleFilterChange()}
+                setSelectedCategory={setSelectedCategory}
+            />
         </div>
     );
 };
