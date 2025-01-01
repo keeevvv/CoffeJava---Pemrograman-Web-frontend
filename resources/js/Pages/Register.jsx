@@ -1,41 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { Inertia } from "@inertiajs/inertia";
 import Logo from "../assets/images/logo1.png";
-import { Link } from "@inertiajs/react";
 import { router } from "@inertiajs/react";
-export default function Login(props) {
+import { Link } from "@inertiajs/react";
+export default function Register(props) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [fullName, setFullName] = useState("");
+    const [gender, setGender] = useState("");
+    const [selectedDate, setSelectedDate] = useState("");
+
     const [errors, setErrors] = useState(props.errors || {}); // Mengambil errors dari props jika ada
 
-   
-
-    
-
     // Menangkap error dari props, jika ada
-    const errorMessage = errors?.login;
+    const errorMessage = errors?.register;
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        router.visit("/login", {
+        console.log(email);
+        console.log(password);
+        console.log(confirmPassword);
+        console.log(fullName);
+        console.log(gender);
+        console.log(selectedDate);
+
+        router.visit("/register", {
             method: "post",
             data: {
+                nama: fullName,
                 email,
                 password,
+                confirmPassword,
+                gender,
+                tanggalLahir: selectedDate,
             },
         });
     };
 
     return (
         <div>
-            
             <div className="">
                 <div className="min-h-screen bg-gray-100 lg:bg-transparent  text-gray-900 flex justify-center">
                     <div className="max-w-screen-xl m-0 sm:m-10  shadow  lg:shadow-none sm:rounded-lg flex justify-center flex-1max-w-screen-xl m-0 sm:m-10 bg-white sm:rounded-lg flex justify-center flex-1 flex-col">
                         <h1 className="title text-center font-bold text-4xl md:text-6xl">
                             {" "}
-                            Sign In
+                            Sign Up
                         </h1>
                         <div>
                             <img src={Logo} className="mx-auto  " />
@@ -61,7 +72,62 @@ export default function Login(props) {
                                     onChange={(e) => setEmail(e.target.value)}
                                 ></input>
                             </div>
+                            <div className="mb-4 mx-10 sm:mx-20">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2 "
+                                    for="fullname"
+                                >
+                                    Full Name
+                                </label>
+                                <input
+                                    className="w-full px-2 py-4 rounded-lg font-medium bg-gray-100 border  border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                    id="name"
+                                    type="text"
+                                    placeholder="rrq fahri"
+                                    required
+                                    onChange={(e) =>
+                                        setFullName(e.target.value)
+                                    }
+                                ></input>
+                            </div>
 
+                            <div className="mb-4 mx-10 sm:mx-20">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2 "
+                                    for="gender"
+                                >
+                                    Gender
+                                </label>
+                                <select
+                                    className="w-full px-2 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                    id="gender"
+                                    required
+                                    onChange={(e) => setGender(e.target.value)}
+                                >
+                                    <option value="" disabled selected>
+                                        Select Gender
+                                    </option>
+                                    <option value="male">Male</option>
+                                    <option value="female">Female</option>
+                                </select>
+                            </div>
+                            <div className="mb-4 mx-10 sm:mx-20">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2 "
+                                    for="birtDate"
+                                >
+                                    Birt Date
+                                </label>
+                                <input
+                                    className="w-full px-2 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                    id="date"
+                                    type="date"
+                                    required
+                                    onChange={(e) =>
+                                        setSelectedDate(e.target.value)
+                                    }
+                                />
+                            </div>
                             <div className="mb-4 sm:mx-20 mx-10">
                                 <label
                                     className="block text-gray-700 text-sm font-bold mb-2"
@@ -79,6 +145,24 @@ export default function Login(props) {
                                         setPassword(e.target.value)
                                     }
                                 ></input>
+                            </div>
+                            <div className="mb-4 sm:mx-20 mx-10">
+                                <label
+                                    className="block text-gray-700 text-sm font-bold mb-2"
+                                    for="confirmPassword"
+                                >
+                                    Confirm Password
+                                </label>
+                                <input
+                                    className="w-full px-2 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
+                                    id="confirmPassword"
+                                    type="password"
+                                    required
+                                    placeholder="*********"
+                                    onChange={(e) =>
+                                        setConfirmPassword(e.target.value)
+                                    }
+                                ></input>
                                 {errorMessage && (
                                     <div className="text-red-500 text-center m-4">
                                         {errorMessage}
@@ -88,12 +172,12 @@ export default function Login(props) {
 
                             <div className="mt-6 sm:mx-20 mx-10">
                                 <p>
-                                    don't have an account?{" "}
+                                    already have an account?{" "}
                                     <Link
-                                        href="/register"
+                                        href="/login"
                                         className="inline-flex items-center   text-sm font-medium text-center text-blue-500 hover:underline "
                                     >
-                                        Sing Up here
+                                        Login here
                                     </Link>
                                 </p>
                                 <button
@@ -113,7 +197,7 @@ export default function Login(props) {
                                         <path d="M20 8v6M23 11h-6" />
                                     </svg>
 
-                                    <span class="ml-">Sign In</span>
+                                    <span class="ml-">Sign Up</span>
                                 </button>
                             </div>
                         </form>

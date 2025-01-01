@@ -51,7 +51,7 @@ export default function ShopCardComponent({ product }) {
                 </span>
                 <a
                     href={`/product/${product.product_id}`}
-                    className="rounded-lg bg-NusantaraGold px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-NusantaraGoldDark focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
+                    className="rounded-lg bg-NusantaraGold px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-NusantaraGoldDark focus:outline-none focus:ring-4 focus:ring-NusantaraGoldLight dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
                 >
                     See more
                 </a>

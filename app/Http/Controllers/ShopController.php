@@ -29,64 +29,125 @@ class ShopController extends Controller
         $isLoggedIn = $this->checkLoginStatus($request);
         $refreshToken = $request->session()->get('refresh_token');
 
-        // Ambil produk dari API
+        if (!$isLoggedIn['isLoggedIn']) {
+            return redirect()->route('login');
+        }
+       
         try {
-            $queryParams = [
-                'categoryId' => $request->query('categoryId'),
-                'subcategoryId' => $request->query('subcategoryId'),
-                'specificSubcategoryId' => $request->query('specificSubcategoryId'),
-                'search' => $request->query('search'),
-                'limit' => $request->query('limit', 20), // Default 20
-                'page' => $request->query('page', 1),   // Default page 1
-            ];
+            $categories = $this->fetchCategories();
 
-            $response = Http::get("http://localhost:3000/api/v1/products?page={$page}", $queryParams);
+            $subCategories = $this->fetchSubCategories();
 
-            if ($response->successful()) {
-                $data = $response->json();
-                // Jika pengguna sudah login, dekode token dan ambil data pengguna
-                if ($refreshToken) {
-                    try {
-                        $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
-                        return Inertia::render('Shop', [
-                            'user' => [
-                                'id' => $decoded->id,
-                                'name' => $decoded->name,
-                                'email' => $decoded->email,
-                                'profileImage' => $decoded->profileImage,
-                                'tanggalLahir' => $decoded->tanggalLahir,
-                            ],
-                            'isLoggedIn' => $isLoggedIn,
-                            'products' => $data['data'] ?? [],
-                            'pagination' => $data['pagination'] ?? [],
-                        ]);
-                    } catch (\Exception $e) {
-                        return Inertia::render('Shop', [
-                            'isLoggedIn' => $isLoggedIn,
-                            'error' => 'Invalid token. Please login again.',
-                            'products' => $data['data'] ?? [],
-                            'pagination' => $data['pagination'] ?? [],
-                        ]);
-                    }
+            $specificCategories = $this->fetchSpecificCategories();
+          
+           
+            $categoryId = $request->query('categoryId');
+            $subcategoryId = $request->query('subcategoryId');
+            $specificSubcategoryId = $request->query('specificSubcategoryId');
+            $search = $request->query('search', ''); 
+
+            
+            $products = $this->fetchProducts($request, $page, $categoryId, $subcategoryId, $specificSubcategoryId, $search);
+    
+
+            $user = null;
+            if ($refreshToken) {
+                try {
+                    $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+                    $user = [
+                        'id' => $decoded->id,
+                        'name' => $decoded->name,
+                        'email' => $decoded->email,
+                        'profileImage' => $decoded->profileImage,
+                        'tanggalLahir' => $decoded->tanggalLahir,
+                    ];
+                } catch (\Exception $e) {
+                    return redirect()->route('login');
                 }
-
-                // Jika pengguna tidak login, tetap kembalikan produk
-                return Inertia::render('Shop', [
-                    'isLoggedIn' => $isLoggedIn,
-                    'products' => $data['data'] ?? [],
-                    'pagination' => $data['pagination'] ?? [],
-                ]);
             } else {
-                return Inertia::render('Shop', [
-                    'isLoggedIn' => $isLoggedIn,
-                    'error' => 'Failed to fetch products.',
-                ]);
+                return redirect()->route('login');
             }
+    
+            return Inertia::render('Shop', [
+                'user' => $user,
+                'isLoggedIn' => $isLoggedIn,
+                'categories' => $categories, 
+                'subCategories' => $subCategories,
+                'specificCategories' => $specificCategories,
+            'products' => $products['data'] ?? [],
+            'pagination' => $products['pagination'] ?? [],
+            ]);
         } catch (\Exception $e) {
             return Inertia::render('Shop', [
                 'isLoggedIn' => $isLoggedIn,
                 'error' => 'An error occurred: ' . $e->getMessage(),
             ]);
+        }
+    }
+
+    //fetch produk
+    private function fetchProducts(Request $request, $page, $categoryId = null, $subcategoryId = null, $specificSubcategoryId = null, $search = '')
+{
+    $queryParams = [
+        'categoryId' => $categoryId,
+        'subcategoryId' => $subcategoryId,
+        'specificSubcategoryId' => $specificSubcategoryId,
+        'search' => $search,
+        'limit' => $request->query('limit', 20),
+        'page' => $page,
+    ];
+
+    try {
+        $response = Http::get("http://localhost:3000/api/v1/products", $queryParams);
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            return ['error' => 'Failed to fetch products: ' . $response->status()];
+        }
+    } catch (\Exception $e) {
+        return ['error' => 'An error occurred while fetching products: ' . $e->getMessage()];
+    }
+}
+
+    //fetch kategori
+    private function fetchCategories(){
+        try {
+            $response = Http::get("http://localhost:3000/api/v1/categories");
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                return ['error' => 'Failed to fetch categories: ' . $response->status()];
+            }
+        } catch (\Exception $e) {
+            return ['error' => 'An error occurred while fetching categories: ' . $e->getMessage()];
+        }
+    }
+
+    //fetch subkategori
+    private function fetchSubCategories(){
+        try {
+            $response = Http::get("http://localhost:3000/api/v1/subcategory");
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                return ['error' => 'Failed to fetch subcategories: ' . $response->status()];
+            }
+        } catch (\Exception $e) {
+            return ['error' => 'An error occurred while fetching subcategories: ' . $e->getMessage()];
+        }
+    }
+
+    //fetch spesifik
+    private function fetchSpecificCategories(){
+        try {
+            $response = Http::get("http://localhost:3000/api/v1/specific-subcategories");
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                return ['error' => 'Failed to fetch specific subcategories: ' . $response->status()];
+            }
+        } catch (\Exception $e) {
+            return ['error' => 'An error occurred while fetching specific subcategories: ' . $e->getMessage()];
         }
     }
 }
