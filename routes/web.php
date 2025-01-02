@@ -26,11 +26,11 @@ Route::get('/', [AuthController::class, 'showHome'])->name('home.show');//kevin/
 Route::post('/addToCart', [AuthController::class, 'addToCart'])->name('addToCart')->middleware(AuthMiddleware::class);//kevin
 Route::delete("/delete/favorite/{id}", [AuthController::class, 'deleteFavorites'])->middleware(AuthMiddleware::class);//kevin
 
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name('profile.setting');
-Route::post('/profile/setting/password', [ProfileController::class, 'updatePassword'])->name('profile.password');
-Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile'])->name('profile.update');
-Route::get('/profile/orders', [ProfileController::class, 'getAllOrders'])->name('profile.order');
+Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show')->middleware(AuthMiddleware::class);;
+Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name('profile.setting')->middleware(AuthMiddleware::class);
+Route::post('/profile/setting/password', [ProfileController::class, 'updatePassword'])->name('profile.password')->middleware(AuthMiddleware::class);
+Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile'])->name('profile.update')->middleware(AuthMiddleware::class);
+Route::get('/profile/orders', [ProfileController::class, 'getAllOrders'])->name('profile.order')->middleware(AuthMiddleware::class);
 
 Route::get('/favorites', [FavoriteController::class, 'loadFavorites'])->name('favorites.show')->middleware(AuthMiddleware::class);
 Route::post('/addToFavorites', [FavoriteController::class, 'addFavorites'])->name('favorites.add')->middleware(AuthMiddleware::class);

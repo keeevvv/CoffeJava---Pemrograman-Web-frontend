@@ -60,6 +60,7 @@ class AuthMiddleware
     private function requestNewToken(Request $request)
     {
         $refreshToken = $request->session()->get('refresh_token');
+      
 
         try {
 
@@ -75,7 +76,7 @@ class AuthMiddleware
 
                 return $data['accessToken'];
             } else {
-
+                dd($response->json());
                 $request->session()->flush();
                 return null;
             }

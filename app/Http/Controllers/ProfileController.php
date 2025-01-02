@@ -47,7 +47,8 @@ class ProfileController extends Controller
         }
     }
 
-    public function showShipping(Request $request) {
+    public function showShipping(Request $request)
+    {
         $refreshToken = $request->session()->get('refresh_token');
 
         if (!$refreshToken) {
@@ -72,7 +73,8 @@ class ProfileController extends Controller
         }
     }
 
-    public function showSetting(Request $request) {
+    public function showSetting(Request $request)
+    {
         $refreshToken = $request->session()->get('refresh_token');
         if (!$refreshToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
@@ -195,13 +197,17 @@ class ProfileController extends Controller
 
     public function updateProfile(Request $request)
     {
+
         $accessToken = $request->session()->get('access_token');
+
         if (!$accessToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
 
+
         try {
             $decoded = JWT::decode($accessToken, new Key(env('ACCESS_TOKEN'), 'HS256'));
+
 
             $validated = $request->validate([
                 'nama' => 'nullable|string|max:255',
@@ -209,11 +215,15 @@ class ProfileController extends Controller
                 'profileImage' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ]);
 
+
+
             $updateData = [];
             if (!empty($validated['nama'])) $updateData['nama'] = $validated['nama'];
             if (!empty($validated['email'])) $updateData['email'] = $validated['email'];
 
+
             if ($request->hasFile('profileImage')) {
+
                 $image = $request->file('profileImage');
                 $imagePath = $image->store('profile_images', 'public');
                 $imageUrl = Storage::url($imagePath);
@@ -228,6 +238,8 @@ class ProfileController extends Controller
                     $request->file('profileImage')->getClientOriginalName() // Nama file yang di-upload
                 )->post("http://localhost:3000/api/v1/editProfile/{$decoded->id}");
 
+
+
                 if (!$cloudResponse->successful()) {
                     return redirect()->back()->withErrors(['msg' => 'Failed to upload profile image to external server.']);
                 }
@@ -241,12 +253,16 @@ class ProfileController extends Controller
                 }
             }
 
+
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$accessToken}",
             ])->put("http://localhost:3000/api/v1/editUser/{$decoded->id}", $updateData);
 
-            if ($response->successful()) {
 
+
+            if ($response->successful()) {
+                $newAccessToken = $response->json('accessToken');
+                $newRefreshToken = $response->json('refreshToken');
                 if ($newAccessToken && $newRefreshToken) {
                     $request->session()->put('access_token', $newAccessToken);
                     $request->session()->put('refresh_token', $newRefreshToken);
@@ -256,16 +272,19 @@ class ProfileController extends Controller
                 return redirect()->back()->withErrors(['msg' => 'Failed to update profile.']);
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
+            dd("asd 1");
             return redirect()->back()->withErrors($e->errors());
         } catch (\Firebase\JWT\ExpiredException $e) {
+            dd($e->getMessage());
             return redirect('/login')->withErrors(['msg' => 'Token has expired. Please login again.']);
         } catch (\Exception $e) {
+            dd("asd 3");
             return redirect('/login')->withErrors(['msg' => 'An unexpected error occurred. Please login again.']);
         }
     }
 
 
-   public function getAllOrders(Request $request)
+    public function getAllOrders(Request $request)
     {
         $accessToken = $request->session()->get('access_token');
         $refreshToken = $request->session()->get('refresh_token');
@@ -273,6 +292,7 @@ class ProfileController extends Controller
         // dd($accessToken);
 
         if (!$accessToken) {
+            dd("sadsa");
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
 
@@ -308,9 +328,11 @@ class ProfileController extends Controller
                 return redirect()->back()->withErrors(['msg' => $response->json()['error'] ?? 'Failed to fetch orders.']);
             }
         } catch (\Firebase\JWT\ExpiredException $e) {
+            dd("sadsa");
             return redirect('/login')->withErrors(['msg' => 'Token has expired. Please login again.']);
         } catch (\Exception $e) {
             Log::error('Error fetching all orders: ' . $e->getMessage());
+            dd("sadsa");
             return redirect('/')->withErrors(['msg' => 'An unexpected error occurred.']);
         }
     }
