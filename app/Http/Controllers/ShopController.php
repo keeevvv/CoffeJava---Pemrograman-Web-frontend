@@ -29,9 +29,7 @@ class ShopController extends Controller
         $isLoggedIn = $this->checkLoginStatus($request);
         $refreshToken = $request->session()->get('refresh_token');
 
-        if (!$isLoggedIn['isLoggedIn']) {
-            return redirect()->route('login');
-        }
+       
        
         try {
             $categories = $this->fetchCategories();
@@ -64,11 +62,9 @@ class ShopController extends Controller
                         'tanggalLahir' => $decoded->tanggalLahir,
                     ];
                 } catch (\Exception $e) {
-                    return redirect()->route('login');
+                    
                 }
-            } else {
-                return redirect()->route('login');
-            }
+            } 
     
             return Inertia::render('Shop', [
                 'user' => $user,

@@ -49,7 +49,7 @@ const SpecificCategoryModal = ({
                     <hr className="border border-1 border-gray-300" />
                     <div className="flex flex-col p-2 max-h-[300px] overflow-y-auto">
                         {specificCategoriesData
-                            .slice() // Membuat salinan array untuk menghindari mutasi data asli
+                            .slice()
                             .sort((a, b) =>
                                 a.specific_sub_category_name.localeCompare(
                                     b.specific_sub_category_name

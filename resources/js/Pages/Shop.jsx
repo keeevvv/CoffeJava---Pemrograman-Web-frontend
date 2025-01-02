@@ -11,7 +11,7 @@ import SpecificCategoryModal from "../component/Shop_SpecificCategory_Modal";
 
 import { Inertia } from "@inertiajs/inertia";
 import { Link } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { router } from "@inertiajs/react";
 
 const ShopPage = ({
@@ -32,6 +32,7 @@ const ShopPage = ({
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const [searchValue, setSearchValue] = useState("");
+    const inputRef = useRef(null);
 
     const [showCategoryModal, setShowCategoryModal] = useState(false);
     const [selectedCategoryFilter, setSelectedCategory] = useState(null); //untuk filter
@@ -43,84 +44,6 @@ const ShopPage = ({
         useState(false);
     const [selectedSpecificCategoryFilter, setSelectedSpecificCategory] =
         useState(null); //untuk filter
-
-    // const handleFilterChange = () => {
-    //     const params = new URLSearchParams();
-    //     if (selectedCategoryFilter) {
-    //         params.append("categoryId", selectedCategoryFilter);
-    //     }
-    //     if (selectedSubCategoryFilter) {
-    //         params.append("subCategoryId", selectedSubCategoryFilter);
-    //     }
-    //     if (selectedSpecificCategoryFilter) {
-    //         params.append("specificCategoryId", selectedSpecificCategoryFilter);
-    //     }
-    //     params.append("page", 1);
-
-    //     // console.log("Final URL Params:", params.toString());
-    //     // Inertia.get(`/shop?${params.toString()}`);
-    // };
-
-    //filter kategori
-    // useEffect(() => {
-    //     if (selectedCategoryFilter != null) {
-    //         router.visit(`/shop?categoryId=${selectedCategoryFilter}`, {
-    //             method: "get",
-    //         });
-    //     }
-    // }, [selectedCategoryFilter]);
-
-    // //filter subkategori
-    // useEffect(() => {
-    //     if (selectedSubCategoryFilter != null) {
-    //         router.visit(`/shop?subcategoryId=${selectedSubCategoryFilter}`, {
-    //             method: "get",
-    //         });
-    //     }
-    // }, [selectedSubCategoryFilter]);
-
-    // //filter specifickategori
-    // useEffect(() => {
-    //     if (selectedSpecificCategoryFilter != null) {
-    //         router.visit(
-    //             `/shop?specificSubcategoryId=${selectedSpecificCategoryFilter}`,
-    //             {
-    //                 method: "get",
-    //             }
-    //         );
-    //     }
-    // }, [selectedSpecificCategoryFilter]);
-
-    // //search
-    // //ganti value search
-    // const handleSearchChange = (e) => {
-    //     const value = e.target.value;
-    //     setSearchValue(value);
-    //     handleSearch(value);
-    // };
-
-    // //lakukan pencarian
-    // const handleSearch = (value) => {
-    //     const params = new URLSearchParams();
-    //     if (selectedCategoryFilter) {
-    //         params.append("categoryId", selectedCategoryFilter);
-    //     }
-    //     if (selectedSubCategoryFilter) {
-    //         params.append("subcategoryId", selectedSubCategoryFilter);
-    //     }
-    //     if (selectedSpecificCategoryFilter) {
-    //         params.append(
-    //             "specificSubcategoryId",
-    //             selectedSpecificCategoryFilter
-    //         );
-    //     }
-    //     if (value.trim() !== "") {
-    //         params.append("search", encodeURIComponent(value));
-    //     }
-    //     router.visit(`/shop?${params.toString()}`, {
-    //         method: "get",
-    //     });
-    // };
 
     // //Clear
     const handleReset = () => {
@@ -250,9 +173,11 @@ const ShopPage = ({
                         type="text"
                         className="justify-end w-full sm:w-1/2 h-10 bg-white p-2 rounded resize-none focus:outline-none focus:ring-2 focus:ring-NusantaraGoldLight overflow-hidden"
                         placeholder="Search products..."
+                        ref={inputRef}
                         onKeyDown={(e) => {
                             if (e.key === "Enter") {
                                 setSearchValue(e.target.value);
+                                inputRef.current.value = "";
                             }
                         }}
                     />
