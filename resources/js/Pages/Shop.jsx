@@ -30,6 +30,7 @@ const ShopPage = ({
     // console.log("specificCategories:", specificCategories);
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
     const [searchValue, setSearchValue] = useState("");
 
     const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -43,73 +44,85 @@ const ShopPage = ({
     const [selectedSpecificCategoryFilter, setSelectedSpecificCategory] =
         useState(null); //untuk filter
 
-    const handleFilterChange = () => {
-        const params = new URLSearchParams();
-        if (selectedCategoryFilter) {
-            params.append("categoryId", selectedCategoryFilter);
-        }
-        if (selectedSubCategoryFilter) {
-            params.append("subCategoryId", selectedSubCategoryFilter);
-        }
-        if (selectedSpecificCategoryFilter) {
-            params.append("specificCategoryId", selectedSpecificCategoryFilter);
-        }
-        params.append("page", 1);
+    // const handleFilterChange = () => {
+    //     const params = new URLSearchParams();
+    //     if (selectedCategoryFilter) {
+    //         params.append("categoryId", selectedCategoryFilter);
+    //     }
+    //     if (selectedSubCategoryFilter) {
+    //         params.append("subCategoryId", selectedSubCategoryFilter);
+    //     }
+    //     if (selectedSpecificCategoryFilter) {
+    //         params.append("specificCategoryId", selectedSpecificCategoryFilter);
+    //     }
+    //     params.append("page", 1);
 
-        console.log("Final URL Params:", params.toString());
-        // Inertia.get(`/shop?${params.toString()}`);
-    };
+    //     // console.log("Final URL Params:", params.toString());
+    //     // Inertia.get(`/shop?${params.toString()}`);
+    // };
 
     //filter kategori
-    useEffect(() => {
-        if (selectedCategoryFilter != null) {
-            router.visit(`/shop?categoryId=${selectedCategoryFilter}`, {
-                method: "get",
-            });
-        }
-    }, [selectedCategoryFilter]);
+    // useEffect(() => {
+    //     if (selectedCategoryFilter != null) {
+    //         router.visit(`/shop?categoryId=${selectedCategoryFilter}`, {
+    //             method: "get",
+    //         });
+    //     }
+    // }, [selectedCategoryFilter]);
 
-    //filter subkategori
-    useEffect(() => {
-        if (selectedSubCategoryFilter != null) {
-            router.visit(`/shop?subcategoryId=${selectedSubCategoryFilter}`, {
-                method: "get",
-            });
-        }
-    }, [selectedSubCategoryFilter]);
+    // //filter subkategori
+    // useEffect(() => {
+    //     if (selectedSubCategoryFilter != null) {
+    //         router.visit(`/shop?subcategoryId=${selectedSubCategoryFilter}`, {
+    //             method: "get",
+    //         });
+    //     }
+    // }, [selectedSubCategoryFilter]);
 
-    //filter specifickategori
-    useEffect(() => {
-        if (selectedSpecificCategoryFilter != null) {
-            router.visit(
-                `/shop?specificSubcategoryId=${selectedSpecificCategoryFilter}`,
-                {
-                    method: "get",
-                }
-            );
-        }
-    }, [selectedSpecificCategoryFilter]);
+    // //filter specifickategori
+    // useEffect(() => {
+    //     if (selectedSpecificCategoryFilter != null) {
+    //         router.visit(
+    //             `/shop?specificSubcategoryId=${selectedSpecificCategoryFilter}`,
+    //             {
+    //                 method: "get",
+    //             }
+    //         );
+    //     }
+    // }, [selectedSpecificCategoryFilter]);
 
-    //search
-    //ganti value search
-    const handleSearchChange = (e) => {
-        const value = e.target.value;
-        setSearchValue(value);
-        handleSearch(value);
-    };
+    // //search
+    // //ganti value search
+    // const handleSearchChange = (e) => {
+    //     const value = e.target.value;
+    //     setSearchValue(value);
+    //     handleSearch(value);
+    // };
 
-    //lakukan pencarian
-    const handleSearch = (value) => {
-        if (value.trim() === "") {
-            return;
-        }
+    // //lakukan pencarian
+    // const handleSearch = (value) => {
+    //     const params = new URLSearchParams();
+    //     if (selectedCategoryFilter) {
+    //         params.append("categoryId", selectedCategoryFilter);
+    //     }
+    //     if (selectedSubCategoryFilter) {
+    //         params.append("subcategoryId", selectedSubCategoryFilter);
+    //     }
+    //     if (selectedSpecificCategoryFilter) {
+    //         params.append(
+    //             "specificSubcategoryId",
+    //             selectedSpecificCategoryFilter
+    //         );
+    //     }
+    //     if (value.trim() !== "") {
+    //         params.append("search", encodeURIComponent(value));
+    //     }
+    //     router.visit(`/shop?${params.toString()}`, {
+    //         method: "get",
+    //     });
+    // };
 
-        router.visit(`/shop?search=${encodeURIComponent(value)}`, {
-            method: "get",
-        });
-    };
-
-    //Clear
+    // //Clear
     const handleReset = () => {
         // Reset semua filter
         setSelectedCategory(null);
@@ -122,6 +135,34 @@ const ShopPage = ({
             method: "get",
         });
     };
+
+    useEffect(() => {
+        const params = new URLSearchParams();
+        if (selectedCategoryFilter) {
+            params.append("categoryId", selectedCategoryFilter);
+        }
+        if (selectedSubCategoryFilter) {
+            params.append("subcategoryId", selectedSubCategoryFilter);
+        }
+        if (selectedSpecificCategoryFilter) {
+            params.append(
+                "specificSubcategoryId",
+                selectedSpecificCategoryFilter
+            );
+        }
+        if (searchValue.trim() !== "") {
+            params.append("search", searchValue);
+        }
+        router.visit(`/shop?${params.toString()}`, {
+            method: "get",
+            preserveState: true,
+        });
+    }, [
+        selectedCategoryFilter,
+        selectedSubCategoryFilter,
+        selectedSpecificCategoryFilter,
+        searchValue,
+    ]);
 
     return (
         <div>
@@ -187,7 +228,7 @@ const ShopPage = ({
                             </button>
                             <button
                                 className="block w-full px-4 py-2 text-left hover:bg-NusantaraGoldDark"
-                                onClick={handleReset()}
+                                onClick={handleReset}
                             >
                                 Clear
                             </button>
@@ -200,8 +241,11 @@ const ShopPage = ({
                         type="text"
                         className="justify-end w-full sm:w-1/2 h-10 bg-white p-2 rounded resize-none focus:outline-none focus:ring-2 focus:ring-NusantaraGoldLight overflow-hidden"
                         placeholder="Search products..."
-                        value={searchValue}
-                        onChange={handleSearchChange}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                setSearchValue(e.target.value);
+                            }
+                        }}
                     />
                 </div>
             </div>
@@ -211,6 +255,11 @@ const ShopPage = ({
                 <ShopPagination
                     pagination={pagination}
                     selectedCategoryFilter={selectedCategoryFilter}
+                    selectedSubCategoryFilter={selectedSubCategoryFilter}
+                    selectedSpecificCategoryFilter={
+                        selectedSpecificCategoryFilter
+                    }
+                    searchValue={searchValue}
                 />
 
                 <FooterLanding />
@@ -219,7 +268,7 @@ const ShopPage = ({
                 isVisible={showCategoryModal}
                 onClose={() => setShowCategoryModal(false)}
                 categoriesData={categories}
-                apply={handleFilterChange}
+                // apply={handleFilterChange}
                 setSelectedCategory={setSelectedCategory}
             />
 
@@ -227,7 +276,7 @@ const ShopPage = ({
                 isVisible={showSubCategoryModal}
                 onClose={() => setShowSubCategoryModal(false)}
                 subCategoriesData={subCategories}
-                apply={handleFilterChange}
+                // apply={handleFilterChange}
                 setSelectedSubCategory={setSelectedSubCategory}
             />
 
@@ -235,7 +284,7 @@ const ShopPage = ({
                 isVisible={showSpecificCategoryModal}
                 onClose={() => setShowSpecificCategoryModal(false)}
                 specificCategoriesData={specificCategories}
-                apply={handleFilterChange}
+                // apply={handleFilterChange}
                 setSelectedSpecificCategory={setSelectedSpecificCategory}
             />
         </div>

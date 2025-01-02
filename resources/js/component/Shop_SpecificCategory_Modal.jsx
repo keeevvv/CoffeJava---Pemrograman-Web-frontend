@@ -4,7 +4,7 @@ const SpecificCategoryModal = ({
     isVisible,
     onClose,
     specificCategoriesData,
-    apply,
+    // apply,
     setSelectedSpecificCategory,
 }) => {
     if (!isVisible) return null;
@@ -21,7 +21,7 @@ const SpecificCategoryModal = ({
     const handleApply = () => {
         console.log("Selected SpecificCategory ID:", selectedSpecificCategory);
         setSelectedSpecificCategory(selectedSpecificCategory);
-        apply();
+        // apply();
         onClose();
     };
 

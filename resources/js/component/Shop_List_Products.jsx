@@ -3,7 +3,24 @@ import react from "react";
 
 const ShopListOfProducts = ({ products = [] }) => {
     if (!products || products.length === 0) {
-        return <div>No product available now.</div>;
+        return (
+            <div className="h-full w-full flex flex-col justify-center items-center text-center bg-gray-100 p-4">
+                <iframe
+                    src="https://giphy.com/embed/giXLnhxp60zEEIkq8K"
+                    width="480"
+                    height="480"
+                    className="giphy-embed"
+                    allowFullScreen
+                    style={{
+                        border: "none",
+                        marginBottom: "16px",
+                    }}
+                ></iframe>
+                <p className="text-lg font-semibold text-gray-800">
+                    No product available now.
+                </p>
+            </div>
+        );
     }
 
     return (

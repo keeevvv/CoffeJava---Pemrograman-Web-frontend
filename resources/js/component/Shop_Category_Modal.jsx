@@ -4,7 +4,7 @@ const CategoryModal = ({
     isVisible,
     onClose,
     categoriesData,
-    apply,
+    // apply,
     setSelectedCategory,
 }) => {
     if (!isVisible) return null;
@@ -20,7 +20,7 @@ const CategoryModal = ({
     const handleApply = () => {
         console.log("Selected Category ID:", selectedCategory);
         setSelectedCategory(selectedCategory);
-        apply();
+        // apply();
         onClose();
     };
 

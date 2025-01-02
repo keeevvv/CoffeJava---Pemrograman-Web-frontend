@@ -4,7 +4,7 @@ const SubCategoryModal = ({
     isVisible,
     onClose,
     subCategoriesData,
-    apply,
+    // apply,
     setSelectedSubCategory,
 }) => {
     if (!isVisible) return null;
@@ -20,7 +20,7 @@ const SubCategoryModal = ({
     const handleApply = () => {
         console.log("Selected SubCategory ID:", selectedSubCategory);
         setSelectedSubCategory(selectedSubCategory);
-        apply();
+        // apply();
         onClose();
     };
 

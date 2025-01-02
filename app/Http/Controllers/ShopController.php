@@ -47,8 +47,10 @@ class ShopController extends Controller
             $search = $request->query('search', ''); 
 
             
-            $products = $this->fetchProducts($request, $page, $categoryId, $subcategoryId, $specificSubcategoryId, $search);
-    
+            $products = $this->fetchProducts($request, $page, $categoryId, $subcategoryId, $specificSubcategoryId, $search) ?? [
+                'data' => [],
+                'pagination' => [],
+            ];
 
             $user = null;
             if ($refreshToken) {
