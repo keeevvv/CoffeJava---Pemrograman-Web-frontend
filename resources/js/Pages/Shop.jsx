@@ -137,26 +137,35 @@ const ShopPage = ({
     };
 
     useEffect(() => {
-        const params = new URLSearchParams();
-        if (selectedCategoryFilter) {
-            params.append("categoryId", selectedCategoryFilter);
+        const params = new URLSearchParams(window.location.search);
+        params.set("page", "1");
+
+        if (
+            selectedCategoryFilter != null ||
+            selectedSubCategoryFilter != null ||
+            selectedSpecificCategoryFilter != null ||
+            searchValue != ""
+        ) {
+            if (selectedCategoryFilter) {
+                params.append("categoryId", selectedCategoryFilter);
+            }
+            if (selectedSubCategoryFilter) {
+                params.append("subcategoryId", selectedSubCategoryFilter);
+            }
+            if (selectedSpecificCategoryFilter) {
+                params.append(
+                    "specificSubcategoryId",
+                    selectedSpecificCategoryFilter
+                );
+            }
+            if (searchValue.trim() !== "") {
+                params.append("search", searchValue);
+            }
+            router.visit(`/shop?page=1&${params.toString()}`, {
+                method: "get",
+                preserveState: true,
+            });
         }
-        if (selectedSubCategoryFilter) {
-            params.append("subcategoryId", selectedSubCategoryFilter);
-        }
-        if (selectedSpecificCategoryFilter) {
-            params.append(
-                "specificSubcategoryId",
-                selectedSpecificCategoryFilter
-            );
-        }
-        if (searchValue.trim() !== "") {
-            params.append("search", searchValue);
-        }
-        router.visit(`/shop?${params.toString()}`, {
-            method: "get",
-            preserveState: true,
-        });
     }, [
         selectedCategoryFilter,
         selectedSubCategoryFilter,

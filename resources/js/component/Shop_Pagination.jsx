@@ -11,7 +11,8 @@ const ShopPagination = ({
     const { current_page, last_visible_page } = pagination;
 
     const createQueryString = (page) => {
-        const params = new URLSearchParams();
+        const params = new URLSearchParams(window.location.search);
+        
         params.append("page", page);
         if (selectedCategoryFilter) {
             params.append("categoryId", selectedCategoryFilter);
