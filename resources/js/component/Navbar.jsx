@@ -90,6 +90,16 @@ export default function NavbarComponent() {
                     Shop
                 </Navbar.Link>
                 <Navbar.Link
+                    href="/bag"
+                    className={`${
+                        location.pathname === "/bag"
+                            ? "text-gray-600"
+                            : "text-black"
+                    }`}
+                >
+                    Bag
+                </Navbar.Link>
+                <Navbar.Link
                     href="/favorites"
                     className={`${
                         location.pathname === "/favorites"

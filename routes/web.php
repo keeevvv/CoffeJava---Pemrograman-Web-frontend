@@ -39,19 +39,12 @@ Route::get('/shop', [ShopController::class, 'openShopPage'])->name('shop.show');
 
 
 //BAG PAGE
-Route::get('/bag', [BagController::class, 'show'])->name('bag.show');
-Route::get('/bag/addnewaddress', [BagController::class, 'showAddNewAddress'])->name('bag.addNewAddress');
-Route::get('/bag/addresslist', [BagController::class, 'showAddressList'])->name('bag.addressList');
-Route::get('/bag/checkout', [BagController::class, 'showCheckout'])->name('bag.showCheckout');
-Route::post('/bag/store-total', [BagController::class, 'storeTotalPrice'])->name('bag.storeTotalPrice');
-Route::post('/bag/select-shipping', [BagController::class, 'selectShippingAddress'])->name('bag.selectShippingAddress');
-Route::post('/bag/add-shipping', [BagController::class, 'storeNewShippingAddress'])->name('bag.storeNewShippingAddress');
-
-
-// Route::get('/login', function () {
-//     return inertia('Login');
-// });
-
-// Route::get('/product/1', function () {
-//     return inertia('ProductDetail');
-// });
+Route::get('/bag', [BagController::class, 'show'])->name('bag.show')->middleware(AuthMiddleware::class);
+Route::get('/bag/addnewaddress', [BagController::class, 'showAddNewAddress'])->name('bag.addNewAddress')->middleware(AuthMiddleware::class);
+Route::get('/bag/addresslist', [BagController::class, 'showAddressList'])->name('bag.addressList')->middleware(AuthMiddleware::class);
+Route::get('/bag/checkout', [BagController::class, 'showCheckout'])->name('bag.showCheckout')->middleware(AuthMiddleware::class);
+Route::post('/bag/store-total', [BagController::class, 'storeTotalPrice'])->name('bag.storeTotalPrice')->middleware(AuthMiddleware::class);
+Route::post('/bag/select-shipping', [BagController::class, 'selectShippingAddress'])->name('bag.selectShippingAddress')->middleware(AuthMiddleware::class);
+Route::post('/bag/add-shipping', [BagController::class, 'storeNewShippingAddress'])->name('bag.storeNewShippingAddress')->middleware(AuthMiddleware::class);
+Route::post('/bag/update-quantity', [BagController::class, 'updateQuantity'])->name('bag.updateQuantity');
+Route::delete('/bag/delete-item', [BagController::class, 'deleteItem'])->name('bag.deleteItem');
