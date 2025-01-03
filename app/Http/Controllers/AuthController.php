@@ -22,6 +22,14 @@ class AuthController extends Controller
         ];
     }
 
+    public function showRegister(Request $request)
+    {
+        if ($request->session()->has('access_token')) {
+            return Inertia::location('/');
+        }
+        return Inertia::render('Register');
+    }
+
     public function showLogin(Request $request)
     {
 
@@ -248,6 +256,33 @@ class AuthController extends Controller
                 'errors' => [
                     'login' => $response->json()['msg'],
                 ],
+            ]);
+        }
+    }
+
+    public function register(Request $request)
+    {
+
+
+        $response = Http::post('http://localhost:3000/api/v1/register', [
+            'nama' => $request->input('nama'),
+            'email' => $request->input('email'),
+            'password' => $request->input('password'),
+            'confirmPassword' => $request->input('confirmPassword'),
+            'gender' => $request->input('gender'),
+            'tanggalLahir' => $request->input('tanggalLahir'),
+        ]);
+
+        if ($response->successful()) {
+
+
+
+
+            return redirect('/login')->with('success', 'Registration successful! Please log in.');
+        } else {
+
+            return redirect()->back()->withErrors([
+                'register' => $response->json()['msg'],
             ]);
         }
     }
