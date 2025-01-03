@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Head, usePage } from '@inertiajs/react';
 import { Link } from '@inertiajs/react';
+import NavbarComponent from "../component/Navbar";
 import {Inertia} from "@inertiajs/inertia";
+import FooterLanding from "../component/FooterSection";
 
 
 export default function Shipping_address() {
@@ -24,7 +26,8 @@ export default function Shipping_address() {
   };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-8">
+        <div><NavbarComponent />
+        <div className="min-h-screen bg-gray-100 p-8 mt-16">
             <h1 className="text-2xl font-bold mb-6">Shipping Addresses</h1>
 
             {/* buttons */}
@@ -78,6 +81,11 @@ export default function Shipping_address() {
                 ) : (
                     <p>No shipping addresses available.</p>
                 )}
+            </div>
+        </div>
+        <div>
+
+                <FooterLanding />
             </div>
         </div>
     );

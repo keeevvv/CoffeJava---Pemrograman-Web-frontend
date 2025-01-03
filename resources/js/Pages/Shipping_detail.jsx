@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { usePage } from '@inertiajs/react';
 import { Link } from "@inertiajs/react";
 import {Inertia} from "@inertiajs/inertia";
+import NavbarComponent from "../component/Navbar";
+import FooterLanding from "../component/FooterSection";
 
 export default function ShippingDetail() {
   const [formData, setFormData] = useState({
@@ -42,7 +44,8 @@ export default function ShippingDetail() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
+    <div><NavbarComponent />
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 mt-16">
       <h1 className="text-xl font-bold mb-6">Add New Shipping Address</h1>
 
       <form
@@ -127,6 +130,11 @@ export default function ShippingDetail() {
           </Link>
         </div>
       </form>
+    </div>
+    <div>
+
+                <FooterLanding />
+            </div>
     </div>
   );
 }

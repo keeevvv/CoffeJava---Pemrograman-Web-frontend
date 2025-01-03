@@ -4,7 +4,8 @@ import { Inertia } from '@inertiajs/inertia';
 import { router } from '@inertiajs/react';
 import toast, { Toaster } from 'react-hot-toast';
 import { Link } from "@inertiajs/react";
-
+import NavbarComponent from "../component/Navbar";
+import FooterLanding from "../component/FooterSection";
 
 
 
@@ -44,7 +45,7 @@ export default function Checkout() {
 
 
     return (
-      
+      <div><NavbarComponent />
       <div className="min-h-screen bg-gray-100 p-8">
         <h1 className="text-2xl font-bold mb-6">Checkout</h1>
   
@@ -87,11 +88,11 @@ export default function Checkout() {
                 }}
               />
               <label htmlFor={seleksi.id} className="flex items-center cursor-pointer">
-                <img
+                {/* <img
                   src="https://via.placeholder.com/40"
                   alt={`${seleksi.label} Logo`}
                   className="h-6 mr-2"
-                />
+                /> */}
                 {seleksi.label}
               </label>
             </div>
@@ -119,7 +120,7 @@ export default function Checkout() {
               </div>
             </div>
             <button
-              className="w-full bg-green-500 text-white py-3 rounded-lg mt-6 font-medium hover:bg-green-600 transition"
+              className="w-full bg-NusantaraGold text-white py-3 rounded-lg mt-6 font-medium hover:bg-NusantaraGoldDark"
               onClick={() => {
                 console.log('Checkout Button Clicked');
                 console.log('the total is:', total);
@@ -132,6 +133,11 @@ export default function Checkout() {
             </button>
           </div>
         </div>
+      </div>
+      <div>
+
+                <FooterLanding />
+            </div>
       </div>
     );
   };
