@@ -61,18 +61,10 @@ export default function Bag() {
         Inertia.post("/bag/store-total", { totalPrice });
     };
 
-    const showNotification = (message) => {
-      setNotification({ visible: true, message });
-      setTimeout(() => setNotification({ visible: false, message: "" }), 3000); // Hide after 3 seconds
-  };
+
 
     return (
         <div>
-          {notification.visible && (
-                <div className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-4 py-2 rounded shadow-lg">
-                    {notification.message}
-                </div>
-            )}
             <NavbarComponent />
              {/* Sticky Notification */}
              
