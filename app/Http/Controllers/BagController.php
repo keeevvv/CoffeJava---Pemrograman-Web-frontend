@@ -10,6 +10,8 @@ use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Midtrans\config;
+use Midtrans\Snap;
 
 
 
@@ -79,30 +81,30 @@ class BagController extends Controller
     }
 
     public function showAddNewAddress(Request $request)
-{
-    $accessToken = $request->session()->get('access_token');
-    $refreshToken = $request->session()->get('refresh_token');
+    {
+        $accessToken = $request->session()->get('access_token');
+        $refreshToken = $request->session()->get('refresh_token');
 
-    if (!$accessToken) {
-        return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login']);
-    }
-    try {
-        $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
-    } catch (\Exception $e) {
-        return redirect('/login')->withErrors(['msg' => 'Failed to decode refresh token. Please login again']);
-    }
+        if (!$accessToken) {
+            return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login']);
+        }
+        try {
+            $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+        } catch (\Exception $e) {
+            return redirect('/login')->withErrors(['msg' => 'Failed to decode refresh token. Please login again']);
+        }
 
-    return Inertia::render("Shipping_detail", [
-        'user' => [
-            'id' => $decoded->id,
-            'name' => $decoded->name,
-            'email' => $decoded->email,
-            'profileImage' => $decoded->profileImage,
-            'tanggalLahir' => $decoded->tanggalLahir,
-        ],
-        'isLoggedIn' => $this->checkLoginStatus($request),
-    ]);
-}
+        return Inertia::render("Shipping_detail", [
+            'user' => [
+                'id' => $decoded->id,
+                'name' => $decoded->name,
+                'email' => $decoded->email,
+                'profileImage' => $decoded->profileImage,
+                'tanggalLahir' => $decoded->tanggalLahir,
+            ],
+            'isLoggedIn' => $this->checkLoginStatus($request),
+        ]);
+    }
 
 
 
@@ -118,8 +120,8 @@ class BagController extends Controller
         }
 
         try {
-            
-        
+
+
             try {
                 $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
             } catch (\Exception $e) {
@@ -175,11 +177,11 @@ class BagController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer $accessToken",
             ])->get('http://localhost:3000/api/v1/checkout');
-    
+
             if ($response->successful()) {
                 $cart = $response->json();
-    
-               
+
+
                 if (empty($cart['cart_items'])) {
                     return redirect('/')->withErrors(['msg' => 'Your cart is empty. Add items to your cart before proceeding to checkout']);
                 }
@@ -187,7 +189,7 @@ class BagController extends Controller
         } catch (\Exception $e) {
             return redirect('/login')->withErrors(['msg' => 'An error occurred. Please try again.']);
         }
-    
+
         try {
             $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
         } catch (\Exception $e) {
@@ -401,39 +403,180 @@ class BagController extends Controller
     public function deleteItem(Request $request)
     {
         $accessToken = $request->session()->get('access_token');
-    
+
         if (!$accessToken) {
             return redirect('login')->withErrors(['msg' => 'Access token not found, please Login']);
         }
-    
+
         $validatedData = $request->validate([
             'itemId' => 'required|integer',
         ]);
-    
-        $itemId = $validatedData['itemId'];
-    
+
+        $itemId = intval($validatedData['itemId']);
+
         try {
+            $body = json_encode(['itemId' => $itemId]);
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$accessToken}",
-            ])->delete("http://localhost:3000/api/v1/checkout/delete/{$itemId}");
-    
+                'Content-Type' => 'application/json',
+            ])->withBody($body, 'application/json')
+                ->delete("http://localhost:3000/api/v1/checkout/delete/{$itemId}");
+
             if ($response->successful()) {
                 Log::info("Item {$itemId} deleted successfully");
-                return redirect('/bag')->withErrors(['msg' => 'Access token not found, please Login']);
             } else {
-               
-            Log::error("Failed to delete item {$itemId} " . $response->body());
 
-           
-            return response()->json([
-                'error' => 'Failed to delete item',
-                'details' => $response->body() 
-            ], $response->status());
+                Log::error("Failed to delete item {$itemId} " . $response->body());
+
+
+                return response()->json([
+                    'error' => 'Failed to delete item',
+                    'details' => $response->body()
+                ], $response->status());
             }
         } catch (\Exception $e) {
             Log::error("Error deleting item: " . $e->getMessage());
             return response()->json(['error' => 'An error occurred while deleting item'], 500);
         }
     }
+
+    public function handleTransaction(Request $request)
+    {
+        Log::info('Handling transaction request', ['request_data' => $request->all()]);
     
+        $accessToken = $request->session()->get('access_token');
+    
+        if (!$accessToken) {
+            Log::warning('Access token not found in session.');
+            return redirect()->route('login')->withErrors(['msg' => 'Access token not found, please Login']);
+        }
+    
+        $validated = $request->validate([
+            'shipping_id' => 'required|integer',
+            'payment_type' => 'required|string',
+        ]);
+    
+        Log::info('Validated request data', ['validated_data' => $validated]);
+    
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => "Bearer {$accessToken}",
+                'Content-Type' => 'application/json',
+            ])->post('http://localhost:3000/api/v1/transaction', $validated);
+    
+            $transaction = $response->json();
+    
+            if (isset($transaction['transaction']['redirect_url'])) {
+                // Use Inertia::location to handle the redirect for Inertia
+                Log::info('Transaction initialized successfully', [
+                    'transaction_token' => $transaction['transaction']['token'],
+                    'redirect_url' => $transaction['transaction']['redirect_url'],
+                ]);
+                return Inertia::location($transaction['transaction']['redirect_url']);  // This ensures proper Inertia response
+                
+            } else {
+                Log::error('Invalid response structure', ['response' => $response->json()]);
+                return response()->json(['status' => 'error', 'message' => 'Invalid response structure from transaction API'], 500);
+            }
+    
+        } catch (\Exception $e) {
+            Log::error('Transaction error occurred', ['error' => $e->getMessage()]);
+            return response()->json(['status' => 'error', 'message' => 'Transaction initialization failed'], 500);
+        }
+    }
+
+    
+
+
+
+
+
+    
+//     public function handleTransaction(Request $request)
+// {
+
+//     Log::info('Handling transaction request', [
+//         'request_data' => $request->all(),  // Log the incoming request data
+//     ]);
+
+//     $accessToken = $request->session()->get('access_token');
+
+//     if (!$accessToken) {
+//         return redirect()->route('login')->withErrors(['msg' => 'Access token not found, please Login']);
+//     }
+
+//     $validated = $request->validate([
+//         'shipping_id' => 'required|integer',
+//         'payment_type' => 'required|string',
+//     ]);
+
+//     Log::info('Validated data', [
+//         'shipping_id' => $validated['shipping_id'],
+//         'payment_type' => $validated['payment_type']
+//     ]);
+
+//     try {
+//         $shippingId = $validated['shipping_id'];
+//         $paymentType = $validated['payment_type'];
+
+//         Log::info('Sending API request to external service', [
+//             'shipping_id' => $shippingId,
+//             'payment_type' => $paymentType
+//         ]);
+
+//         $response = Http::withHeaders([
+//             'Authorization' => "Bearer {$accessToken}",
+//             'Content-Type' => 'application/json',
+//         ])->post('http://localhost:3000/api/v1/transaction', [
+//             'shipping_id' => $shippingId,
+//             'payment_type' => $paymentType,
+//         ]);
+
+//         Log::info('Received API response', [
+//             'response_status' => $response->status(),
+//             'response_data' => $response->json(),
+//         ]);
+
+//         if ($response->successful()) {
+//             $transactionToken = $response->json()['transaction']['token'];
+//             $redirect_url = $response->json()['transaction']['redirect_url'];
+
+//             Log::info('Transaction successful', [
+//                 'transaction_token' => $transactionToken,
+//                 'redirect_url' => $redirect_url,
+//             ]);
+
+//             return response()->json([
+//                 'status' => 'success',
+//                 'transaction' => [
+//                     'token' => $transactionToken,
+//                     'redirect_url' => $redirect_url,
+//                 ],
+//             ]);
+//         } else {
+
+//             Log::error('Failed to fetch transaction data from backend', [
+//                 'status' => $response->status(),
+//                 'message' => 'Failed to fetch transaction data from backend.',
+//                 'response_data' => $response->json(),
+//             ]);
+
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Failed to fetch transaction data from backend.',
+//             ], $response->status());
+//         }
+//     } catch (\Exception $e) {
+//         Log::error('Exception occurred during transaction process', [
+//             'error_message' => $e->getMessage(),
+//             'stack_trace' => $e->getTraceAsString(),
+//         ]);
+
+
+//         return response()->json([
+//             'status' => 'error',
+//             'message' => $e->getMessage(),
+//         ], 500);
+//     }
+// }
 }

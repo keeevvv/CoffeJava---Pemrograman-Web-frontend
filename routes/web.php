@@ -51,3 +51,4 @@ Route::post('/bag/select-shipping', [BagController::class, 'selectShippingAddres
 Route::post('/bag/add-shipping', [BagController::class, 'storeNewShippingAddress'])->name('bag.storeNewShippingAddress')->middleware(AuthMiddleware::class);
 Route::post('/bag/update-quantity', [BagController::class, 'updateQuantity'])->name('bag.updateQuantity');
 Route::delete('/bag/delete-item', [BagController::class, 'deleteItem'])->name('bag.deleteItem');
+Route::post('/bag/transaction', [BagController::class, 'handleTransaction'])->name('bag.handleTransaction');
