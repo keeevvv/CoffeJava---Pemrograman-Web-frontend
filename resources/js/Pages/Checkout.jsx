@@ -21,8 +21,8 @@ console.log("Address:", address);
   const [paymentType, setPaymentType] = useState("credit_card");
 
 
-  const ongkos = 15000;
-  const totalTagihan = ongkos+total;
+  // const ongkos = 15000;
+  const totalTagihan = total;
 
 
 
@@ -157,7 +157,6 @@ const handleCheckout = async () => {
               <p className="text-gray-600">Negara: {address.country}</p>
               <p className="text-gray-600">Kode Pos: {address.postal}</p>
               <p className="text-gray-600">Kurir: {address.courier}</p>
-              <p className="text-gray-600">Biaya Pengiriman: Rp{address.cost}</p>
               </div>
               <Link href = "/bag/addresslist">
               <button
@@ -199,20 +198,20 @@ const handleCheckout = async () => {
   
           {/* order summary */}
           <div className="bg-white p-6 rounded-lg shadow">
-            <h2 className="text-lg font-bold mb-4">Cek ringkasan transaksimu, yuk</h2>
+            <h2 className="text-lg font-bold mb-4">Ringkasan Tagihan</h2>
             <div className="space-y-4">
-              <div className="flex justify-between text-gray-600">
+              {/* <div className="flex justify-between text-gray-600">
                 <p>Total Harga</p>
                 <p>{total.toFixed(2)}</p>
               </div>
               <div className="flex justify-between text-gray-600">
                 <p>Total Ongkos</p>
                 <p>Rp{ongkos}</p>
-              </div>
+              </div> */}
               <hr />
               <div className="flex justify-between font-bold text-lg">
                 <p>Total Tagihan</p>
-                <p>Rp{totalTagihan.toFixed(2)}</p>
+                <p>Rp{totalTagihan}</p>
               </div>
             </div>
             <button
