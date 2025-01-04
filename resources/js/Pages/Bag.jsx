@@ -8,9 +8,13 @@ import StickyCard from "../component/StickyCard";
 export default function Bag() {
     const { cart, hasItems } = usePage().props;
     const [cartItems, setCartItems] = useState(cart.cart_items || []);
-    const subtotal = cartItems.reduce((sum, item) => sum + item.total_price, 0);
-    const shipping = 15000;
-    const total = subtotal + shipping;
+    const subtotal = cartItems.reduce((sum, item) => {
+      const roundedPrice = Math.floor(item.product.price); 
+      return sum + roundedPrice * item.quantity; 
+  }, 0);
+  // const shipping = 15000;
+    const total = Math.round(subtotal);
+
     
 
     const handleQuantityChange = (itemId, action) => {
@@ -56,7 +60,7 @@ export default function Bag() {
   };
 
     const handleCheckout = (e) => {
-        const totalPrice = subtotal + shipping;
+        const totalPrice = subtotal;
 
         Inertia.post("/bag/store-total", { totalPrice });
     };
@@ -167,18 +171,18 @@ export default function Bag() {
                             Order summary
                         </h2>
                         <div className="space-y-4">
-                            <div className="flex justify-between text-sm">
+                            {/* <div className="flex justify-between text-sm">
                                 <span>Subtotal</span>
                                 <span>Rp{subtotal.toFixed(2)}</span>
                             </div>
                             <div className="flex justify-between text-sm">
                                 <span>Shipping</span>
                                 <span>Rp{shipping.toFixed(2)}</span>
-                            </div>
+                            </div> */}
 
                             <div className="flex justify-between text-base font-semibold">
                                 <span>Total</span>
-                                <span>Rp{total.toFixed(2)}</span>
+                                <span>Rp{total}</span>
                             </div>
                         </div>
 
