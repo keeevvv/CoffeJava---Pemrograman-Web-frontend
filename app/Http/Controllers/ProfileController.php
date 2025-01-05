@@ -99,8 +99,10 @@ class ProfileController extends Controller
             'newPassword' => 'required|string|min:8',
             'confirmNewPassword' => 'required|string|same:newPassword',
         ]);
+        
 
         $accessToken = $request->session()->get('access_token');
+       
         if (!$accessToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
@@ -115,13 +117,15 @@ class ProfileController extends Controller
             'newPassword' => $validated['newPassword'],
             'confirmNewPassword' => $validated['confirmNewPassword'],
         ];
-
+        
         try {
             $response = Http::withHeaders($headers)->put("http://localhost:3000/api/v1/" . $request->id . "/change-password", $body);
 
             if ($response->successful()) {
+               
                 return redirect()->route('profile.setting')->with('success', 'Password updated successfully');
             } else {
+                dd("test3", $response->json()['msg']);
                 return redirect()->back()->with('error', $response->json()['msg'] ?? 'Failed to update password');
             }
         } catch (\Exception $e) {
@@ -272,6 +276,7 @@ class ProfileController extends Controller
                 return redirect()->back()->withErrors(['msg' => 'Failed to update profile.']);
             }
         } catch (\Illuminate\Validation\ValidationException $e) {
+            dd($e->getMessage());
             dd("asd 1");
             return redirect()->back()->withErrors($e->errors());
         } catch (\Firebase\JWT\ExpiredException $e) {

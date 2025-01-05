@@ -9,7 +9,13 @@ const Favorite = () => {
   const { auth } = usePage().props
   const [isLoading, setIsLoading] = useState(false)
   const [favorites, setFavorites] = useState(auth?.favorites || [])
-
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 2, // Jumlah angka di belakang koma
+    }).format(number);
+};
   if (!auth?.favorites || auth.favorites.length === 0) {
     return (
       <>
@@ -102,7 +108,8 @@ const removeFavorite = (id) => {
                   {favorite.product?.pName}
                 </h2>
                 <p className="text-lg text-indigo-600 font-semibold mb-2">
-                  Rp.{(Math.round(favorite.product?.price) * 1000).toLocaleString('id-ID')}
+                  Rp.{(Math.round(favorite.product?.price) ).toLocaleString('id-ID')}
+                
                 </p>
                 <p className="text-sm text-gray-600 mb-4 line-clamp-2">
                   {favorite.product?.desc}

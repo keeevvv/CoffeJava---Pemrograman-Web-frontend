@@ -112,6 +112,7 @@ class AuthController extends Controller
     {
 
         try {
+
             $token = $this->getToken($request);
             if (!$token) return redirect()->route('login');
 
@@ -128,6 +129,7 @@ class AuthController extends Controller
                     'status' => $response->status(),
                     'body' => $response->body()
                 ]);
+               
                 return redirect()->back()->with('error', 'Failed to delete from favorites');
             }
 
