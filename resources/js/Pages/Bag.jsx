@@ -6,16 +6,14 @@ import FooterLanding from "../component/FooterSection";
 import StickyCard from "../component/StickyCard";
 
 export default function Bag() {
-    const { cart, hasItems } = usePage().props;
+    const { cart } = usePage().props;
     const [cartItems, setCartItems] = useState(cart.cart_items || []);
     const subtotal = cartItems.reduce((sum, item) => {
-      const roundedPrice = Math.floor(item.product.price); 
-      return sum + roundedPrice * item.quantity; 
-  }, 0);
-  // const shipping = 15000;
+        const roundedPrice = Math.floor(item.product.price);
+        return sum + roundedPrice * item.quantity;
+    }, 0);
+    // const shipping = 15000;
     const total = Math.round(subtotal);
-
-    
 
     const handleQuantityChange = (itemId, action) => {
         const updatedItems = cartItems.map((item) => {
@@ -41,23 +39,23 @@ export default function Bag() {
     };
 
     const handleDelete = (itemId) => {
-      // delete in local
-      const updatedItems = cartItems.filter(
-          (item) => item.cart_item_id !== itemId
-      );
-      setCartItems(updatedItems);
-  
-      // delete in backend
-      Inertia.delete("/bag/delete-item", { data: { itemId } })
-        .then(() => {
-            console.log("Item deleted successfully");
-            showNotification("Product removed from cart!");
-        })
-        .catch((error) => {
-            console.error("Error deleting item:", error);
-            showNotification("Error removing product from cart.");
-        });
-  };
+        // delete in local
+        const updatedItems = cartItems.filter(
+            (item) => item.cart_item_id !== itemId
+        );
+        setCartItems(updatedItems);
+
+        // delete in backend
+        Inertia.delete("/bag/delete-item", { data: { itemId } })
+            .then(() => {
+                console.log("Item deleted successfully");
+                showNotification("Product removed from cart!");
+            })
+            .catch((error) => {
+                console.error("Error deleting item:", error);
+                showNotification("Error removing product from cart.");
+            });
+    };
 
     const handleCheckout = (e) => {
         const totalPrice = subtotal;
@@ -65,13 +63,11 @@ export default function Bag() {
         Inertia.post("/bag/store-total", { totalPrice });
     };
 
-
-
     return (
         <div>
             <NavbarComponent />
-             {/* notif here if you want */}
-             
+            {/* notif here if you want */}
+
             <div className="min-h-screen bg-gray-100 py-10 px-4 md:px-10  mt-16">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md">
@@ -123,7 +119,8 @@ export default function Bag() {
                                         </div>
                                     </div>
                                     {/* actions */}
-                                    <div className="flex items-center space-x-2 sm:space-x-4">
+                                    <div className="flex items-center space-x-0 sm:space-x-4 flex-col sm:flex-row  space-y-2 sm:space-y-0 ">
+                                        
                                         <button
                                             onClick={() =>
                                                 handleQuantityChange(
@@ -185,18 +182,21 @@ export default function Bag() {
                                 <span>Rp{total}</span>
                             </div>
                         </div>
-
-                        <button
-                            disabled={!hasItems}
-                            onClick={handleCheckout}
-                            className={`mt-6 w-full text-white py-3 rounded-lg font-medium ${
-                                hasItems
-                                    ? "bg-NusantaraGold hover:bg-NusantaraGoldDark"
-                                    : "bg-gray-300 cursor-not-allowed"
-                            }`}
-                        >
-                            Checkout
-                        </button>
+                        {cartItems.length === 0 ? (
+                            <button
+                                disabled
+                                className="mt-6 w-full text-white py-3 rounded-lg font-medium bg-gray-300 cursor-not-allowed"
+                            >
+                                Checkout
+                            </button>
+                        ) : (
+                            <button
+                                onClick={handleCheckout}
+                                className="mt-6 w-full text-white py-3 rounded-lg font-medium bg-NusantaraGold hover:bg-NusantaraGoldDark"
+                            >
+                                Checkout
+                            </button>
+                        )}
                     </div>
                 </div>
             </div>

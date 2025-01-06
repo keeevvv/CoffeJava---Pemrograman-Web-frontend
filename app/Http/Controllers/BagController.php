@@ -56,7 +56,6 @@ class BagController extends Controller
 
             if ($response->successful()) {
                 $cart = $response->json();
-                $hasItems = !empty($cart['cart_items']);
                 $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
                 return inertia('Bag', [
                     'user' => [
@@ -68,7 +67,6 @@ class BagController extends Controller
                     ],
                     'cart' => $cart,
                     'isLoggedIn' => $this->checkLoginStatus($request),
-                    'hasItems' => $hasItems,
                 ]);
             } else {
 
