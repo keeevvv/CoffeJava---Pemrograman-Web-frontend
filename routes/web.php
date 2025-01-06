@@ -31,6 +31,9 @@ Route::get('/profile/setting', [ProfileController::class, 'showSetting'])->name(
 Route::post('/profile/setting/password', [ProfileController::class, 'updatePassword'])->name('profile.password')->middleware(AuthMiddleware::class);
 Route::post('/profile/setting/edit', [ProfileController::class, 'updateProfile'])->name('profile.update')->middleware(AuthMiddleware::class);
 Route::get('/profile/orders', [ProfileController::class, 'getAllOrders'])->name('profile.order')->middleware(AuthMiddleware::class);
+Route::delete('/profile/signout', [ProfileController::class, 'signout'])->name('profile.signout')->middleware(AuthMiddleware::class);
+
+
 
 Route::get('/favorites', [FavoriteController::class, 'loadFavorites'])->name('favorites.show')->middleware(AuthMiddleware::class);
 Route::post('/addToFavorites', [FavoriteController::class, 'addFavorites'])->name('favorites.add')->middleware(AuthMiddleware::class);
