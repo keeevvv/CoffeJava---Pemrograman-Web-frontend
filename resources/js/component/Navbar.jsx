@@ -4,6 +4,8 @@ import { usePage } from "@inertiajs/react";
 import { Avatar, Dropdown, Navbar, Button } from "flowbite-react";
 import { Link } from "@inertiajs/react";
 import Logo from "../assets/images/logo.png";
+import { router } from '@inertiajs/react';
+import { Inertia } from "@inertiajs/inertia";
 
 export default function NavbarComponent() {
     const { isLoggedIn, user } = usePage().props;
@@ -58,8 +60,15 @@ export default function NavbarComponent() {
                         <Link href="/profile/orders">
                             <Dropdown.Item>Orders</Dropdown.Item>
                         </Link>
+
                         <Dropdown.Divider />
-                        <Dropdown.Item>Sign out</Dropdown.Item>
+                        <Dropdown.Item
+                            onClick={() => {
+                                Inertia.delete("/profile/signout")
+                            }}
+                        >
+                            Sign out
+                        </Dropdown.Item>
                     </Dropdown>
                 ) : (
                     <Link href="/login">

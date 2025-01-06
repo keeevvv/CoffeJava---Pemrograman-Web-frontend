@@ -264,6 +264,57 @@ class ProfileController extends Controller
         }
     }
 
+    public function signout(Request $request)
+{
+    $refreshToken = $request->session()->get('refresh_token');
+
+    if (!$refreshToken) {
+        return response()->json(['message' => 'Access token not found. Please login again.'], 400);
+    }
+
+    Log::info('Retrieved access token from session.', ['access_token' => $refreshToken]);
+
+    try {
+
+        Log::info('Sending DELETE request to logout API.', [
+            'url' => 'http://localhost:3000/api/v1/logout',
+            'headers' => ['Authorization' => "Bearer {$refreshToken}"],
+        ]);
+
+        $response = Http::withHeaders([
+            'Authorization' => "Bearer {$refreshToken}",
+        ])->delete("http://localhost:3000/api/v1/logout");
+
+        Log::info('Received response from logout API.', [
+            'status' => $response->status(),
+            'body' => $response->body(),
+        ]);
+
+        if ($response->successful()) {
+            $request->session()->forget(['access_token', 'refresh_token']);
+
+            return Inertia::location('/');
+
+        } else {
+            Log::warning('Logout API failed', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+            Log::warning('Logout API failed ' . $response->body());
+            
+            return response()->json(['message' => 'Logout failed. Please try again.'], 500);
+        }
+    } catch (\Exception $e) {
+        Log::error('Error during signout process.', [
+            'error_message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
+        return response()->json(['message' => 'An error occurred while signing out. Please try again.'], 500);
+    }
+}
+
+
+
 
    public function getAllOrders(Request $request)
     {
