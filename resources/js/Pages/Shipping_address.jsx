@@ -31,7 +31,7 @@ export default function Shipping_address() {
             <h1 className="text-2xl font-bold mb-6">Shipping Addresses</h1>
 
             {/* buttons */}
-            <div className="flex justify-between mb-6">
+            <div className="flex justify-between mb-6 space-x-4">
                 <Link href="/bag/addnewaddress">
                     <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
                         Add New Address
@@ -66,12 +66,12 @@ export default function Shipping_address() {
                             <p className="text-gray-600">Cost: RP {address.cost}</p>
 
                             <div className="mt-4">
-                                <label className="flex items-center">
+                                <label className="flex items-center text-sm sm:text-md">
                                     <input
                                         type="checkbox"
                                         checked={selectedAddress === address.shipping_id}
                                         onChange={() => setSelectedAddress(address.shipping_id)}
-                                        className="mr-2"
+                                        className="mr-2 "
                                     />
                                     Use as the shipping address
                                 </label>

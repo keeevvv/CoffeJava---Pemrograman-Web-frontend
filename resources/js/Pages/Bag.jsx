@@ -70,7 +70,7 @@ export default function Bag() {
     return (
         <div>
             <NavbarComponent />
-             {/* Sticky Notification */}
+             {/* notif here if you want */}
              
             <div className="min-h-screen bg-gray-100 py-10 px-4 md:px-10  mt-16">
                 <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -111,19 +111,19 @@ export default function Bag() {
                                         )}
                                         {/* item name size and price */}
                                         <div className="ml-4">
-                                            <h2 className="text-lg font-semibold">
+                                            <h2 className="sm:text-lg text-xs font-semibold">
                                                 {item.product.pName}
                                             </h2>
-                                            <p className="text-sm text-gray-600">
+                                            <p className="sm:text-sm text-xs text-gray-600">
                                                 Size: {item.size}
                                             </p>
-                                            <p className="text-sm font-semibold mt-2">
+                                            <p className="sm:text-sm text-xs font-semibold mt-2">
                                                 Rp{item.total_price.toFixed(2)}
                                             </p>
                                         </div>
                                     </div>
                                     {/* actions */}
-                                    <div className="flex items-center space-x-4">
+                                    <div className="flex items-center space-x-2 sm:space-x-4">
                                         <button
                                             onClick={() =>
                                                 handleQuantityChange(
@@ -131,12 +131,12 @@ export default function Bag() {
                                                     "decrement"
                                                 )
                                             }
-                                            className="border border-gray-300 rounded-lg p-2 hover:bg-gray-200"
+                                            className="border border-gray-300 rounded-lg p-2 hover:bg-gray-200 text-xs sm:text-md"
                                         >
                                             -
                                         </button>
 
-                                        <span className="text-lg">
+                                        <span className="sm:text-lg text-xs">
                                             {item.quantity}
                                         </span>
 
@@ -147,13 +147,13 @@ export default function Bag() {
                                                     "increment"
                                                 )
                                             }
-                                            className="border border-gray-300 rounded-lg p-2 hover:bg-gray-200"
+                                            className="border border-gray-300 rounded-lg p-2 hover:bg-gray-200 sm:text-md text-xs"
                                         >
                                             +
                                         </button>
 
                                         <button
-                                            className="text-red-500 hover:text-red-700"
+                                            className="text-red-500 hover:text-red-700 text-xs sm:text-md"
                                             onClick={() =>
                                                 handleDelete(item.cart_item_id)
                                             }
@@ -167,7 +167,7 @@ export default function Bag() {
                     </div>
 
                     <div className="bg-white p-6 rounded-lg shadow-md">
-                        <h2 className="text-lg font-bold mb-4">
+                        <h2 className="text-lg font-bold mb-4 border-b">
                             Order summary
                         </h2>
                         <div className="space-y-4">

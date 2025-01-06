@@ -28,11 +28,12 @@ console.log("Address:", address);
 
   const paymentOptions = [
     { id: "credit_card", label: "Credit Card" },
+    { id: "other_qris", label: "Qris" },
+    { id: "gopay", label: "Gopay" },
     { id: "bca_va", label: "BCA Virtual Account" },
     { id: "bni_va", label: "BNI Virtual Account" },
     { id: "cimb_va", label: "CIMB Virtual Account" },
-    { id: "mandiri_va", label: "Mandiri Virtual Account" },
-    { id: "danamon_va", label: "Danamon Virtual Account" },
+    { id: "echannel", label: "Mandiri Bill Payment" },
   ];
 
   useEffect(() => {
@@ -66,21 +67,20 @@ console.log("Address:", address);
 //redirect
 const handleCheckout = async () => {
   try {
-    // Log the data being sent to the backend
+
     console.log("Starting checkout process...");
     console.log("Shipping ID:", shipping_id);
     console.log("Payment Type:", paymentType);
 
-    // Send a POST request to the backend using router.post()
+
     const response = await router.post('/bag/transaction', { shipping_id, payment_type: paymentType });
 
-    // Log the response from the backend
+
     console.log("Response from backend:", response);
 
-    // Check if the response is successful and contains a redirect_url
+
     if (response.status === "success" && response.redirect_url) {
       console.log("Transaction initialized successfully. Redirecting to:", response.redirect_url);
-      // Redirect the user to the payment page using the URL received from the backend
       window.location.href = response.redirect_url;
     } else {
       console.error("Transaction initialization failed. No redirect URL found.");
@@ -89,7 +89,6 @@ const handleCheckout = async () => {
     }
 
   } catch (error) {
-    // Log the error in case of failure
     console.error("Error during checkout process:", error);
     setError("An unexpected error occurred.");
     toast.error('An unexpected error occurred.');
@@ -145,7 +144,7 @@ const handleCheckout = async () => {
       <div className="min-h-screen bg-gray-100 p-8">
         <h1 className="text-2xl font-bold mb-6">Checkout</h1>
   
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* address */}
           <div className="col-span-2 bg-white p-6 rounded-lg shadow">
             <h2 className="text-lg font-bold mb-4">Alamat Pengiriman</h2>
@@ -209,7 +208,7 @@ const handleCheckout = async () => {
                 <p>Rp{ongkos}</p>
               </div> */}
               <hr />
-              <div className="flex justify-between font-bold text-lg">
+              <div className="flex justify-between font-bold lg:text-lg text-sm">
                 <p>Total Tagihan</p>
                 <p>Rp{totalTagihan}</p>
               </div>
