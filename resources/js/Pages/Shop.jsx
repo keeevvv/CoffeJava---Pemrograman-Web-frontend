@@ -1,5 +1,5 @@
 import NavbarComponent from "../component/Navbar";
-import ShopCarouselComponent from "../component/Shop_Carousel";
+import ShopCarouselComponent from "../component/shop_carousel";
 import ShopCardComponent from "../component/Shop_Card";
 import ShopPagination from "../component/Shop_Pagination";
 import ShopListOfProducts from "../component/Shop_List_Products";
@@ -99,7 +99,9 @@ const ShopPage = ({
     return (
         <div>
             <NavbarComponent />
-            <ShopCarouselComponent />
+            <div className="mt-14">
+                <ShopCarouselComponent />
+            </div>
             {/* BAGIAN SEARCH DAN FILTER */}
             <div className="sticky flex items-center top-[58px] bg-NusantaraGold w-full p-2">
                 {/* BAGIAN FILTER */}
@@ -168,10 +170,10 @@ const ShopPage = ({
                     )}
                 </div>
                 {/* BAGIAN SEARCH */}
-                <div className="flex justify-end w-5/12 h-full ml-auto">
+                <div className="flex justify-end w-5/12 sm:w-full h-full ml-auto">
                     <input
                         type="text"
-                        className="justify-end w-full sm:w-1/2 h-10 bg-white p-2 rounded resize-none focus:outline-none focus:ring-2 focus:ring-NusantaraGoldLight overflow-hidden"
+                        className="w-full sm:w-1/2 h-10 bg-white p-2 rounded resize-none focus:outline-none focus:ring-2 focus:ring-NusantaraGoldLight overflow-hidden"
                         placeholder="Search products..."
                         ref={inputRef}
                         onKeyDown={(e) => {

@@ -24,7 +24,7 @@ const ShopListOfProducts = ({ products = [] }) => {
     }
 
     return (
-        <div className="m-4 grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+        <div className="m-0 mt-4 sm:m-4 place-items-center grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
             {products.map((product) => (
                 <ShopCardComponent key={product.id} product={product} />
             ))}
