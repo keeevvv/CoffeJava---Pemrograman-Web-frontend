@@ -129,7 +129,7 @@ class AuthController extends Controller
                     'status' => $response->status(),
                     'body' => $response->body()
                 ]);
-               
+
                 return redirect()->back()->with('error', 'Failed to delete from favorites');
             }
 
@@ -326,6 +326,22 @@ class AuthController extends Controller
         } catch (Exception $e) {
 
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        $refreshToken =  $request->session()->get('refresh_token');
+
+        try {
+            $response = Http::withHeader([
+                'Authorization' => "Bearer {$refreshToken} ",
+            ])->delete("http://localhost:3000/api/v1/logout");
+        } catch (\Throwable $th) {
+            //throw $th;
+        } finally {
+            $request->session()->flush();
+            return redirect('/login')->with('success', 'logout successful');
         }
     }
 }

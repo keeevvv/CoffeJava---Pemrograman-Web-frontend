@@ -39,7 +39,7 @@ const BottomCart = ({ product_id, isAddedFavorite, flash, selectedStock }) => {
 
     const handleAddToCart = () => {
         if (selectedStock === undefined) {
-            alert("undefinasdsaded");
+            alert("please select the size first");
         } else {
             router.visit("/addToCart", {
                 method: "post",
@@ -66,7 +66,7 @@ const BottomCart = ({ product_id, isAddedFavorite, flash, selectedStock }) => {
                 }`}
                 onClick={handleAddFavorite}
             >
-                <AiFillHeart size={45} className="mr-2 " />
+                <AiFillHeart size={45} color={isFavorite == true ? "red": "grey"} className="mr-2 " />
             </button>
         </div>
     );

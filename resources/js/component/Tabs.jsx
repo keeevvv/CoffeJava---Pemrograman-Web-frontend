@@ -62,7 +62,7 @@ export function TabsComponent({ product }) {
                         setCurentTab(tab1);
                     }}
                 >
-                    Informasi
+                    Information
                 </h1>
                 <h1
                     className={`cursor-pointer ${
@@ -72,7 +72,7 @@ export function TabsComponent({ product }) {
                         setCurentTab(tab2);
                     }}
                 >
-                    Tentang
+                    Size Stock
                 </h1>
             </div>
             <div className="mt-4">

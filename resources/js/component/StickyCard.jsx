@@ -161,19 +161,15 @@ const StickyCard = ({
                 <div className="flex items-center">
                     <button
                         onClick={handleAddToCart}
-                        className="w-[90%] bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-gray-900 hover:text-white transition-all"
+                        className="w-[90%] bg-white border py-3 rounded-lg font-semibold text-gray-800 hover:bg-NusantaraGold hover:text-black transition-all"
                     >
                         ADD TO CART
                     </button>
                     <button
                         onClick={handleAddFavorite}
-                        className={
-                            isFavorite === true
-                                ? "text-red-400 "
-                                : "bg-transparent"
-                        }
+                       
                     >
-                        <AiFillHeart size={45} className="mr-2 " />
+                        <AiFillHeart size={45} color={isFavorite == true ? "red": "white"}  className="mr-2 " />
                     </button>
                 </div>
             </div>
