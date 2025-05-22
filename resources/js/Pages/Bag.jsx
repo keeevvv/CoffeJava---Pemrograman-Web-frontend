@@ -13,7 +13,7 @@ export default function Bag() {
         return sum + roundedPrice * item.quantity;
     }, 0);
     // const shipping = 15000;
-    const total = Math.round(subtotal);
+    const total = Math.round(subtotal).toFixed(2);
 
     const handleQuantityChange = (itemId, action) => {
         const updatedItems = cartItems.map((item) => {
