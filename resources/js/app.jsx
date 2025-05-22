@@ -3,8 +3,6 @@ import "../css/app.css";
 
 import { createInertiaApp } from "@inertiajs/react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom"; // Import BrowserRouter
-import NavbarComponent from "./component/Navbar";
 
 createInertiaApp({
     resolve: (name) => {
@@ -12,10 +10,6 @@ createInertiaApp({
         return pages[`./Pages/${name}.jsx`];
     },
     setup({ el, App, props }) {
-        createRoot(el).render(
-            <BrowserRouter>
-                <App {...props} />
-            </BrowserRouter>
-        );
+        createRoot(el).render(<App {...props} />);
     },
 });

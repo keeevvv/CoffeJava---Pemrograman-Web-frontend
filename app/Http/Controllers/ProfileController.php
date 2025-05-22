@@ -283,7 +283,7 @@ class ProfileController extends Controller
             dd($e->getMessage());
             return redirect('/login')->withErrors(['msg' => 'Token has expired. Please login again.']);
         } catch (\Exception $e) {
-            dd("asd 3");
+            dd($e->getMessage());
             return redirect('/login')->withErrors(['msg' => 'An unexpected error occurred. Please login again.']);
         }
     }

@@ -7,6 +7,7 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\BagController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\AuthMiddleware;
+use Inertia\Inertia;
 
 
 
@@ -52,6 +53,9 @@ Route::get('/bag/checkout', [BagController::class, 'showCheckout'])->name('bag.s
 Route::post('/bag/store-total', [BagController::class, 'storeTotalPrice'])->name('bag.storeTotalPrice')->middleware(AuthMiddleware::class);
 Route::post('/bag/select-shipping', [BagController::class, 'selectShippingAddress'])->name('bag.selectShippingAddress')->middleware(AuthMiddleware::class);
 Route::post('/bag/add-shipping', [BagController::class, 'storeNewShippingAddress'])->name('bag.storeNewShippingAddress')->middleware(AuthMiddleware::class);
+Route::put('/bag/update-shipping/{id}', [BagController::class, 'updateShipping'])->name('bag.updateShipping')->middleware(AuthMiddleware::class);
+Route::get('/bag/editaddress/{id}', [BagController::class, 'editShipping'])->middleware(AuthMiddleware::class);
+
 Route::post('/bag/update-quantity', [BagController::class, 'updateQuantity'])->name('bag.updateQuantity')->middleware(AuthMiddleware::class);
 Route::delete('/bag/delete-item', [BagController::class, 'deleteItem'])->name('bag.deleteItem')->middleware(AuthMiddleware::class);
 Route::post('/bag/transaction', [BagController::class, 'handleTransaction'])->name('bag.handleTransaction')->middleware(AuthMiddleware::class);

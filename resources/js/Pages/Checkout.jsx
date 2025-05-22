@@ -210,7 +210,7 @@ const handleCheckout = async () => {
               <hr />
               <div className="flex justify-between font-bold lg:text-lg text-sm">
                 <p>Total Tagihan</p>
-                <p>Rp{totalTagihan}</p>
+                <p>Rp{totalTagihan.toFixed(2)}</p>
               </div>
             </div>
             <button

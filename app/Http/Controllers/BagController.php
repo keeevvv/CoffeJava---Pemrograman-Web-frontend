@@ -40,6 +40,7 @@ class BagController extends Controller
             'isLoggedIn' => $isLoggedIn,
         ];
     }
+
     //show pages
     public function show(Request $request)
     {
@@ -154,6 +155,78 @@ class BagController extends Controller
             return redirect('/login')->withErrors(['msg' => 'An error occurred while fetching shipping data.']);
         }
     }
+
+    public function updateShipping(Request $request, $id)
+{
+    $accessToken = $request->session()->get('access_token');
+
+    if (!$accessToken) {
+        return redirect()->route('bag.addressList')->withErrors(['msg' => 'Unauthorized']);
+    }
+
+    $validated = $request->validate([
+        'address' => 'required|string|max:255',
+        'city' => 'required|string|max:100',
+        'country' => 'required|string|max:100',
+        'postal' => 'required|string|max:20',
+        'courier' => 'required|string|max:100',
+        'cost' => 'required|numeric|min:0',
+    ]);
+
+    $response = Http::withHeaders([
+        'Authorization' => "Bearer $accessToken",
+    ])->put("http://localhost:3000/api/v1/shipping/$id", $validated);
+
+    if ($response->successful()) {
+        
+        return redirect()->route('bag.addressList')->with('success', 'Shipping address updated successfully');
+    
+    } else {
+        return redirect()->back()->withErrors(['msg' => 'Failed to update address.']);
+    }
+}
+
+
+public function editShipping($id, Request $request)
+{
+    $accessToken = $request->session()->get('access_token');
+    $refreshToken = $request->session()->get('refresh_token'); 
+
+    if (!$accessToken) {
+        return redirect()->back()->withErrors(['msg' => 'Unauthorized']);
+    }
+
+    $response = Http::withHeaders([
+        'Authorization' => "Bearer $accessToken",
+    ])->get("http://localhost:3000/api/v1/shipping/$id");
+
+    if ($response->successful()) {
+        $address = $response->json();
+
+        try {
+            $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => 'Failed to decode refresh token. Please login again.']);
+        }
+
+        return Inertia::render('Shipping_Edit', [
+            'addressToEdit' => $address,
+            'user' => [
+                'id' => $decoded->id,
+                'name' => $decoded->name,
+                'email' => $decoded->email,
+                'profileImage' => $decoded->profileImage,
+                'tanggalLahir' => $decoded->tanggalLahir,
+            ],
+            'isLoggedIn' => $this->checkLoginStatus($request),
+        ]);
+    }
+
+    return redirect()->back()->withErrors(['msg' => 'Failed to fetch address.']);
+}
+
+
+
 
 
     public function showCheckout(Request $request)
@@ -465,12 +538,11 @@ class BagController extends Controller
             $transaction = $response->json();
     
             if (isset($transaction['transaction']['redirect_url'])) {
-                // Use Inertia::location to handle the redirect for Inertia
                 Log::info('Transaction initialized successfully', [
                     'transaction_token' => $transaction['transaction']['token'],
                     'redirect_url' => $transaction['transaction']['redirect_url'],
                 ]);
-                return Inertia::location($transaction['transaction']['redirect_url']);  // This ensures proper Inertia response
+                return Inertia::location($transaction['transaction']['redirect_url']);  
                 
             } else {
                 Log::error('Invalid response structure', ['response' => $response->json()]);
