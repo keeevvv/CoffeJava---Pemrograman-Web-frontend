@@ -39,19 +39,20 @@ const PopularProduct = () => {
 
     return (
         <section>
-            <h1 className="flex items-center text-5xl font-extrabold dark:text-white justify-center mt-5">
+            <h1 className="flex items-center text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-extrabold dark:text-white justify-center mt-5">
                 Product Popular
             </h1>
-            <div className="flex flex-row justify-center mt-7 gap-5">
-                <div className="flex overflow-x-auto space-x-7  ">
+            <div className="mt-4 sm:m-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
+                <div className="flex gap-4 w-max">
                     {products.map((product) => (
-                        <ShopCardComponent
-                            key={product.product_id}
-                            product={product}
-                        />
+                        <div className="snap-start">
+                            <ShopCardComponent
+                                key={product.product_id}
+                                product={product}
+                            />
+                        </div>
                     ))}
                 </div>
-                
             </div>
         </section>
     );

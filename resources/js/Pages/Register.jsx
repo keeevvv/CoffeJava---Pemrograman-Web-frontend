@@ -11,10 +11,56 @@ export default function Register(props) {
     const [gender, setGender] = useState("");
     const [selectedDate, setSelectedDate] = useState("");
 
+    const [paswwordErrors, setPasswordError] = useState([]);
+    const [confirmError, setConfirmError] = useState("");
+    const [canSubmit, setCanSubmit] = useState(false);
+
     const [errors, setErrors] = useState(props.errors || {}); // Mengambil errors dari props jika ada
 
     // Menangkap error dari props, jika ada
     const errorMessage = errors?.register;
+
+    useEffect(() => {
+        if (password === "") {
+            setPasswordError([]);
+            setConfirmError("");
+            setCanSubmit(false);
+            return;
+        }
+        const newErrors = [];
+
+        // Rule 1: at least 6 chars
+        if (password.length < 6)
+            newErrors.push("Password must be at least 6 characters long");
+        // Rule 2: at least one uppercase letter
+        if (!/[A-Z]/.test(password))
+            newErrors.push("Password must have at least one uppercase letter");
+        // Rule 3: no spaces
+        if (/\s/.test(password))
+            newErrors.push("Password must not have spaces");
+        // Rule 4: at least two digits
+        if ((password.match(/\d/g) || []).length < 2)
+            newErrors.push("Password must have at least two digits");
+        // Rule 5: at least one special character
+        if (!/[!@#$%^&*(),.?":{}|<>]/.test(password))
+            newErrors.push("Password must have at least one special character");
+
+        setPasswordError(newErrors);
+
+        // Confirm password check
+        if (confirmPassword && password !== confirmPassword) {
+            setConfirmError("Password and confirmation do not match");
+        } else {
+            setConfirmError("");
+        }
+
+        // Enable submit if no errors and passwords match
+        setCanSubmit(
+            newErrors.length === 0 &&
+                confirmPassword &&
+                password === confirmPassword
+        );
+    }, [password, confirmPassword]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -123,9 +169,9 @@ export default function Register(props) {
                                     id="date"
                                     type="date"
                                     required
-                                    onChange={(e) =>
-                                        setSelectedDate(e.target.value)
-                                    }
+                                    onChange={(e) => {
+                                        setSelectedDate(e.target.value);
+                                    }}
                                 />
                             </div>
                             <div className="mb-4 sm:mx-20 mx-10">
@@ -141,10 +187,15 @@ export default function Register(props) {
                                     type="password"
                                     required
                                     placeholder="*********"
-                                    onChange={(e) =>
-                                        setPassword(e.target.value)
-                                    }
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                    }}
                                 ></input>
+                                {paswwordErrors.length > 0 && (
+                                    <div className="text-red-500">
+                                        {paswwordErrors[0]}
+                                    </div>
+                                )}
                             </div>
                             <div className="mb-4 sm:mx-20 mx-10">
                                 <label
@@ -163,14 +214,19 @@ export default function Register(props) {
                                         setConfirmPassword(e.target.value)
                                     }
                                 ></input>
-                                {errorMessage && (
-                                    <div className="text-red-500 text-center m-4">
-                                        {errorMessage}
+                                {confirmError && (
+                                    <div className="text-red-500">
+                                        {confirmError}
                                     </div>
                                 )}
                             </div>
 
                             <div className="mt-6 sm:mx-20 mx-10">
+                                {errorMessage && (
+                                    <div className="text-red-500 text-center m-4">
+                                        {errorMessage}
+                                    </div>
+                                )}
                                 <p>
                                     already have an account?{" "}
                                     <Link
@@ -181,8 +237,17 @@ export default function Register(props) {
                                     </Link>
                                 </p>
                                 <button
-                                    className=" tracking-wide font-semibold bg-NusantaraGoldLight text-white-500 w-full py-4 rounded-lg hover:bg-NusantaraGoldDark transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                                    className={`
+    tracking-wide font-semibold w-full py-4 rounded-lg flex items-center justify-center
+    transition-all duration-300 ease-in-out focus:shadow-outline focus:outline-none
+    ${
+        canSubmit
+            ? "bg-NusantaraGoldLight text-white-500 hover:bg-NusantaraGoldDark cursor-pointer"
+            : "bg-gray-400 text-gray-200 cursor-not-allowed"
+    }
+  `}
                                     type="submit"
+                                    disabled={!canSubmit}
                                 >
                                     <svg
                                         className="w-6 h-6 -ml-2"
