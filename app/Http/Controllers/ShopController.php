@@ -24,27 +24,27 @@ class ShopController extends Controller
     {
         $page = $request->query('page', 1); // Default ke 1 jika 'page' tidak ada
 
-        
-       
+
+
         $isLoggedIn = $this->checkLoginStatus($request);
         $refreshToken = $request->session()->get('refresh_token');
 
-       
-       
+
+
         try {
             $categories = $this->fetchCategories();
 
             $subCategories = $this->fetchSubCategories();
 
             $specificCategories = $this->fetchSpecificCategories();
-          
-           
+
+
             $categoryId = $request->query('categoryId');
             $subcategoryId = $request->query('subcategoryId');
             $specificSubcategoryId = $request->query('specificSubcategoryId');
-            $search = $request->query('search', ''); 
+            $search = $request->query('search', '');
 
-            
+
             $products = $this->fetchProducts($request, $page, $categoryId, $subcategoryId, $specificSubcategoryId, $search) ?? [
                 'data' => [],
                 'pagination' => [],
@@ -62,14 +62,14 @@ class ShopController extends Controller
                         'tanggalLahir' => $decoded->tanggalLahir,
                     ];
                 } catch (\Exception $e) {
-                    
+
                 }
-            } 
-    
+            }
+
             return Inertia::render('Shop', [
                 'user' => $user,
                 'isLoggedIn' => $isLoggedIn,
-                'categories' => $categories, 
+                'categories' => $categories,
                 'subCategories' => $subCategories,
                 'specificCategories' => $specificCategories,
             'products' => $products['data'] ?? [],
@@ -96,7 +96,7 @@ class ShopController extends Controller
     ];
 
     try {
-        $response = Http::get("http://localhost:3000/api/v1/products", $queryParams);
+        $response = Http::get("https://backendenusantara.se4603.my.id/api/v1/products", $queryParams);
         if ($response->successful()) {
             return $response->json();
         } else {
@@ -110,7 +110,7 @@ class ShopController extends Controller
     //fetch kategori
     private function fetchCategories(){
         try {
-            $response = Http::get("http://localhost:3000/api/v1/categories");
+            $response = Http::get("https://backendenusantara.se4603.my.id/api/v1/categories");
             if ($response->successful()) {
                 return $response->json();
             } else {
@@ -124,7 +124,7 @@ class ShopController extends Controller
     //fetch subkategori
     private function fetchSubCategories(){
         try {
-            $response = Http::get("http://localhost:3000/api/v1/subcategory");
+            $response = Http::get("https://backendenusantara.se4603.my.id/api/v1/subcategory");
             if ($response->successful()) {
                 return $response->json();
             } else {
@@ -138,7 +138,7 @@ class ShopController extends Controller
     //fetch spesifik
     private function fetchSpecificCategories(){
         try {
-            $response = Http::get("http://localhost:3000/api/v1/specific-subcategories");
+            $response = Http::get("https://backendenusantara.se4603.my.id/api/v1/specific-subcategories");
             if ($response->successful()) {
                 return $response->json();
             } else {

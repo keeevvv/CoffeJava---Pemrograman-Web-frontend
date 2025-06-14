@@ -51,7 +51,7 @@ class FavoriteController extends Controller
 
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
-            ])->get('http://localhost:3000/api/v1/favorites');
+            ])->get('https://backendenusantara.se4603.my.id/api/v1/favorites');
 
             if (!$response->successful()) {
                 Log::error('Failed to fetch favorites', [
@@ -98,7 +98,7 @@ class FavoriteController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
-            ])->post('http://localhost:3000/api/v1/favorites', $body);
+            ])->post('https://backendenusantara.se4603.my.id/api/v1/favorites', $body);
 
             if (!$response->successful()) {
                 Log::error('Failed to add favorite', [
@@ -126,7 +126,7 @@ class FavoriteController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
-            ])->delete("http://localhost:3000/api/v1/favorites/{$id}");
+            ])->delete("https://backendenusantara.se4603.my.id/api/v1/favorites/{$id}");
 
             if (!$response->successful()) {
                 Log::error('Failed to delete favorite', [

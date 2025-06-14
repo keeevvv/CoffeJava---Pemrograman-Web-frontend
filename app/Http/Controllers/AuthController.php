@@ -80,7 +80,7 @@ class AuthController extends Controller
 
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$refreshToken}"
-            ])->get('http://localhost:3000/api/v1/token');
+            ])->get('https://backendenusantara.se4603.my.id/api/v1/token');
 
             if ($response->successful()) {
 
@@ -119,7 +119,7 @@ class AuthController extends Controller
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$token} ",
                 'Content-Type' => 'application/json',
-            ])->delete("http://localhost:3000/api/v1/favorites", [
+            ])->delete("https://backendenusantara.se4603.my.id/api/v1/favorites", [
                 'productId' => (int)$id
             ]);
 
@@ -144,7 +144,7 @@ class AuthController extends Controller
 
 
 
-        $response = Http::get("http://localhost:3000/api/v1/product/{$id}");
+        $response = Http::get("https://backendenusantara.se4603.my.id/api/v1/product/{$id}");
         if (!$response->successful()) {
             abort(404);
         }
@@ -153,7 +153,7 @@ class AuthController extends Controller
         $data = $response->json();
 
         $categoryId = $data["data"]["categories"][0]["category_id"];
-        $Categoryresponse = Http::get("http://localhost:3000/api/v1/products?categoryId={$categoryId}");
+        $Categoryresponse = Http::get("https://backendenusantara.se4603.my.id/api/v1/products?categoryId={$categoryId}");
         $categoryData = $Categoryresponse->json()["data"];
 
 
@@ -184,7 +184,7 @@ class AuthController extends Controller
 
                 $responseFavorite = Http::withHeaders([
                     'Authorization' => "Bearer {$newAccesshToken} ",
-                ])->get('http://localhost:3000/api/v1/favorites');
+                ])->get('https://backendenusantara.se4603.my.id/api/v1/favorites');
                 $isAddedFavorite =  false;
 
                 if ($responseFavorite->successful()) {
@@ -236,7 +236,7 @@ class AuthController extends Controller
     {
 
 
-        $response = Http::post('http://localhost:3000/api/v1/login', [
+        $response = Http::post('https://backendenusantara.se4603.my.id/api/v1/login', [
             'email' => $request->input('email'),
             'password' => $request->input('password'),
         ]);
@@ -266,7 +266,7 @@ class AuthController extends Controller
     {
 
 
-        $response = Http::post('http://localhost:3000/api/v1/register', [
+        $response = Http::post('https://backendenusantara.se4603.my.id/api/v1/register', [
             'nama' => $request->input('nama'),
             'email' => $request->input('email'),
             'password' => $request->input('password'),
@@ -307,7 +307,7 @@ class AuthController extends Controller
         ];
 
         try {
-            $response = Http::withHeaders($headers)->post("http://localhost:3000/api/v1/checkout", $body);
+            $response = Http::withHeaders($headers)->post("https://backendenusantara.se4603.my.id/api/v1/checkout", $body);
 
 
             if ($response->successful()) {
@@ -326,22 +326,6 @@ class AuthController extends Controller
         } catch (Exception $e) {
 
             return redirect()->back()->with('error', 'An error occurred: ' . $e->getMessage());
-        }
-    }
-
-    public function logout(Request $request)
-    {
-        $refreshToken =  $request->session()->get('refresh_token');
-
-        try {
-            $response = Http::withHeader([
-                'Authorization' => "Bearer {$refreshToken} ",
-            ])->delete("http://localhost:3000/api/v1/logout");
-        } catch (\Throwable $th) {
-            //throw $th;
-        } finally {
-            $request->session()->flush();
-            return redirect('/login')->with('success', 'logout successful');
         }
     }
 }

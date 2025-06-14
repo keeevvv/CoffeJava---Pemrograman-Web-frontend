@@ -60,14 +60,14 @@ class AuthMiddleware
     private function requestNewToken(Request $request)
     {
         $refreshToken = $request->session()->get('refresh_token');
-      
+
 
         try {
 
 
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$refreshToken}"
-            ])->get('http://localhost:3000/api/v1/token');
+            ])->get('https://backendenusantara.se4603.my.id/api/v1/token');
 
             if ($response->successful()) {
 

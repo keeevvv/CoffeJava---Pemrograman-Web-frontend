@@ -99,10 +99,10 @@ class ProfileController extends Controller
             'newPassword' => 'required|string|min:8',
             'confirmNewPassword' => 'required|string|same:newPassword',
         ]);
-        
+
 
         $accessToken = $request->session()->get('access_token');
-       
+
         if (!$accessToken) {
             return redirect('/login')->withErrors(['msg' => 'Access token not found. Please login again.']);
         }
@@ -117,12 +117,12 @@ class ProfileController extends Controller
             'newPassword' => $validated['newPassword'],
             'confirmNewPassword' => $validated['confirmNewPassword'],
         ];
-        
+
         try {
-            $response = Http::withHeaders($headers)->put("http://localhost:3000/api/v1/" . $request->id . "/change-password", $body);
+            $response = Http::withHeaders($headers)->put("https://backendenusantara.se4603.my.id/api/v1/" . $request->id . "/change-password", $body);
 
             if ($response->successful()) {
-               
+
                 return redirect()->route('profile.setting')->with('success', 'Password updated successfully');
             } else {
                 dd("test3", $response->json()['msg']);
@@ -162,7 +162,7 @@ class ProfileController extends Controller
 
     //         $response = Http::withHeaders([
     //             'Authorization' => "Bearer {$accessToken}",
-    //         ])->put("http://localhost:3000/api/v1/editUser/{$decoded->id}", $updateData);
+    //         ])->put("https://backendenusantara.se4603.my.id/api/v1/editUser/{$decoded->id}", $updateData);
 
     //         if ($response->successful()) {
     //             $newAccessToken = $response->json('accessToken') ?? null;
@@ -177,7 +177,7 @@ class ProfileController extends Controller
     //                 $filePath = $updateData['profileImage'];
     //                 $cloudResponse = Http::withHeaders([
     //                     'Authorization' => "Bearer {$newAccessToken}",
-    //                 ])->post("http://localhost:3000/api/v1/editProfile/{$decoded->id}", [
+    //                 ])->post("https://backendenusantara.se4603.my.id/api/v1/editProfile/{$decoded->id}", [
     //                     'profileImage' => $filePath,
     //                 ]);
 
@@ -240,7 +240,7 @@ class ProfileController extends Controller
                     'image',
                     file_get_contents($request->file('profileImage')->getRealPath()), // Isi file
                     $request->file('profileImage')->getClientOriginalName() // Nama file yang di-upload
-                )->post("http://localhost:3000/api/v1/editProfile/{$decoded->id}");
+                )->post("https://backendenusantara.se4603.my.id/api/v1/editProfile/{$decoded->id}");
 
 
 
@@ -260,7 +260,7 @@ class ProfileController extends Controller
 
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$accessToken}",
-            ])->put("http://localhost:3000/api/v1/editUser/{$decoded->id}", $updateData);
+            ])->put("https://backendenusantara.se4603.my.id/api/v1/editUser/{$decoded->id}", $updateData);
 
 
 
@@ -301,13 +301,13 @@ class ProfileController extends Controller
     try {
 
         Log::info('Sending DELETE request to logout API.', [
-            'url' => 'http://localhost:3000/api/v1/logout',
+            'url' => 'https://backendenusantara.se4603.my.id/api/v1/logout',
             'headers' => ['Authorization' => "Bearer {$refreshToken}"],
         ]);
 
         $response = Http::withHeaders([
             'Authorization' => "Bearer {$refreshToken}",
-        ])->delete("http://localhost:3000/api/v1/logout");
+        ])->delete("https://backendenusantara.se4603.my.id/api/v1/logout");
 
         Log::info('Received response from logout API.', [
             'status' => $response->status(),
@@ -325,7 +325,7 @@ class ProfileController extends Controller
                 'body' => $response->body(),
             ]);
             Log::warning('Logout API failed ' . $response->body());
-            
+
             return response()->json(['message' => 'Logout failed. Please try again.'], 500);
         }
     } catch (\Exception $e) {
@@ -358,7 +358,7 @@ class ProfileController extends Controller
 
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$accessToken}",
-            ])->get("http://localhost:3000/api/v1/order", null);
+            ])->get("https://backendenusantara.se4603.my.id/api/v1/order", null);
 
             // dd($response);
 
@@ -388,6 +388,7 @@ class ProfileController extends Controller
             return redirect('/login')->withErrors(['msg' => 'Token has expired. Please login again.']);
         } catch (\Exception $e) {
             Log::error('Error fetching all orders: ' . $e->getMessage());
+           dd($e);
             dd("sadsa");
             return redirect('/')->withErrors(['msg' => 'An unexpected error occurred.']);
         }
@@ -409,7 +410,7 @@ class ProfileController extends Controller
     //         $response = Http::withHeaders([
     //             'Authorization' => "Bearer {$accessToken}",
     //             'Content-Type' => 'application/json',
-    //         ])->get("http://localhost:3000/api/v1/orders/{$orderId}", [
+    //         ])->get("https://backendenusantara.se4603.my.id/api/v1/orders/{$orderId}", [
     //             'user_id' => $userId,
     //         ]);
 

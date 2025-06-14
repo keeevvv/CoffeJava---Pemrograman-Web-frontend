@@ -40,7 +40,6 @@ class BagController extends Controller
             'isLoggedIn' => $isLoggedIn,
         ];
     }
-
     //show pages
     public function show(Request $request)
     {
@@ -53,7 +52,7 @@ class BagController extends Controller
         try {
             $response = Http::withHeaders([
                 'Authorization' => "Bearer $accessToken",
-            ])->get('http://localhost:3000/api/v1/checkout');
+            ])->get('https://backendenusantara.se4603.my.id/api/v1/checkout');
 
             if ($response->successful()) {
                 $cart = $response->json();
@@ -130,7 +129,7 @@ class BagController extends Controller
             //get shipipng
             $response = Http::withHeaders([
                 'Authorization' => "Bearer $accessToken",
-            ])->get('http://localhost:3000/api/v1/shipping');
+            ])->get('https://backendenusantara.se4603.my.id/api/v1/shipping');
 
             if ($response->successful()) {
                 $shippingData = $response->json();
@@ -156,78 +155,6 @@ class BagController extends Controller
         }
     }
 
-    public function updateShipping(Request $request, $id)
-{
-    $accessToken = $request->session()->get('access_token');
-
-    if (!$accessToken) {
-        return redirect()->route('bag.addressList')->withErrors(['msg' => 'Unauthorized']);
-    }
-
-    $validated = $request->validate([
-        'address' => 'required|string|max:255',
-        'city' => 'required|string|max:100',
-        'country' => 'required|string|max:100',
-        'postal' => 'required|string|max:20',
-        'courier' => 'required|string|max:100',
-        'cost' => 'required|numeric|min:0',
-    ]);
-
-    $response = Http::withHeaders([
-        'Authorization' => "Bearer $accessToken",
-    ])->put("http://localhost:3000/api/v1/shipping/$id", $validated);
-
-    if ($response->successful()) {
-        
-        return redirect()->route('bag.addressList')->with('success', 'Shipping address updated successfully');
-    
-    } else {
-        return redirect()->back()->withErrors(['msg' => 'Failed to update address.']);
-    }
-}
-
-
-public function editShipping($id, Request $request)
-{
-    $accessToken = $request->session()->get('access_token');
-    $refreshToken = $request->session()->get('refresh_token'); 
-
-    if (!$accessToken) {
-        return redirect()->back()->withErrors(['msg' => 'Unauthorized']);
-    }
-
-    $response = Http::withHeaders([
-        'Authorization' => "Bearer $accessToken",
-    ])->get("http://localhost:3000/api/v1/shipping/$id");
-
-    if ($response->successful()) {
-        $address = $response->json();
-
-        try {
-            $decoded = JWT::decode($refreshToken, new Key(env('REFRESH_TOKEN'), 'HS256'));
-        } catch (\Exception $e) {
-            return redirect()->back()->withErrors(['msg' => 'Failed to decode refresh token. Please login again.']);
-        }
-
-        return Inertia::render('Shipping_Edit', [
-            'addressToEdit' => $address,
-            'user' => [
-                'id' => $decoded->id,
-                'name' => $decoded->name,
-                'email' => $decoded->email,
-                'profileImage' => $decoded->profileImage,
-                'tanggalLahir' => $decoded->tanggalLahir,
-            ],
-            'isLoggedIn' => $this->checkLoginStatus($request),
-        ]);
-    }
-
-    return redirect()->back()->withErrors(['msg' => 'Failed to fetch address.']);
-}
-
-
-
-
 
     public function showCheckout(Request $request)
     {
@@ -247,7 +174,7 @@ public function editShipping($id, Request $request)
         try {
             $response = Http::withHeaders([
                 'Authorization' => "Bearer $accessToken",
-            ])->get('http://localhost:3000/api/v1/checkout');
+            ])->get('https://backendenusantara.se4603.my.id/api/v1/checkout');
 
             if ($response->successful()) {
                 $cart = $response->json();
@@ -274,7 +201,7 @@ public function editShipping($id, Request $request)
 
             $response = Http::withHeaders([
                 'Authorization' => "Bearer $accessToken",
-            ])->get('http://localhost:3000/api/v1/shipping/' . $shippingId);
+            ])->get('https://backendenusantara.se4603.my.id/api/v1/shipping/' . $shippingId);
 
             if ($response->successful()) {
                 $address = $response->json();
@@ -392,7 +319,7 @@ public function editShipping($id, Request $request)
             //posting
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$accessToken}",
-            ])->post('http://localhost:3000/api/v1/shipping', $body);
+            ])->post('https://backendenusantara.se4603.my.id/api/v1/shipping', $body);
 
             Log::info('posting...');
 
@@ -444,7 +371,7 @@ public function editShipping($id, Request $request)
         try {
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$accessToken}",
-            ])->put('http://localhost:3000/api/v1/checkout/update', [
+            ])->put('https://backendenusantara.se4603.my.id/api/v1/checkout/update', [
                 'itemId' => $itemId,
                 'qty' => $newQty,
             ]);
@@ -491,7 +418,7 @@ public function editShipping($id, Request $request)
                 'Authorization' => "Bearer {$accessToken}",
                 'Content-Type' => 'application/json',
             ])->withBody($body, 'application/json')
-                ->delete("http://localhost:3000/api/v1/checkout/delete/{$itemId}");
+                ->delete("https://backendenusantara.se4603.my.id/api/v1/checkout/delete/{$itemId}");
 
             if ($response->successful()) {
                 Log::info("Item {$itemId} deleted successfully");
@@ -514,54 +441,55 @@ public function editShipping($id, Request $request)
     public function handleTransaction(Request $request)
     {
         Log::info('Handling transaction request', ['request_data' => $request->all()]);
-    
+
         $accessToken = $request->session()->get('access_token');
-    
+
         if (!$accessToken) {
             Log::warning('Access token not found in session.');
             return redirect()->route('login')->withErrors(['msg' => 'Access token not found, please Login']);
         }
-    
+
         $validated = $request->validate([
             'shipping_id' => 'required|integer',
             'payment_type' => 'required|string',
         ]);
-    
+
         Log::info('Validated request data', ['validated_data' => $validated]);
-    
+
         try {
             $response = Http::withHeaders([
                 'Authorization' => "Bearer {$accessToken}",
                 'Content-Type' => 'application/json',
-            ])->post('http://localhost:3000/api/v1/transaction', $validated);
-    
+            ])->post('https://backendenusantara.se4603.my.id/api/v1/transaction', $validated);
+
             $transaction = $response->json();
-    
+
             if (isset($transaction['transaction']['redirect_url'])) {
+                // Use Inertia::location to handle the redirect for Inertia
                 Log::info('Transaction initialized successfully', [
                     'transaction_token' => $transaction['transaction']['token'],
                     'redirect_url' => $transaction['transaction']['redirect_url'],
                 ]);
-                return Inertia::location($transaction['transaction']['redirect_url']);  
-                
+              //  return Inertia::location($transaction['transaction']['redirect_url']);  // This ensures proper Inertia response
+                return Inertia::location('/');
             } else {
                 Log::error('Invalid response structure', ['response' => $response->json()]);
                 return response()->json(['status' => 'error', 'message' => 'Invalid response structure from transaction API'], 500);
             }
-    
+
         } catch (\Exception $e) {
             Log::error('Transaction error occurred', ['error' => $e->getMessage()]);
             return response()->json(['status' => 'error', 'message' => 'Transaction initialization failed'], 500);
         }
     }
 
-    
 
 
 
 
 
-    
+
+
 //     public function handleTransaction(Request $request)
 // {
 
@@ -597,7 +525,7 @@ public function editShipping($id, Request $request)
 //         $response = Http::withHeaders([
 //             'Authorization' => "Bearer {$accessToken}",
 //             'Content-Type' => 'application/json',
-//         ])->post('http://localhost:3000/api/v1/transaction', [
+//         ])->post('https://backendenusantara.se4603.my.id/api/v1/transaction', [
 //             'shipping_id' => $shippingId,
 //             'payment_type' => $paymentType,
 //         ]);

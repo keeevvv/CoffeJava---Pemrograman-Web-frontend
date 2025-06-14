@@ -10,7 +10,7 @@ const PopularProduct = () => {
         const fetchProducts = async () => {
             try {
                 const response = await fetch(
-                    "http://localhost:3000/api/v1/products?limit=10"
+                    "https://backendenusantara.se4603.my.id/api/v1/products?limit=10"
                 );
                 const data = await response.json();
 
